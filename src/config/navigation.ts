@@ -154,6 +154,7 @@ export const NAV_FOOTER: NavFooterColumn[] = [
 export const NAV_LEGAL: NavLink[] = [
   { label: "Privacy Policy", href: "/legal/privacy-policy" },
   { label: "Terms of Use", href: "/legal/terms-of-use" },
+  { label: "Refund Policy", href: "/legal/refund-policy" },
   { label: "Cookie Policy", href: "/legal/cookie-policy" },
   { label: "Anti-Fraud Notice", href: "/legal/anti-fraud" },
   { label: "Disclaimer", href: "/legal/disclaimer" },

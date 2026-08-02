@@ -60,3 +60,20 @@ Record architectural and content decisions, deviations from templates, renamed/c
 
 ### Interim root behavior
 - `/` currently redirects (307) to `/${DEFAULT_MARKET}` for dev; replaced by full `proxy.ts` geo+cookie+legacy-host routing in Phase 4. `proxy.ts` must read geo from request headers (`x-vercel-ip-country`, `x-vercel-ip-country-region`) — not present in Next's proxy docs; verified pattern is Vercel platform headers.
+
+## 2026-08-03 — Phase 3 (shared shell + homepage) complete
+
+### Layout & component decisions
+- `cn` joins conflicting Tailwind display utilities (e.g. `hidden sm:inline-flex` emits BOTH classes → always hidden). Rule going forward: use exclusive variants (`max-sm:hidden`) when a component's className is composed via `cn`.
+- `Button` maps explicit variant/size props to class strings (no cn-conflict); CTA in header uses `max-sm:hidden`.
+- `SocialIcon`: hand-drawn SVG paths for Instagram/Facebook/YouTube — lucide-react ships NO brand icons (Instagram/Facebook/YouTube exports were removed); `SocialIcon` renders from a small internal path registry, honoring `aria-hidden` + parent aria-label.
+- `AccordionItem` collapses via CSS grid `grid-template-rows: 0fr→1fr` transition (no JS height measurement, RTL-safe, no reflow).
+- Drawer/menu panels must not be `fixed` descendants of any element with `backdrop-filter`/`filter`/`transform` — those create a containing block, so `top`/`bottom` resolve against the panel's own height (drawer collapsed to zero height: `top:88px` + `bottom:0` against the 88px header bar). `MobileNavigation` drawer is `createPortal`ed to `document.body`.
+- Test pattern: scope queries to the region under test (`mobileNav.getByRole(...)`, `footer.getByText(...)`) — un-scoped queries hit duplicates (utility bar phone vs footer phone; mobile accordion link vs Tools card whose copy mentions the program).
+
+### Homepage content (from template + MASTER constraints)
+- Hero: stats chosen conservative + verifiable from Phase 1 crawl (15+ years, 20 countries represented, 50+ pathways, 3 regulated practices) — no fabricated approval/satisfaction percentages; template's "98% client satisfaction" style claims EXCLUDED until client provides evidence.
+- Services (6), countries (5 journeys + network card), tools (3 featured), resources (8), FAQ (5) — copy derived from template with facts verified in Phase 1 crawl; nothing fabricated.
+- Testimonials: `approvedTestimonials()` renders ONLY `status: "approved"`; all 10 candidates remain unapproved → homepage shows the truthful placeholder ("Client story — being verified with the client before publication") in story/video cards. Same for video stories (3 placeholder tiles).
+- Credentials section: dark aurora band with ICORP/ICCRC/MARA/CICC/OPC badges + two consultants shown with `status: "candidate"` and an honest "subject to final client confirmation before launch" caption — satisfies §16.3 without publishing unverified claims.
+- Footer: per-market office card labeled `{office.city} Office` (e.g. "Doha, Qatar Office"); phone/email render from env registry with `tel:`/`mailto:`.

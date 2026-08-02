@@ -2,7 +2,7 @@
 
 Living checklist. Update after every meaningful batch. Never delete completed history.
 
-Last updated: 2026-08-02
+Last updated: 2026-08-03
 
 ## Completed
 
@@ -39,11 +39,20 @@ Last updated: 2026-08-02
 
 ## Current work
 
-- Phase 3 (Shared shell + homepage): SiteHeader (utility bar + sticky header + logo V1), MegaNavigation (desktop, from `navigation.ts` registry), MobileNavigation (hamburger + accordion), MarketSwitcher (5-office switcher + cookie), SiteFooter (V2 logo, office directory, consent links), modals (office info), homepage sections per template (hero, marquee/ticker, services, countries/cards, tools, stories, video stories, resources, FAQ, process, why-dmc, refusals) at 1440/1024/768/390/320 fidelity.
+- **Phase 3 COMPLETE (uncommitted → commit this batch)**: shared shell + homepage sections built and verified end-to-end:
+  - Layout primitives: `Container`, `Button` (primary/dark/outline/white/ghost + sm/md/lg), `SectionHeading`, `AccordionItem` (grid-rows collapse), `Dialog`, `SocialIcon` (hand-drawn SVG paths — lucide-react has no Instagram/Facebook/YouTube exports).
+  - Header: `BrandLogo` (header/footer/mark/emblem variants from processed brand assets), `SiteHeader` (utility bar w/ office phone+email, RCIC·MARA·CICC line, socials; sticky bar with logo V1, `MegaNavigation`, `MarketSwitcher`, CTA `max-sm:hidden`), `MobileNavigation` (hamburger→accordion drawer: primary groups, tools, legal; **drawer portaled to `document.body`** — the header bar's `backdrop-blur` creates a containing block for `fixed` descendants, which collapsed the drawer to zero height (`top:88px`+`bottom:0` resolved against the 88px bar); portal + `z-40` fixes it), `MarketSwitcher` (flag icons, market-prefixed nav, cookie via server action `setMarketCookieAction`).
+  - Footer: V2 logo, 4-column nav + legal links, per-market office card (`{office.city} Office`, phone `tel:`, email `mailto:`), brand-950 bg.
+  - Config: `src/config/credentials.ts` (5 credentials + 2 consultants — all `status: "candidate"` with honest "subject to final confirmation" label until client verifies), `src/config/testimonials.ts` (10 named candidates w/ `sourceUrl`; `approvedTestimonials()` renders ONLY `status === "approved"` quotes; homepage shows truthful placeholders "Client story — being verified").
+  - Homepage: `HomeSections` + 13 sections — Hero (stats, aurora bg, CTA), marquee/ticker (5 countries, `@keyframes marquee` + `[mask-image]` fade edges), Services (6 cards), Countries (5 illustrative journeys + network card), WhyDmc, Credentials (dark aurora), VisitVisas (5 featured + "15 more"), Tools (3), Process (5), Stories + VideoStories (truthful placeholders), Resources (8), FAQ (5, accordion), ContactCta. `[market]/layout.tsx` wraps header/main/footer.
+- Phase 3 e2e debugging (all three failures resolved):
+  1. **Overflow 29px @320** — Services card title row: badge (`shrink-0`, `tracking-mega`) + heading without `min-w-0` → heading couldn't shrink → card overflowed viewport. Fixed with `min-w-0` on the heading.
+  2. **Mobile menu "Express Entry"** — test ambiguity: TWO matches (drawer accordion link + Tools card whose accessible name contains "Express Entry" → `.last()` hit `/dubai/tools/canada/crs-calculator`) → scoped to mobile nav; plus drawer visibility bug (above) fixed via portal.
+  3. **Footer phone strict-mode violation** — `getByText('+974 4436 7929')` matched utility bar + footer → scoped to `footer`; footer label now `{office.city} Office` (matches "Doha, Qatar Office").
 
 ## Next work
 
-1. Phase 3: shared shell + homepage (above) — first fully responsive page milestone.
+1. Commit Phase 3 (verified below).
 2. Phase 4: root routing — `proxy.ts` (geo headers `x-vercel-ip-country` + `x-vercel-ip-country-region`, market cookie, legacy-host redirects registry, apex→www), then remove the interim root redirect.
 3. Phase 5: content pages — Express Entry reference implementation (ProgramPage from EE template), then remaining program pages.
 4. Phase 6: blog MDX migration from crawl inventory (91 posts), blog index + `[slug]` market filtering.
@@ -72,6 +81,7 @@ Last updated: 2026-08-02
 
 ## Latest commands / test results
 
+- `npm run test:e2e` — **18/18 passed** (desktop-chromium + mobile-390; homepage: root redirect, all sections, overflow 1440→320, header nav, mega-menu hrefs, mobile menu open/navigate/close, market switcher + cookie, footer per-market details, unknown-market 404) ✓
 - `npm test` — 21 passed (4 files: env schema, markets, routes, navigation) ✓
 - `npm run lint` — 0 errors, 0 warnings ✓
 - `npm run typecheck` — clean ✓

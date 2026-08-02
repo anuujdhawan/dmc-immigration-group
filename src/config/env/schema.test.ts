@@ -61,9 +61,7 @@ describe("env schema", () => {
   });
 
   it("rejects missing required market contact", () => {
-    const incomplete = { ...baseEnv };
-    delete incomplete.DMC_DUBAI_EMAIL;
-    expect(() => parseEnv(incomplete)).toThrow();
+    expect(() => parseEnv({ ...baseEnv, DMC_DUBAI_EMAIL: undefined })).toThrow();
   });
 
   it("rejects an unknown default market", () => {
