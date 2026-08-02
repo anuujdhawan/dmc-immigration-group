@@ -77,3 +77,18 @@ Record architectural and content decisions, deviations from templates, renamed/c
 - Testimonials: `approvedTestimonials()` renders ONLY `status: "approved"`; all 10 candidates remain unapproved → homepage shows the truthful placeholder ("Client story — being verified with the client before publication") in story/video cards. Same for video stories (3 placeholder tiles).
 - Credentials section: dark aurora band with ICORP/ICCRC/MARA/CICC/OPC badges + two consultants shown with `status: "candidate"` and an honest "subject to final client confirmation before launch" caption — satisfies §16.3 without publishing unverified claims.
 - Footer: per-market office card labeled `{office.city} Office` (e.g. "Doha, Qatar Office"); phone/email render from env registry with `tel:`/`mailto:`.
+
+## 2026-08-03 — Phase 4 (routing + redirects) complete
+
+### Proxy location and trailing slashes
+- With `src/app/`, the Next 16 proxy file MUST live at `src/proxy.ts` (root `proxy.ts` is silently ignored — verified empirically).
+- Next's built-in trailing-slash redirect runs BEFORE the proxy function body, so legacy-host paths with trailing slashes (WordPress URLs) were redirected by Next instead of mapped. Fix: `skipTrailingSlashRedirect: true` in `next.config.ts` + explicit trailing-slash 308 in the proxy (new-site behavior unchanged).
+- Proxy reads the request `Host` header (with `nextUrl.hostname` fallback) for host-based decisions — `nextUrl.hostname` reflects the URL, not the Host header.
+- Root redirects (307, geo/cookie/default) preserve `request.nextUrl.origin` so local dev and Vercel previews stay same-origin; legacy/apex redirects (308) target `https://www.dmcimmigrationgroup.com`.
+
+### Legacy redirect registry
+- `src/config/legacy-redirects.ts` built from the Phase 1 crawl inventory: one shared path map across the five clone domains (host selects market), exact-match then prefix rules (`/new-zealand-partner*`, `/work-permit*`, `/blog/*` slug preservation), unknown → market homepage. Blog 1:1 redirects come later from MDX `legacyUrls` via `next.config.ts` redirects (which run before proxy).
+- Apex `dmcimmigrationgroup.com` → `www` (308) handled in proxy.
+
+### Verified behavior (e2e `tests/e2e/routing.spec.ts`, 22 assertions)
+- 307 default/cookie/geo/query-preservation precedence; UAE region split DU/AZ/unknown; explicit markets never redirected; invalid market 404; five legacy homepages; www variants; known path 1:1; blog slug preservation; alias normalization; unknown → market home; query preservation; apex→www; new-site trailing slash 308; assets bypass proxy.
