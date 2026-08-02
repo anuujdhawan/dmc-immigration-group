@@ -92,3 +92,27 @@ Record architectural and content decisions, deviations from templates, renamed/c
 
 ### Verified behavior (e2e `tests/e2e/routing.spec.ts`, 22 assertions)
 - 307 default/cookie/geo/query-preservation precedence; UAE region split DU/AZ/unknown; explicit markets never redirected; invalid market 404; five legacy homepages; www variants; known path 1:1; blog slug preservation; alias normalization; unknown → market home; query preservation; apex→www; new-site trailing slash 308; assets bypass proxy.
+
+## 2026-08-03 — Phase 5 (content pages) complete
+
+### Content architecture
+- 60 `PageContent` objects across 8 group files under `src/content/pages/`; `index.ts` is the single registry (`PAGE_REGISTRY`/`PAGE_IDS`/`getPageContent`/`breadcrumbsFor`). Section kinds extended with `programs` (code/label cards) and `links` (cross-link cards); every section accepts optional `anchor` (used by `/why-dmc#process`).
+- Catch-all `src/app/[market]/[...segments]/page.tsx` renders any registered id under all 5 markets (`generateStaticParams` = 300 pages + infra = 311 routes). Unknown ids → `notFound()`. Metadata: seoTitle/seoDescription, canonical via `canonicalUrl(market, id, env.SITE_URL)`, `robots.noindex` when `page.noindex`.
+- Content invariants enforced by `src/content/pages/content-registry.test.ts`: unique ids, full metadata, every `relatedPages`/`links`-path target must be a registered page, `relatedTools` must be `tools/*`, `lastVerified` ISO date. **Rule: cross-page links in content must only point at registered pages** (this caught a `/contact` link in `faqs` — replaced with `/visit-visas`).
+
+### Renderer decisions (ProgramPage, mapped from EE template)
+- Hero = light botanical gradient (not aurora dark); title's last word rendered as brand-tinted span (template style) — note this makes heading text nodes concatenate without a space (e2e uses `/regex\s*/`).
+- Breadcrumb prefixes that are not registered pages (e.g. `/visas`, `/visas/canada`) render as plain text, never links — avoids 404 crumbs.
+- Section tone map: alternate white/slate; `process` sections always dark aurora (template's dark process band); `faq` sections render accordions without a SectionHeading header; `status` sections render as full-width banners above the breadcrumb bar; sources + `lastVerified` in a dark aurora band; hero/CTA link to `/#contact` (homepage ContactCta anchor — `/contact` route is Phase 11).
+- `officialSources` may be empty (service/resource pages) — renderer hides the band. No fabricated sources ever.
+
+### Content decisions (verified web facts)
+- Approximate-threshold wording is deliberate: Australia CSIT "~AUD 79,400" (2026-07 indexation; sources split 79,499 vs 79,400) and SSIT "~AUD 146,600" — keep hedged "approximately" until official gazette figures; 191 has NO income requirement (removed Jun 2023; ATO NOAs 3 of 5 years).
+- UK Student maintenance: current published rates are **£1,529/month London, £1,171/month outside** (effective 11 Nov 2025) — many 2026 guides still cite the stale £1,334/£1,023; content uses the new rates with "revised periodically" note. Student visa fee £558 (Apr 2026), student IHS £776/yr.
+- Australia 500: GS requirement (replaced GTE Mar 2024), 48h/fortnight term-time work, unlimited scheduled breaks, research uncapped, ~AUD 29,710 living-cost benchmark — all hedged "current published".
+- Closed/renamed programs recorded as status banners: RNIP closed 31 Aug 2024 (RCIP is its replacement), SDS terminated 8 Nov 2024, TSS→SID 482 (7 Dec 2024), Global Talent→NIV 858.
+- `study-abroad/ielts-coaching` is **noindex** with an honest status banner until client confirms in-house coaching (existing blocker). Remove noindex + banner after confirmation.
+- Homepage stats reused honestly in `why-dmc` (15+ years, 20 countries, 50+ pathways); credentials claim limited to "RCIC and MARA registered practitioners where those credentials apply" — regulators still being verified (existing blocker).
+
+### Nav fix
+- Primary nav "Express Entry" href was `/express-entry` (dead route) → `/visas/canada/express-entry`. The old e2e assertion `/dubai/express-entry` encoded the bug; updated to the canonical path. Remaining nav paths (`/tools/*`, `/blog`, `/credentials`, `/contact`, `/legal/*`, `/about`, stories/gallery/press) are intentionally later-phase routes and will 404 until built.

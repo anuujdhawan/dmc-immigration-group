@@ -70,7 +70,7 @@ export const NAV_PRIMARY: PrimaryNavItem[] = [
       },
     ],
   },
-  { label: "Express Entry", href: "/express-entry" },
+  { label: "Express Entry", href: "/visas/canada/express-entry" },
   { label: "Services", href: "/why-dmc" },
   {
     label: "Resources",

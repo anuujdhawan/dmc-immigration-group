@@ -39,7 +39,16 @@ Last updated: 2026-08-03
 
 ## Current work
 
-- **Phase 3 COMPLETE (uncommitted → commit this batch)**: shared shell + homepage sections built and verified end-to-end:
+- **Phase 5 COMPLETE (uncommitted → commit this batch)**: content pages — 60 content pages across 8 group files, ProgramPage renderer, catch-all route, tests:
+  - Content registry (`src/content/pages/`): `types.ts` (added `ProgramItem`, `LinkItem`, `programs`/`links` kinds, `anchor` on sections), 8 group files — `canada.ts` (7), `australia.ts` (8), `uk.ts` (2), `visit-visas.ts` (23: directory + 6 hubs + 16 destinations), `business-investment.ts` (9), `study-abroad.ts` (6), `services.ts` (2), `resources.ts` (3). `index.ts` exports `PAGE_REGISTRY`, `PAGE_IDS`, `getPageContent`, `breadcrumbsFor`, `pageTitleForMarket`.
+  - Renderer `src/components/pages/ProgramPage.tsx` mapped from the EE template: botanical hero (title split into brand-tinted last word), disclaimer, status banners (e.g. RNIP closed, IELTS pending client), breadcrumbs (crumb prefixes like `/visas` render as plain text — they are not registered pages), sticky anchor nav, alternating white/slate sections, dark aurora process + sources sections, FAQ accordions, related pages/tools cards, CTA band. Official sources + `lastVerified` on every page.
+  - Catch-all `src/app/[market]/[...segments]/page.tsx`: `generateStaticParams` from `MARKET_LIST × PAGE_IDS`, `generateMetadata` (seoTitle/seoDescription, canonical from `SITE_URL`, `noindex` when `page.noindex`), `notFound()` for unknown ids.
+  - Nav fix: primary "Express Entry" item href `/express-entry` → `/visas/canada/express-entry` (was a dead route).
+  - Facts verified via web search this batch: UK Student maintenance £1,529/£1,171 per month (rates from 11 Nov 2025; previous £1,334/£1,023 cited by stale sources), student visa fee £558 (Apr 2026), IHS £776/yr students; Australia 500: GS requirement (replaced GTE Mar 2024), 48h/fortnight term work (unlimited breaks, research uncapped), ~AUD 29,710 funds benchmark; Canada: SDS ended 8 Nov 2024, PAL, 24h/week off-campus, CAD 20,635 (2024–25).
+  - `study-abroad/ielts-coaching` published **noindex** with honest status banner pending client confirmation of in-house coaching.
+  - Tests: `src/content/pages/content-registry.test.ts` (8 tests — unique ids, metadata completeness, relatedPages/links-path resolution, relatedTools shape, noindex flag); `tests/e2e/content-pages.spec.ts` (7 tests — hero/sections/sources, FAQ accordion, overflow at 768/390/320, breadcrumbs, all 5 markets, unknown path 404, robots noindex).
+- **Phase 4 (routing + redirects) complete** — see earlier entry below.
+- **Phase 3 COMPLETE**: shared shell + homepage sections built and verified end-to-end:
   - Layout primitives: `Container`, `Button` (primary/dark/outline/white/ghost + sm/md/lg), `SectionHeading`, `AccordionItem` (grid-rows collapse), `Dialog`, `SocialIcon` (hand-drawn SVG paths — lucide-react has no Instagram/Facebook/YouTube exports).
   - Header: `BrandLogo` (header/footer/mark/emblem variants from processed brand assets), `SiteHeader` (utility bar w/ office phone+email, RCIC·MARA·CICC line, socials; sticky bar with logo V1, `MegaNavigation`, `MarketSwitcher`, CTA `max-sm:hidden`), `MobileNavigation` (hamburger→accordion drawer: primary groups, tools, legal; **drawer portaled to `document.body`** — the header bar's `backdrop-blur` creates a containing block for `fixed` descendants, which collapsed the drawer to zero height (`top:88px`+`bottom:0` resolved against the 88px bar); portal + `z-40` fixes it), `MarketSwitcher` (flag icons, market-prefixed nav, cookie via server action `setMarketCookieAction`).
   - Footer: V2 logo, 4-column nav + legal links, per-market office card (`{office.city} Office`, phone `tel:`, email `mailto:`), brand-950 bg.
@@ -52,16 +61,14 @@ Last updated: 2026-08-03
 
 ## Next work
 
-1. Commit Phase 3 (verified below).
-2. Phase 4: root routing — `proxy.ts` (geo headers `x-vercel-ip-country` + `x-vercel-ip-country-region`, market cookie, legacy-host redirects registry, apex→www), then remove the interim root redirect.
-3. Phase 5: content pages — Express Entry reference implementation (ProgramPage from EE template), then remaining program pages.
-4. Phase 6: blog MDX migration from crawl inventory (91 posts), blog index + `[slug]` market filtering.
-5. Phase 7: lead forms (`react-hook-form` + zod), Resend route handler (env-gated), CRM adapter (env-gated), honeypot/rate-limit.
-6. Phase 8: React ChatBotify v2 `DmcGuidedChat` + eligibility checker.
-7. Phase 9: consent + analytics (vanilla-cookieconsent, consent-gated GTM/GA4/Meta from env).
-8. Phase 10: calculators/tools (16 tools from inventory, pure modules + unit tests).
-9. Phase 11: WhatsApp launcher (env numbers, per-market) + office directory + credentials page.
-10. Phase 12: legal/anti-fraud hub + copy review; Phase 13: SEO (metadata, sitemap, robots, OG, structured data); Phase 14: QA sweep + e2e suite + readiness checklist.
+1. Commit Phase 5 (verified below).
+2. Phase 6: blog MDX migration from crawl inventory (91 posts), blog index + `[slug]` market filtering.
+3. Phase 7: lead forms (`react-hook-form` + zod), Resend route handler (env-gated), CRM adapter (env-gated), honeypot/rate-limit.
+4. Phase 8: React ChatBotify v2 `DmcGuidedChat` + eligibility checker.
+5. Phase 9: consent + analytics (vanilla-cookieconsent, consent-gated GTM/GA4/Meta from env).
+6. Phase 10: calculators/tools (16 tools from inventory, pure modules + unit tests).
+7. Phase 11: WhatsApp launcher (env numbers, per-market) + office directory + credentials page.
+8. Phase 12: legal/anti-fraud hub + copy review; Phase 13: SEO (metadata, sitemap, robots, OG, structured data); Phase 14: QA sweep + e2e suite + readiness checklist.
 
 ## Blockers / TODO(client)
 
@@ -81,17 +88,18 @@ Last updated: 2026-08-03
 
 ## Latest commands / test results
 
-- `npm run test:e2e` — **18/18 passed** (desktop-chromium + mobile-390; homepage: root redirect, all sections, overflow 1440→320, header nav, mega-menu hrefs, mobile menu open/navigate/close, market switcher + cookie, footer per-market details, unknown-market 404) ✓
-- `npm test` — 21 passed (4 files: env schema, markets, routes, navigation) ✓
+- `npm run test:e2e` — **68/68 passed** (desktop-chromium + mobile-390; homepage 9, routing 22, content pages 7 — Phase 5 suite incl. hero/sections/sources, FAQ accordion, content overflow 768/390/320, breadcrumbs, 5-market render, unknown-path 404, robots noindex) ✓
+- `npm test` — 41 passed (6 files: env schema, markets, routes, navigation, legacy-redirects, content registry) ✓
 - `npm run lint` — 0 errors, 0 warnings ✓
 - `npm run typecheck` — clean ✓
-- `npm run build` — ✓ 11 routes (/, /_not-found, /dubai + 4 markets, /icon.png, /apple-icon.png, /favicon.ico); Turbopack; TypeScript pass ✓
+- `npm run build` — ✓ **311 routes** (11 infra + 5 markets × 60 content pages); Turbopack; TypeScript pass ✓
+- NOTE: kill stale dev/start servers on :3000 before `test:e2e` — `reuseExistingServer: true` will silently reuse an outdated build (caused 15 phantom failures this session; root cause: pre-Phase-5 `next dev` still listening).
 - `npm audit --omit=dev` — 3 high, all `sharp <0.35.0` via Next 16.2.12 optionalDep (postcss fixed via override) — accepted debt, revisit on Next update
 - Logo pipeline (temp): `logo-process.mjs` — flood-fill white→transparent + trim + WebP/PNG variants → `public/media/brand/` + app icons
 
 ## Incomplete counts
 
-- Routes: ~90 canonical routes inventoried; 5 of 90 built as market homepages (placeholder content).
-- Blog articles: 91 (`.ae`) + 23 + 8 + 19 + 4 crawled into inventory; 0 migrated.
+- Routes: ~90 canonical routes inventoried; 60 of ~90 built as content pages (all 5 markets live via catch-all); blog/legal/credentials/about/contact/tools remain (later phases).
+- Blog articles: 91 (`.ae`) + 23 + 8 + 19 + 4 crawled into inventory; 0 migrated (Phase 6).
 - Legacy authentic assets: 144 success-story + 16 gallery + video/press items inventoried as sources; 0 approved/manifested.
-- Tools: 0 of 16 implemented.
+- Tools: 0 of 16 implemented (Phase 10).

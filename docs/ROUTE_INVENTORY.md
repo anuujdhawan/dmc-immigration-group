@@ -15,93 +15,93 @@ All routes are under `/[market]/` for the five markets: `dubai`, `abu-dhabi`, `q
 
 | Route ID | Label | Component/content | 5-market | Meta | Test | Legacy aliases |
 |---|---|---|---|---|---|---|
-| `visas/canada/express-entry` | Express Entry | ProgramPage (reference impl, EE template) | pending | pending | pending | pending |
-| `visas/canada/provincial-nominee-programs` | PNP hub | ProgramPage hub | pending | pending | pending | pending |
-| `visas/canada/atlantic-immigration-program` | Atlantic Immigration | ProgramPage | pending | pending | pending | pending |
-| `visas/canada/rural-and-northern-immigration-pilot` | RNIP (legacy status) | ProgramPage w/ status label | pending | pending | pending | pending |
-| `visas/canada/study-permits` | Study permits | ProgramPage (SDS history + NCLEX context) | pending | pending | pending | pending |
-| `visas/canada/family-sponsorship-parent-grandparent-program` | Parent/Grandparent | ProgramPage | pending | pending | pending | pending |
-| `visit-visas/canada` | Canada visit visa | ProgramPage (Super Visa section canonical if no separate page) | pending | pending | pending | pending |
-| `visas/canada/super-visa` | Super Visa | conditional — only if content warrants; else section above | pending | pending | pending | pending |
-| `tools/canada/crs-calculator` | CRS calculator | ToolShell + pure CRS module | pending | pending | pending | pending |
+| `visas/canada/express-entry` | Express Entry | ProgramPage (reference impl, EE template) | done | done | done | pending |
+| `visas/canada/provincial-nominee-programs` | PNP hub | ProgramPage hub | done | done | done | pending |
+| `visas/canada/atlantic-immigration-program` | Atlantic Immigration | ProgramPage | done | done | done | pending |
+| `visas/canada/rural-and-northern-immigration-pilot` | RNIP (legacy status) | ProgramPage w/ status banner (closed 31 Aug 2024 → RCIP) | done | done | done | pending |
+| `visas/canada/study-permits` | Study permits | ProgramPage (SDS history + NCLEX context) | done | done | done | pending |
+| `visas/canada/family-sponsorship-parent-grandparent-program` | Parent/Grandparent | ProgramPage | done | done | done | pending |
+| `visit-visas/canada` | Canada visit visa | ProgramPage (Super Visa section canonical; no separate page — see decision) | done | done | done | pending |
+| `visas/canada/super-visa` | Super Visa | conditional — DECISION: content lives as a panel/section on `visit-visas/canada`; no separate page in v1 | — | — | — | pending |
+| `tools/canada/crs-calculator` | CRS calculator | ToolShell + pure CRS module (Phase 10) | pending | pending | pending | pending |
 
 ## Australia visas
 
 | Route ID | Label | Component/content | 5-market | Meta | Test | Legacy aliases |
 |---|---|---|---|---|---|---|
-| `visas/australia/skilled-independent-189` | Skilled Independent 189 | ProgramPage | pending | pending | pending | pending |
-| `visas/australia/skilled-nominated-190` | Skilled Nominated 190 | ProgramPage | pending | pending | pending | pending |
-| `visas/australia/skilled-work-regional-491` | Skilled Work Regional 491 | ProgramPage | pending | pending | pending | pending |
-| `visas/australia/permanent-residence-skilled-regional-191` | PR Skilled Regional 191 | ProgramPage | pending | pending | pending | pending |
-| `visas/australia/employer-sponsored-482` | Employer Sponsored 482 (current naming; former TSS) | ProgramPage | pending | pending | pending | pending |
-| `visas/australia/employer-nomination-scheme-186` | ENS 186 | ProgramPage | pending | pending | pending | pending |
-| `visas/australia/national-innovation-visa-858` | National Innovation Visa 858 (former Global Talent naming) | ProgramPage | pending | pending | pending | pending |
-| `visas/australia/state-territory-nominations` | State/Territory nominations | ProgramPage hub | pending | pending | pending | pending |
-| `tools/australia/occupation-eligibility-checker` | Occupation/eligibility checker | ToolShell (ANZSCO-oriented) | pending | pending | pending | pending |
-| `tools/australia/points-calculator` | Points calculator | ToolShell | pending | pending | pending | pending |
+| `visas/australia/skilled-independent-189` | Skilled Independent 189 | ProgramPage | done | done | done | pending |
+| `visas/australia/skilled-nominated-190` | Skilled Nominated 190 | ProgramPage | done | done | done | pending |
+| `visas/australia/skilled-work-regional-491` | Skilled Work Regional 491 | ProgramPage | done | done | done | pending |
+| `visas/australia/permanent-residence-skilled-regional-191` | PR Skilled Regional 191 | ProgramPage (no income requirement since Jun 2023) | done | done | done | pending |
+| `visas/australia/employer-sponsored-482` | Employer Sponsored 482 (SID; former TSS) | ProgramPage | done | done | done | pending |
+| `visas/australia/employer-nomination-scheme-186` | ENS 186 | ProgramPage | done | done | done | pending |
+| `visas/australia/national-innovation-visa-858` | National Innovation Visa 858 (former Global Talent) | ProgramPage | done | done | done | pending |
+| `visas/australia/state-territory-nominations` | State/Territory nominations | ProgramPage hub | done | done | done | pending |
+| `tools/australia/occupation-eligibility-checker` | Occupation/eligibility checker | ToolShell (ANZSCO-oriented, Phase 10) | pending | pending | pending | pending |
+| `tools/australia/points-calculator` | Points calculator | ToolShell (Phase 10) | pending | pending | pending | pending |
 
 ## UK visas
 
 | Route ID | Label | 5-market | Meta | Test |
 |---|---|---|---|---|
-| `visas/uk/skilled-worker` | Skilled Worker | pending | pending | pending |
-| `visas/uk/skilled-worker-dependent` | Skilled Worker Dependent | pending | pending | pending |
+| `visas/uk/skilled-worker` | Skilled Worker | done | done | done |
+| `visas/uk/skilled-worker-dependent` | Skilled Worker Dependent | done | done | done |
 
 ## Visit visas (directory + hubs + destinations)
 
-- `visit-visas` — "Global Visit Visas / More Destinations" directory.
-- Combined hubs: `visit-visas/canada-usa-australia`, `visit-visas/uk-new-zealand`, `visit-visas/china-japan-turkey`, `visit-visas/south-korea-greece-thailand`, `visit-visas/singapore-saudi-arabia-uae`, `visit-visas/south-africa-cyprus-netherlands`.
-- Individual destinations (canonical, no duplicate Canada/UK/Australia visit content elsewhere): `visit-visas/{canada, usa, australia, uk, new-zealand, china, japan, turkey, south-korea, greece, thailand, singapore, saudi-arabia, uae, south-africa, cyprus, netherlands}`.
+- `visit-visas` — "Global Visit Visas / More Destinations" directory — **done**.
+- Combined hubs: `visit-visas/canada-usa-australia`, `visit-visas/uk-new-zealand`, `visit-visas/china-japan-turkey`, `visit-visas/south-korea-greece-thailand`, `visit-visas/singapore-saudi-arabia-uae`, `visit-visas/south-africa-cyprus-netherlands` — **done** (all 6).
+- Individual destinations (canonical, no duplicate Canada/UK/Australia visit content elsewhere): `visit-visas/{canada, usa, australia, uk, new-zealand, china, japan, turkey, south-korea, greece, thailand, singapore, saudi-arabia, uae, south-africa, cyprus, netherlands}` — **done** (all 17; canada lives in `canada.ts`).
 
-All rows: 5-market `pending`, meta `pending`, test `pending`, legacy aliases `pending`.
+All rows: 5-market `done`, meta `done`, test `done`, legacy aliases `pending`.
 
 ## Business and investment
 
 | Route ID | Label | 5-market | Meta | Test |
 |---|---|---|---|---|
-| `business-investment/golden-visa-uae` | UAE Golden Visa | pending | pending | pending |
-| `business-investment/residency` | Residency hub | pending | pending | pending |
-| `business-investment/residency/canada` | Canada residency | pending | pending | pending |
-| `business-investment/residency/uk` | UK residency | pending | pending | pending |
-| `business-investment/residency/usa` | USA residency | pending | pending | pending |
-| `business-investment/citizenship` | Citizenship hub | pending | pending | pending |
-| `business-investment/citizenship/st-kitts-and-nevis` | St Kitts & Nevis | pending | pending | pending |
-| `business-investment/citizenship/vanuatu` | Vanuatu | pending | pending | pending |
-| `business-investment/startup-entrepreneur-visas` | Startup/Entrepreneur | pending | pending | pending |
+| `business-investment/golden-visa-uae` | UAE Golden Visa | done | done | done |
+| `business-investment/residency` | Residency hub | done | done | done |
+| `business-investment/residency/canada` | Canada residency | done | done | done |
+| `business-investment/residency/uk` | UK residency | done | done | done |
+| `business-investment/residency/usa` | USA residency | done | done | done |
+| `business-investment/citizenship` | Citizenship hub | done | done | done |
+| `business-investment/citizenship/st-kitts-and-nevis` | St Kitts & Nevis | done | done | done |
+| `business-investment/citizenship/vanuatu` | Vanuatu | done | done | done |
+| `business-investment/startup-entrepreneur-visas` | Startup/Entrepreneur | done | done | done |
 
 ## Study abroad
 
 | Route ID | Label | 5-market | Meta | Test |
 |---|---|---|---|---|
-| `study-abroad/canada-student-visas` | Canada student | pending | pending | pending |
-| `study-abroad/australia-student-visas` | Australia student | pending | pending | pending |
-| `study-abroad/uk-usa-student-visas` | UK+USA combined hub | pending | pending | pending |
-| `study-abroad/uk-student-visas` | UK student | pending | pending | pending |
-| `study-abroad/usa-student-visas` | USA student | pending | pending | pending |
-| `study-abroad/ielts-coaching` | IELTS coaching | pending (blocker: client verification of in-house coaching) | pending | pending |
+| `study-abroad/canada-student-visas` | Canada student | done | done | done |
+| `study-abroad/australia-student-visas` | Australia student | done | done | done |
+| `study-abroad/uk-usa-student-visas` | UK+USA combined hub | done | done | done |
+| `study-abroad/uk-student-visas` | UK student | done | done | done |
+| `study-abroad/usa-student-visas` | USA student | done | done | done |
+| `study-abroad/ielts-coaching` | IELTS coaching | done (noindex + status banner pending client verification of in-house coaching) | done | done |
 
 ## More services
 
 | Route ID | Label | 5-market | Meta | Test |
 |---|---|---|---|---|
-| `services/resume-marketing` | Resume marketing | pending | pending | pending |
+| `services/resume-marketing` | Resume marketing | done | done | done |
 | `visit-visas` | (see above) | — | — | — |
-| `why-dmc` | Why DMC | pending | pending | pending |
+| `why-dmc` | Why DMC | done (process section anchored `#process` for nav link) | done | done |
 
 ## Resources
 
 | Route ID | Label | 5-market | Meta | Test |
 |---|---|---|---|---|
-| `blog` | Blog index (MDX listing) | pending | pending | pending |
-| `blog/[slug]` | Article (market-filtered) | pending | pending | pending |
-| `faqs` | FAQs | pending | pending | pending |
-| `guides` | Guides hub | pending | pending | pending |
-| `guides/document-checklists` | Document checklists | pending | pending | pending |
-| `success-stories` | Success stories (approved content only) | pending | pending | pending |
-| `video-success-stories` | Video stories (approved content only) | pending | pending | pending |
-| `gallery` | Gallery (approved content only) | pending | pending | pending |
-| `press-media` | Press/media (approved content only) | pending | pending | pending |
-| `credentials` | Licensed consultants & credentials | pending | pending | pending |
+| `blog` | Blog index (MDX listing) | pending (Phase 6) | pending | pending |
+| `blog/[slug]` | Article (market-filtered) | pending (Phase 6) | pending | pending |
+| `faqs` | FAQs | done | done | done |
+| `guides` | Guides hub | done | done | done |
+| `guides/document-checklists` | Document checklists | done | done | done |
+| `success-stories` | Success stories (approved content only) | pending (approval + Phase 11) | pending | pending |
+| `video-success-stories` | Video stories (approved content only) | pending (approval + Phase 11) | pending | pending |
+| `gallery` | Gallery (approved content only) | pending (approval + Phase 11) | pending | pending |
+| `press-media` | Press/media (approved content only) | pending (approval + Phase 11) | pending | pending |
+| `credentials` | Licensed consultants & credentials | pending (regulator verification + Phase 11) | pending | pending |
 
 ## Tools and enquiry
 
@@ -135,5 +135,5 @@ All legal copy: old-site policies reused as client-owned drafts, marked for clie
 ## Site-wide totals
 
 - Markets: 5. Homepages: 5.
-- Content routes (hubs + pages + tools): ~90 canonical rows above (pending crawl-derived aliases).
+- Content routes (hubs + pages + tools): ~90 canonical rows above; **60 content pages done** (all 5 markets via `/[market]/[...segments]` catch-all; 311 static routes at build). Remaining: tools (16), blog (Phase 6), legal/about/contact/credentials (Phase 11–12).
 - Blog articles: to be counted from crawl (`CONTENT_MIGRATION_INVENTORY.md`).

@@ -68,7 +68,7 @@ test("mobile menu opens and navigates", async ({ page }) => {
   const mobileNav = page.getByRole("navigation", { name: "Mobile" });
   await expect(mobileNav).toBeVisible();
   await mobileNav.getByRole("link", { name: "Express Entry" }).click();
-  await expect(page).toHaveURL(/\/dubai\/express-entry$/);
+  await expect(page).toHaveURL(/\/dubai\/visas\/canada\/express-entry$/);
 });
 
 test("market switcher sets cookie and navigates", async ({ page }) => {
