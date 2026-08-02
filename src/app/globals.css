@@ -1,26 +1,125 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-brand-50: #f4f9f1;
+  --color-brand-100: #e5f3df;
+  --color-brand-200: #cce9c3;
+  --color-brand-300: #94d686;
+  --color-brand-400: #68c83a;
+  --color-brand-500: #43aa1b;
+  --color-brand-600: #358e1a;
+  --color-brand-700: #2a7015;
+  --color-brand-800: #20560f;
+  --color-brand-900: #10290a;
+  --color-brand-950: #071d04;
+
+  --color-leaf: #45b318;
+  --color-leaf-dark: #2d7e18;
+  --color-leaf-pale: #d8f5c6;
+  --color-leaf-soft: #a4e985;
+  --color-dmc-pale-green: #e5f4de;
+  --color-dmc-soft-green: #f1faef;
+
+  --color-charcoal: #1d241b;
+  --color-ink: #0f172a;
+  --color-muted: #687465;
+  --color-botanical-muted: #9aab96;
+
+  --color-aurora-bg: #050a06;
+  --color-aurora-bg-2: #071008;
+  --color-aurora-forest: #10290a;
+  --color-aurora-text: #f5fff2;
+  --color-aurora-muted: #9aab96;
+  --color-aurora-border: rgba(164, 233, 133, 0.14);
+  --color-aurora-panel: rgba(255, 255, 255, 0.045);
+  --color-aurora-panel-strong: rgba(255, 255, 255, 0.072);
+
+  --color-dmc-card-border: rgba(53, 142, 26, 0.15);
+
+  --tracking-mega: 0.12em;
+  --tracking-mega-xl: 0.16em;
+  --tracking-mega-2xl: 0.2em;
+
+  --radius-card: 1.25rem;
+  --radius-pill: 999px;
+
+  --container-site: 75rem;
+  --container-narrow: 46rem;
+
+  --shadow-card: 0 1px 3px rgba(23, 61, 13, 0.06), 0 8px 24px rgba(23, 61, 13, 0.08);
+  --shadow-brand-glow: 0 0 0 1px rgba(53, 142, 26, 0.2), 0 12px 32px rgba(53, 142, 26, 0.18);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-dm-sans);
+  --font-display: var(--font-manrope);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --header-offset: 118px;
+  --header-offset-mobile: 88px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: #ffffff;
+    color: var(--color-ink);
+    font-family: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--color-charcoal);
+  }
+
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-brand-600);
+    color: #ffffff;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .anchor-offset {
+    scroll-margin-top: var(--header-offset);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

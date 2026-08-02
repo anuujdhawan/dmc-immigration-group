@@ -30,3 +30,33 @@ Record architectural and content decisions, deviations from templates, renamed/c
 
 ### Removed/no-longer-current items requiring special review (MASTER §4.2)
 - RNIP, SDS, TSS/482 naming, Global Talent 858 naming, ICCRC terminology, fees/quotas/thresholds/processing times — verify against official sources at content time; keep legacy-information routes where a program closed/replaced, labelled with current status.
+
+## 2026-08-02 — Phase 1+2 session (foundation built)
+
+### Env layer architecture
+- `src/config/env/schema.ts`: zod v4 schema with typed per-market contact extraction. Boolean toggles are `boolTrue`/`boolFalse` helpers (`z.enum(["true","false"]).default(...).transform(...)` — default must sit on the enum, before the transform).
+- `src/config/env/index.ts` parses once; `server.ts` re-exports with `import "server-only"`; `public.ts` derives a secret-free `envPublic` subset (used by server components, safe to serialize into client props); `client.ts` reads ONLY `NEXT_PUBLIC_*` inline (`process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY`) — client bundles must never import the full env module (would crash: `process.env` is not an object in the browser).
+- zod v4 TS quirk: spreading computed-key objects into `z.object()` loses key inference unless the helper is generic over the suffix and its return type is a mapped type (`as unknown as { [K in MarketKey<S>]: z.ZodTypeAny }`). `marketContactEnv` reads via a typed `read(field)` helper with explicit casts (schema tests guarantee runtime shape).
+
+### Registries & routing
+- `markets.ts` is the single source for `Market` slugs, labels, geo mapping (`x-vercel-ip-country` → AE/QA/KW/IN; `x-vercel-ip-country-region` → DU=dubai, AZ=abu-dhabi, others→dubai), legacy hosts per market (for proxy redirects).
+- `navigation.ts` registry drives desktop mega-nav + mobile accordion + footer + legal links + tools; `allNavPaths()` feeds the route-audit test and Phase 13 sitemap. Nav labels mirror template anchors (#countries/#services/#tools/#resources); program names use CURRENT terminology (Global Talent→National Innovation Visa 858; 482/TSS→Employer Sponsored).
+- All canonical links are market-prefixed (`/${market}/...`); helpers in `src/lib/routing/routes.ts`; market cookie `dmc_market` httpOnly+Lax+1yr (secure in prod).
+
+### Design tokens (extracted from template CSS)
+- Brand scale `brand-50…#f4f9f1 → brand-950…#071d04` (exact template values), leaf greens, botanical + aurora dark palettes, `--header-offset: 118px` (mobile 88px) used for anchor scroll offsets, tracking-mega series (0.12–0.2em), card radius 1.25rem.
+- Fonts: Manrope (display) + DM Sans (body) via `next/font/google`, wired through Tailwind 4 `@theme inline`.
+
+### Logo pipeline (temp script, not in repo)
+- White→transparent via **border-connected flood fill** (not global threshold): removes only border-connected background whites, preserving interior white text/glyphs; soft alpha ramp 225–255; `trim({threshold:0})`; WebP q90.
+- Outputs: `public/media/brand/dmc-logo-{emblem(-1024),horizontal,wide(-640),mark}.webp`, `dmc-logo-mark-200.png`; `src/app/{icon.png 512, apple-icon.png 180, favicon.ico 32}` (favicon.ico contains PNG bytes — modern browsers accept; standard ICO conversion deferred).
+- Opaque-after-trim: DP 61%, V1 38%, V3 24% (clean). **V2 "wide" 91% opaque — likely on its own green plaque; keep on white surfaces, treat as non-transparent-capable** (client visual confirmation pending).
+- Model cannot view images: all visual judgments (logo glyphs, V2 plaque) remain provisional until client confirms.
+
+### Dependency decisions
+- `zod@4`, `lucide-react` added (runtime); `vitest@4`, `@playwright/test` added (dev). `react-hook-form`, `resend`, `react-chatbotify` v2, `vanilla-cookieconsent`, MDX/remark — installed in their phases (isolates version issues).
+- `overrides: { "postcss": "8.5.25" }` (flat) — Next 16.2.12 nests postcss 8.4.31 (high-severity advisories GHSA-qx2v-qp2m-jg93, GHSA-6g55-p6wh-862q); flat override verified by successful build. `sharp` 0.34.5 stays (Next optionalDep pin; libvips CVEs GHSA-f88m-g3jw-g9cj fixed only in sharp 0.35) — accepted build-time-only debt; revisit on next Next patch.
+- No explicit `sharp` dependency in package.json (Next bundles it); repo scripts never call sharp — image pipeline stays in the temp tooling dir.
+
+### Interim root behavior
+- `/` currently redirects (307) to `/${DEFAULT_MARKET}` for dev; replaced by full `proxy.ts` geo+cookie+legacy-host routing in Phase 4. `proxy.ts` must read geo from request headers (`x-vercel-ip-country`, `x-vercel-ip-country-region`) — not present in Next's proxy docs; verified pattern is Vercel platform headers.
