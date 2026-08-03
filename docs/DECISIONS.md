@@ -116,3 +116,9 @@ Record architectural and content decisions, deviations from templates, renamed/c
 
 ### Nav fix
 - Primary nav "Express Entry" href was `/express-entry` (dead route) → `/visas/canada/express-entry`. The old e2e assertion `/dubai/express-entry` encoded the bug; updated to the canonical path. Remaining nav paths (`/tools/*`, `/blog`, `/credentials`, `/contact`, `/legal/*`, `/about`, stories/gallery/press) are intentionally later-phase routes and will 404 until built.
+
+## 2026-08-03 — post-Phase-5 hydration bugfix
+
+- **Hydration bug (Phase 3 latent)**: `MobileNavigation` rendered its portal as `typeof document !== "undefined" && createPortal(..., document.body)` — server rendered nothing, client rendered the panel → hydration mismatch on every page (React regenerated the tree; surfaced as a browser console error in dev; invisible to e2e since Playwright ignores console noise).
+- **Fix pattern (rule going forward)**: SSR portals must be mount-gated with `useSyncExternalStore(() => () => {}, () => true, () => false)` — the server snapshot returns `false` so hydration matches, and the client flips to `true` post-hydration. Do NOT use `useEffect(() => setMounted(true))` — ESLint react-hooks v6 errors on setState-in-effect. Do NOT use `typeof document` conditionals in render.
+- **Guard added**: `tests/e2e/console-errors.spec.ts` asserts zero console/page errors (filtered for hydration messages) on `/dubai`, an Express Entry content page, a noindex page, and a second-market page — runs against the production build in both projects. This catches the whole class of "works but React is angry" regressions.

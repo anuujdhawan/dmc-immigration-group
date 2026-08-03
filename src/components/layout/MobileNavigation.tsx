@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
 import { NAV_LEGAL, NAV_PRIMARY, NAV_TOOLS, marketHrefForNav } from "@/config/navigation";
@@ -11,9 +11,16 @@ interface MobileNavigationProps {
   market: Market;
 }
 
+const emptySubscribe = () => () => {};
+
 export function MobileNavigation({ market }: MobileNavigationProps) {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   return (
     <>
@@ -49,7 +56,7 @@ export function MobileNavigation({ market }: MobileNavigationProps) {
       </button>
 
       </div>
-      {typeof document !== "undefined" &&
+      {mounted &&
         createPortal(
           <div
             id="mobile-nav-panel"
