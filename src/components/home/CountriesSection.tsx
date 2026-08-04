@@ -1,10 +1,4 @@
-import { ArrowRight } from "lucide-react";
-
-import type { Market } from "@/config/markets";
-import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionShell } from "@/components/home/SectionShell";
-import { marketHref } from "@/lib/routing/routes";
 
 interface PathwayCard {
   flag: string;
@@ -13,8 +7,62 @@ interface PathwayCard {
   pathway: string;
   duration: string;
   steps: string[];
-  href: string;
+  accent: "red" | "blue" | "rose" | "neutral" | "amber";
+  summary: string;
 }
+
+const ACCENT_STYLES = {
+  red: {
+    outer: "hover:border-red-200",
+    top: "bg-red-50 border-red-100 border-t-red-500",
+    glow: "bg-red-200/40 group-hover:bg-red-300/50",
+    badge: "bg-rose-600 text-white",
+    title: "text-ink",
+    panel: "bg-white border-red-200",
+    label: "text-red-500",
+    step: "bg-red-800",
+  },
+  blue: {
+    outer: "hover:border-blue-200",
+    top: "bg-blue-50 border-blue-100 border-t-blue-500",
+    glow: "bg-blue-200/40 group-hover:bg-blue-300/50",
+    badge: "bg-rose-600 text-white",
+    title: "text-ink",
+    panel: "bg-white border-blue-200",
+    label: "text-blue-500",
+    step: "bg-blue-800",
+  },
+  rose: {
+    outer: "hover:border-red-300",
+    top: "bg-red-100 border-red-200 border-t-red-700",
+    glow: "bg-red-300/40 group-hover:bg-red-400/50",
+    badge: "bg-white text-red-700",
+    title: "text-ink",
+    panel: "bg-white border-red-300",
+    label: "text-red-600",
+    step: "bg-red-900",
+  },
+  neutral: {
+    outer: "hover:border-neutral-300",
+    top: "bg-neutral-100 border-neutral-200 border-t-neutral-800",
+    glow: "bg-neutral-300/40 group-hover:bg-neutral-400/50",
+    badge: "bg-rose-600 text-white",
+    title: "text-ink",
+    panel: "bg-white border-neutral-300",
+    label: "text-neutral-500",
+    step: "bg-neutral-800",
+  },
+  amber: {
+    outer: "hover:border-amber-200",
+    top: "bg-amber-50 border-amber-100 border-t-amber-500",
+    glow: "bg-amber-200/40 group-hover:bg-amber-300/50",
+    badge: "bg-neutral-900 text-white",
+    title: "text-ink",
+    panel: "bg-white border-amber-200",
+    label: "text-amber-600",
+    step: "bg-amber-800",
+  },
+} as const;
 
 const PATHWAYS: PathwayCard[] = [
   {
@@ -27,9 +75,10 @@ const PATHWAYS: PathwayCard[] = [
       "CRS profile created",
       "ITA received",
       "PR application submitted",
-      "Application under processing",
+      "Application reviewed by the authority",
     ],
-    href: "/visas/canada/express-entry",
+    accent: "red",
+    summary: "Federal Skilled Worker",
   },
   {
     flag: "🇦🇺",
@@ -43,7 +92,8 @@ const PATHWAYS: PathwayCard[] = [
       "Invitation received",
       "Visa application lodged",
     ],
-    href: "/visas/australia/skilled-independent-189",
+    accent: "blue",
+    summary: "Skilled Independent PR",
   },
   {
     flag: "🇬🇧",
@@ -57,7 +107,8 @@ const PATHWAYS: PathwayCard[] = [
       "Biometrics completed",
       "Application under processing",
     ],
-    href: "/visas/uk/skilled-worker",
+    accent: "rose",
+    summary: "Employer-sponsored",
   },
   {
     flag: "🇺🇸",
@@ -71,7 +122,8 @@ const PATHWAYS: PathwayCard[] = [
       "Consular interview attended",
       "Application under processing",
     ],
-    href: "/visit-visas/usa",
+    accent: "amber",
+    summary: "Spouse visa",
   },
   {
     flag: "🇳🇿",
@@ -85,86 +137,115 @@ const PATHWAYS: PathwayCard[] = [
       "INZ assessment & requests",
       "Application under processing",
     ],
-    href: "/visit-visas/new-zealand",
+    accent: "neutral",
+    summary: "Partnership-based",
+  },
+  {
+    flag: "🇩🇪",
+    country: "Germany",
+    profile: "Mechanical Engineer · Berlin",
+    pathway: "EU Blue Card",
+    duration: "~5 months typical",
+    steps: [
+      "Job offer & qualification recognition",
+      "Blue Card application filed",
+      "Residence permit issued",
+      "Relocated · 2025",
+    ],
+    accent: "amber",
+    summary: "Employer-sponsored",
   },
 ];
 
-export function CountriesSection({ market }: { market: Market }) {
+export function CountriesSection() {
   return (
-    <SectionShell id="countries" tone="slate">
-      <Container>
+    <section id="countries" className="bg-slate-50 py-20 lg:py-24">
+      <div className="mx-auto max-w-[1280px] px-6">
         <SectionHeading
+          align="left"
           eyebrow="Where we practice"
           title="Opportunity looks different in every country"
-          lede="Illustrative journeys — real pathways, timelines and steps for each destination we practice in. Outcomes are decided by each country's government authority and vary by case."
+          lede="Illustrative journeys — real pathways, timelines and steps for each destination we practice in."
         />
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {PATHWAYS.map((card) => (
-            <article
-              key={card.country}
-              className="flex flex-col rounded-card border border-dmc-card-border bg-white p-7 shadow-card transition-shadow hover:shadow-brand-glow"
-            >
-              <div className="mb-4 flex items-center gap-3">
-                <span aria-hidden="true" className="text-3xl">
-                  {card.flag}
-                </span>
-                <div>
-                  <h3 className="font-display text-lg font-bold text-charcoal">{card.country}</h3>
-                  <p className="text-sm text-slate-500">{card.profile}</p>
-                </div>
-              </div>
-              <p className="mb-1 text-xs font-bold uppercase tracking-mega text-brand-600">
-                Visa pathway
-              </p>
-              <p className="mb-3 font-medium text-charcoal">{card.pathway}</p>
-              <p className="mb-4 text-xs font-semibold uppercase tracking-mega text-slate-500">
-                Duration{" "}
-                <span className="ml-1 font-bold text-brand-600">{card.duration}</span>
-              </p>
-              <ol className="mb-6 space-y-2 border-t border-slate-100 pt-4">
-                {card.steps.map((step, index) => (
-                  <li key={step} className="flex gap-2.5 text-sm text-slate-700">
-                    <span
-                      aria-hidden="true"
-                      className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-50 text-[10px] font-bold text-brand-700"
-                    >
-                      {index + 1}
-                    </span>
-                    {step}
-                  </li>
-                ))}
-              </ol>
-              <a
-                href={marketHref(market, card.href)}
-                className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 transition-colors hover:text-brand-600"
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {PATHWAYS.map((card) => {
+            const styles = ACCENT_STYLES[card.accent];
+            return (
+              <article
+                key={card.country}
+                className={`group overflow-hidden rounded-2xl border border-slate-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl ${styles.outer}`}
               >
-                Explore the journey
-                <ArrowRight aria-hidden="true" className="size-4" />
-              </a>
-            </article>
-          ))}
-
-          <article className="flex flex-col items-start justify-center rounded-card bg-brand-950 p-8 text-white">
-            <p className="mb-2 text-xs font-bold uppercase tracking-mega text-leaf-soft">
-              Live destination network
-            </p>
-            <h3 className="mb-3 font-display text-2xl font-bold">
-              Canada · Australia · UK · USA · NZ + 15 more
-            </h3>
-            <p className="mb-6 text-sm leading-relaxed text-aurora-muted">
-              20 countries, 50+ pathways, one strategy — profile assessment, strategy mapped,
-              consultant reviewed, case preparation, end-to-end.
-            </p>
-            <a
-              href={marketHref(market, "/visit-visas")}
-              className="inline-flex items-center gap-1.5 rounded-full bg-leaf px-5 py-2.5 text-sm font-semibold text-brand-950 transition-colors hover:bg-leaf-soft"
-            >
-              Explore the journey
-              <ArrowRight aria-hidden="true" className="size-4" />
-            </a>
-          </article>
+                <div className={`relative overflow-hidden border-b p-6 border-t-4 ${styles.top}`}>
+                  <div
+                    aria-hidden="true"
+                    className={`absolute -right-8 -top-10 h-32 w-32 rounded-full blur-2xl transition-colors duration-300 ${styles.glow}`}
+                  />
+                  <div className="relative mb-5 flex items-center justify-between">
+                    <span className={`rounded-full px-3 py-1.5 text-[11px] font-bold ${styles.badge}`}>
+                      {card.pathway.includes("Express Entry")
+                        ? "EE + PNP"
+                        : card.pathway.includes("189")
+                          ? "SC 189"
+                          : card.pathway.includes("Skilled Worker")
+                            ? "Skilled Worker"
+                            : card.pathway.includes("Dependent")
+                              ? "Dependent"
+                              : card.pathway.includes("EU Blue Card")
+                                ? "EU Blue Card"
+                                : "Partner Visa"}
+                    </span>
+                    <span aria-hidden="true" className="inline-block text-2xl transition-transform duration-300 group-hover:scale-110">
+                      {card.flag}
+                    </span>
+                  </div>
+                  <h3 className={`relative font-display text-xl font-extrabold ${styles.title}`}>
+                    {card.country}
+                  </h3>
+                  <p className="relative mt-1 mb-5 text-sm text-slate-500">{card.profile}</p>
+                  <div className="relative grid grid-cols-2 gap-3">
+                    <div className={`rounded-xl border px-4 py-3 ${styles.panel}`}>
+                      <p className={`text-[9px] font-bold uppercase tracking-wider ${styles.label}`}>
+                        Visa Pathway
+                      </p>
+                      <p className="mt-1 text-sm font-extrabold text-ink">{card.pathway}</p>
+                      <p className="mt-0.5 text-[10px] text-slate-400">{card.summary}</p>
+                    </div>
+                    <div className={`rounded-xl border px-4 py-3 ${styles.panel}`}>
+                      <p className={`text-[9px] font-bold uppercase tracking-wider ${styles.label}`}>
+                        Duration
+                      </p>
+                      <p className="mt-1.5 text-lg font-extrabold leading-none text-ink">
+                        {card.duration}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Migration Steps
+                  </p>
+                  <div className="space-y-2.5">
+                    {card.steps.map((step) => (
+                      <div key={step} className="flex items-center gap-2.5">
+                        <span
+                          aria-hidden="true"
+                          className={`grid size-5 shrink-0 place-items-center rounded-full text-[8px] text-white ${styles.step}`}
+                        >
+                          <i className="fa-solid fa-check" />
+                        </span>
+                        <span className="text-sm text-slate-600">{step}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-5 border-t border-slate-100 pt-4 text-sm text-slate-500">
+                    Typical journey. Government decisions still depend on each file&apos;s evidence.
+                  </p>
+                </div>
+              </article>
+            );
+          })}
         </div>
-      </Container>
-    </SectionShell>
+      </div>
+    </section>
   );
 }

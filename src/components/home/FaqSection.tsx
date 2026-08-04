@@ -1,7 +1,8 @@
-import { Container } from "@/components/ui/Container";
+import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionShell } from "@/components/home/SectionShell";
 import { AccordionItem } from "@/components/ui/AccordionItem";
+import { marketHref } from "@/lib/routing/routes";
+import type { Market } from "@/config/markets";
 
 const FAQS = [
   {
@@ -31,16 +32,22 @@ const FAQS = [
   },
 ];
 
-export function FaqSection() {
+export function FaqSection({ market }: { market: Market }) {
   return (
-    <SectionShell id="faq" tone="slate">
-      <Container className="max-w-4xl">
-        <SectionHeading
-          eyebrow="Common questions"
-          title="Clarity before commitment"
-          lede="Start with the questions that shape the feasibility, timing and direction of your immigration plan."
-        />
-        <div className="space-y-3">
+    <section id="faq" className="bg-slate-50 py-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1280px] gap-14 px-6 lg:grid-cols-[1fr_1.4fr]">
+        <div className="fade-up">
+          <SectionHeading
+            align="left"
+            eyebrow="Common questions"
+            title="Clarity before commitment"
+            lede="Start with the questions that shape the feasibility, timing and direction of your immigration plan."
+          />
+          <Button href={marketHref(market, "/contact")} size="lg" className="rounded-xl">
+            Ask a Consultant
+          </Button>
+        </div>
+        <div className="fade-up space-y-3">
           {FAQS.map((faq, index) => (
             <AccordionItem
               key={faq.question}
@@ -50,7 +57,7 @@ export function FaqSection() {
             />
           ))}
         </div>
-      </Container>
-    </SectionShell>
+      </div>
+    </section>
   );
 }

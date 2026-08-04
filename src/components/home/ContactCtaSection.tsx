@@ -2,28 +2,30 @@ import { ArrowRight } from "lucide-react";
 
 import type { Market } from "@/config/markets";
 import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
 import { marketHref } from "@/lib/routing/routes";
 
 export function ContactCtaSection({ market }: { market: Market }) {
   return (
     <section
       id="contact"
-      className="anchor-offset relative overflow-hidden bg-gradient-to-br from-brand-50 via-white to-brand-50/60 py-16 lg:py-24"
+      className="relative overflow-hidden bg-gradient-to-br from-red-50 via-blue-50 to-brand-50 py-20 lg:py-24"
     >
-      <Container className="flex flex-col items-center gap-6 text-center">
-        <p className="text-xs font-bold uppercase tracking-mega text-brand-600">
+      <div aria-hidden="true" className="absolute -top-16 -left-16 h-72 w-72 rounded-full bg-red-200/50 blur-3xl" />
+      <div aria-hidden="true" className="absolute top-1/3 -right-20 h-80 w-80 rounded-full bg-blue-200/50 blur-3xl" />
+      <div aria-hidden="true" className="absolute -bottom-20 left-1/3 h-72 w-72 rounded-full bg-brand-200/50 blur-3xl" />
+      <div className="relative mx-auto max-w-[760px] px-6 text-center">
+        <span className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white px-3.5 py-1.5 text-xs font-semibold text-brand-700 shadow-sm">
           Your next beginning
-        </p>
-        <h2 className="max-w-2xl text-balance font-display text-3xl font-bold leading-tight text-charcoal md:text-4xl lg:text-5xl">
+        </span>
+        <h2 className="mt-5 font-display text-3xl font-extrabold text-ink sm:text-4xl">
           Let your future take root
         </h2>
-        <p className="max-w-xl text-pretty text-base leading-relaxed text-muted md:text-lg">
+        <p className="mt-4 leading-relaxed text-slate-600">
           Begin with a private conversation about your profile, priorities and possible
           destinations. No rushed decisions. No unrealistic guarantees.
         </p>
-        <div className="mt-2 flex flex-wrap items-center justify-center gap-4">
-          <Button href={marketHref(market, "/contact")} size="lg">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Button href={marketHref(market, "/contact")} size="lg" className="rounded-xl">
             Book Consultation
             <ArrowRight aria-hidden="true" className="size-4" />
           </Button>
@@ -31,11 +33,12 @@ export function ContactCtaSection({ market }: { market: Market }) {
             href={marketHref(market, "/tools/eligibility-checker")}
             size="lg"
             variant="outline"
+            className="rounded-xl"
           >
             Free Eligibility Assessment
           </Button>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

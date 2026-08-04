@@ -137,3 +137,26 @@ Last updated: 2026-08-04
 
 - Browser-extension attributes (`webcrx`, `__processed_*`, and `bis_register`) were injected into the root `<html>`/`<body>` before React hydration, producing a development-only mismatch warning despite a successful page response.
 - Added `suppressHydrationWarning` only to the root `<html>` and `<body>` in `src/app/layout.tsx`; nested component hydration mismatches remain visible. `npm run typecheck` passes.
+
+## 2026-08-04 — Homepage template port batch
+
+- Ported the remaining homepage sections from the approved HTML template into the Next.js app while leaving the navbar and hero untouched:
+  - added the regulatory recognition band and stats band,
+  - restyled `ServicesSection`, `CountriesSection`, `WhyDmcSection`, `CredentialsSection`, `VisitVisasSection`, `ToolsSection`, `ProcessSection`, `StoriesSection`, `VideoStoriesSection`, `ResourcesSection`, `FaqSection`, and `ContactCtaSection`,
+  - updated `SiteFooter` to the template-like split layout with social links and bottom legal row,
+  - kept the honest placeholders and safe wording where the template contained unverified testimonials or success claims.
+- Updated `HomeSections` ordering so the page now flows like the template: hero, recognition band, services, destinations, why DMC, credentials, visit visas, tools, process, stats band, stories, video stories, resources, FAQ, and final CTA.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓, `npm run build` ✓ (escalated; Turbopack sandbox port-binding limitation reproduced without escalation).
+
+## 2026-08-04 — Homepage contrast/logo correction
+
+- Reworked the credentials band to use the template's exact proof-stack hooks (`credential-proof-stack`, `credential-proof-card`, `credential-proof-icon`, `credential-assurance`, `credential-assurance-mark`) so the recovered CSS controls the dark-panel contrast correctly and the text remains readable.
+- Replaced the generic `BrandLogo` image in the resources grid with the template's `brand-logo resource-brand-mark` span so the resource cards use the approved logo plaque treatment instead of a standalone image component.
+- Simplified the hero core plaque to a single `brand-logo brand-logo-aurora` span so the animation no longer stacks two logos on top of each other.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓, `npm run build` ✓ (escalated; Turbopack sandbox port-binding limitation reproduced without escalation).
+
+## 2026-08-04 — Countries grid completion
+
+- Added the missing Germany pathway card to the countries section so the desktop grid now matches the approved six-card template layout instead of stopping at five cards.
+- Updated the badge logic so the Germany tile correctly renders `EU Blue Card` instead of falling back to the generic partner-visa label.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓, `npm run build` ✓ (escalated; Turbopack sandbox port-binding limitation reproduced without escalation).

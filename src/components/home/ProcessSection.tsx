@@ -1,6 +1,4 @@
-import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionShell } from "@/components/home/SectionShell";
 
 const STEPS = [
   {
@@ -32,28 +30,30 @@ const STEPS = [
 
 export function ProcessSection() {
   return (
-    <SectionShell id="process" tone="slate">
-      <Container>
+    <section id="process" className="bg-slate-50 py-20 lg:py-24">
+      <div className="mx-auto max-w-[1280px] px-6">
         <SectionHeading
+          align="left"
           eyebrow="The immigration process"
           title="From uncertainty to a clear direction"
           lede="Each stage is reviewed before the next begins, giving you visibility over strategy, responsibilities and progress."
         />
-        <ol className="grid gap-5 md:grid-cols-3 xl:grid-cols-5">
+        <div className="relative grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+          <div
+            aria-hidden="true"
+            className="step-line absolute left-[10%] right-[10%] top-6 hidden h-px bg-slate-200 lg:block"
+          />
           {STEPS.map((step) => (
-            <li
-              key={step.number}
-              className="relative flex flex-col rounded-card border border-dmc-card-border bg-white p-6 shadow-sm"
-            >
-              <span className="mb-4 font-display text-4xl font-bold text-brand-100">
+            <article key={step.number} className="relative fade-up">
+              <div className="relative z-10 mb-4 flex size-12 items-center justify-center rounded-full bg-brand-600 font-display font-bold text-white">
                 {step.number}
-              </span>
-              <h3 className="font-display text-lg font-bold text-charcoal">{step.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{step.text}</p>
-            </li>
+              </div>
+              <h3 className="font-display text-sm font-bold text-ink">{step.title}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-slate-500">{step.text}</p>
+            </article>
           ))}
-        </ol>
-      </Container>
-    </SectionShell>
+        </div>
+      </div>
+    </section>
   );
 }

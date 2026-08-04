@@ -1,4 +1,5 @@
 import type { Market } from "@/config/markets";
+import { RecognitionBandSection } from "@/components/home/RecognitionBandSection";
 import { ContactCtaSection } from "@/components/home/ContactCtaSection";
 import { CountriesSection } from "@/components/home/CountriesSection";
 import { CredentialsSection } from "@/components/home/CredentialsSection";
@@ -8,6 +9,7 @@ import { ProcessSection } from "@/components/home/ProcessSection";
 import { ResourcesSection } from "@/components/home/ResourcesSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { StoriesSection } from "@/components/home/StoriesSection";
+import { StatsBandSection } from "@/components/home/StatsBandSection";
 import { ToolsSection } from "@/components/home/ToolsSection";
 import { VideoStoriesSection } from "@/components/home/VideoStoriesSection";
 import { VisitVisasSection } from "@/components/home/VisitVisasSection";
@@ -17,17 +19,19 @@ export function HomeSections({ market }: { market: Market }) {
   return (
     <>
       <Hero market={market} />
+      <RecognitionBandSection />
       <ServicesSection market={market} />
-      <CountriesSection market={market} />
+      <CountriesSection />
       <WhyDmcSection market={market} />
       <CredentialsSection market={market} />
       <VisitVisasSection market={market} />
       <ToolsSection market={market} />
       <ProcessSection />
+      <StatsBandSection />
       <StoriesSection />
       <VideoStoriesSection />
       <ResourcesSection market={market} />
-      <FaqSection />
+      <FaqSection market={market} />
       <ContactCtaSection market={market} />
     </>
   );

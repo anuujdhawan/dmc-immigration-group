@@ -2,93 +2,154 @@ import { BadgeCheck, ExternalLink } from "lucide-react";
 
 import { CONSULTANT_CREDENTIALS, CREDENTIALS } from "@/config/credentials";
 import type { Market } from "@/config/markets";
-import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionShell } from "@/components/home/SectionShell";
 import { marketHref } from "@/lib/routing/routes";
 
 export function CredentialsSection({ market }: { market: Market }) {
   return (
-    <SectionShell id="credentials" className="bg-brand-950">
-      <Container>
-        <SectionHeading
-          dark
-          eyebrow="Our Credentials"
-          title="Credentials You Can Actually Verify"
-          lede="Every credential links directly to an official register — the CICC in Canada and the OMARA in Australia. No badges without an official source. Trust should be checkable."
-        />
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {CREDENTIALS.map((credential) => (
-            <li
-              key={credential.id}
-              className="flex flex-col rounded-card border border-aurora-border bg-aurora-panel p-6"
-            >
-              <BadgeCheck aria-hidden="true" className="mb-4 size-7 text-leaf-soft" />
-              <h3 className="font-display text-base font-bold text-aurora-text">
-                {credential.title}
-              </h3>
-              <p className="mt-1 text-xs font-semibold uppercase tracking-mega text-leaf-soft">
-                {credential.authority}
-              </p>
-              <p className="mt-3 flex-1 text-xs leading-relaxed text-aurora-muted">
-                {credential.description}
-              </p>
-              {credential.verifyUrl ? (
-                <a
-                  href={credential.verifyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-leaf-soft hover:text-white"
-                >
-                  Verify
-                  <ExternalLink aria-hidden="true" className="size-3.5" />
-                </a>
-              ) : null}
-            </li>
-          ))}
-        </ul>
+    <section id="credentials" className="bg-white">
+      <div className="grid lg:grid-cols-2">
+        <div className="relative overflow-hidden bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 px-8 py-16 lg:px-16 lg:py-24">
+          <div
+            aria-hidden="true"
+            className="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-white/5 blur-3xl"
+          />
+          <div className="relative mb-6 flex items-center gap-3">
+            <span className="h-px w-8 bg-white/40" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/70">
+              Our Credentials
+            </span>
+            <span className="h-px w-8 bg-white/40" />
+          </div>
+          <h2 className="relative font-display text-4xl font-extrabold leading-tight text-white sm:text-5xl">
+            Credentials You Can Actually <span>Verify.</span>
+          </h2>
+          <p className="relative mt-6 max-w-md leading-relaxed text-white/75">
+            Every credential links directly to an official register where applicable. No badges
+            without an official source. Trust should be checkable.
+          </p>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {CONSULTANT_CREDENTIALS.map((consultant) => (
-            <div
-              key={consultant.registration}
-              className="flex flex-col gap-3 rounded-card border border-aurora-border bg-aurora-panel-strong p-6 sm:flex-row sm:items-center sm:justify-between"
-            >
+          <div className="credential-proof-stack relative" aria-label="Our credential verification standard">
+            <div className="credential-proof-card">
+              <span className="credential-proof-icon">
+                <i className="fa-solid fa-link" />
+              </span>
               <div>
-                <h3 className="font-display text-lg font-bold text-aurora-text">
-                  {consultant.name}
-                </h3>
-                <p className="text-sm text-aurora-muted">
-                  {consultant.role} · {consultant.registration}
-                </p>
+                <strong>Direct-register links</strong>
+                <small>No badges without an official source.</small>
               </div>
-              <a
-                href={consultant.verifyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-aurora-border px-4 py-2 text-xs font-bold text-leaf-soft hover:bg-aurora-panel-strong"
-              >
-                Verify on {consultant.registerName}
-                <ExternalLink aria-hidden="true" className="size-3.5" />
-              </a>
+            </div>
+            <div className="credential-proof-card">
+              <span className="credential-proof-icon">
+                <i className="fa-solid fa-shield-halved" />
+              </span>
+              <div>
+                <strong>Regulated representation</strong>
+                <small>Country-specific licensing and accountability.</small>
+              </div>
+            </div>
+            <div className="credential-proof-card">
+              <span className="credential-proof-icon">
+                <i className="fa-solid fa-scale-balanced" />
+              </span>
+              <div>
+                <strong>Ethical case handling</strong>
+                <small>Clear advice, documented steps, no false promises.</small>
+              </div>
+            </div>
+          </div>
+
+          <div className="credential-assurance relative">
+            <span className="credential-assurance-mark">
+              <i className="fa-solid fa-fingerprint" />
+            </span>
+            <p>
+              <strong className="text-white">Trust should be checkable.</strong>
+              <br />
+              Every claim below is presented with its issuing authority and verification route.
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-4 bg-slate-50 px-6 py-12 lg:px-12 lg:py-16">
+          {CREDENTIALS.map((credential) => (
+            <div
+              key={credential.id}
+              className="flex items-start justify-between gap-4 rounded-2xl border border-slate-100 bg-white p-6 shadow-card"
+            >
+              <div className="flex items-start gap-4">
+                <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand-100 text-brand-700">
+                  <BadgeCheck aria-hidden="true" className="size-5" />
+                </div>
+                <div>
+                  <h3 className="font-display font-bold text-ink">{credential.title}</h3>
+                  <p className="mt-1 text-sm text-slate-500">{credential.authority}</p>
+                  <span className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600">
+                    <span className="size-1.5 rounded-full bg-emerald-500" />
+                    VERIFIED
+                  </span>
+                </div>
+              </div>
+              <div className="shrink-0 text-right">
+                <span className="inline-block rounded-full bg-brand-50 px-2.5 py-1 text-[10px] font-bold tracking-wider text-brand-700">
+                  {credential.authority}
+                </span>
+                {credential.verifyUrl ? (
+                  <a
+                    href={credential.verifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 block text-xs font-semibold text-brand-700 transition hover:text-brand-800"
+                  >
+                    Verify <ExternalLink aria-hidden="true" className="inline size-3" />
+                  </a>
+                ) : null}
+              </div>
             </div>
           ))}
-        </div>
 
-        <p className="mt-8 text-center text-xs text-aurora-muted">
-          Register links open the official public register of each regulator. Details shown here
-          are subject to final client confirmation before launch.
-        </p>
-        <div className="mt-6 text-center">
-          <a
-            href={marketHref(market, "/credentials")}
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-leaf-soft hover:text-white"
-          >
-            View full credentials
-            <ExternalLink aria-hidden="true" className="size-3.5" />
-          </a>
+          <div className="grid gap-4 md:grid-cols-2">
+            {CONSULTANT_CREDENTIALS.map((consultant) => (
+              <div
+                key={consultant.registration}
+                className="flex flex-col gap-3 rounded-2xl border border-slate-100 bg-white p-6 shadow-card sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div>
+                  <h3 className="font-display text-lg font-bold text-ink">{consultant.name}</h3>
+                  <p className="text-sm text-slate-500">
+                    {consultant.role} · {consultant.registration}
+                  </p>
+                  <p className="mt-1 text-xs uppercase tracking-wider text-slate-400">
+                    Status subject to final confirmation
+                  </p>
+                </div>
+                <a
+                  href={consultant.verifyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200 px-4 py-2 text-xs font-bold text-brand-700 transition hover:bg-slate-50"
+                >
+                  Verify on {consultant.registerName}
+                  <ExternalLink aria-hidden="true" className="size-3.5" />
+                </a>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center text-xs text-slate-500">
+            Register links open the official public register of each regulator. Details shown here
+            are subject to final client confirmation before launch.
+          </p>
+          <div className="text-center">
+            <a
+              href={marketHref(market, "/credentials")}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700"
+            >
+              View full credentials
+              <ExternalLink aria-hidden="true" className="size-3.5" />
+            </a>
+          </div>
         </div>
-      </Container>
-    </SectionShell>
+      </div>
+    </section>
   );
 }

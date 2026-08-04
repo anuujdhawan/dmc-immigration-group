@@ -3,7 +3,6 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 
 import type { Market } from "@/config/markets";
-import { BrandLogo } from "@/components/layout/BrandLogo";
 import { marketHref } from "@/lib/routing/routes";
 
 const COUNTRIES = [
@@ -342,9 +341,13 @@ export function Hero({ market }: { market: Market }) {
           })}
 
           <div className="aurora-core-card botanical-core-card">
-            <div className="aurora-core-logo botanical-core-logo">
-              <BrandLogo variant="mark" className="brand-logo-aurora" />
-            </div>
+          <div className="aurora-core-logo botanical-core-logo">
+              <span
+                aria-label="DMC Immigration"
+                className="brand-logo brand-logo-aurora"
+                role="img"
+              />
+          </div>
             <span className="aurora-live-label botanical-live-label">
               <i /> Live destination network
             </span>

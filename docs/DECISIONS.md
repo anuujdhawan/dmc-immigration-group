@@ -167,3 +167,20 @@ Record architectural and content decisions, deviations from templates, renamed/c
 
 - The tablet/mobile accordion rows should use a single disclosure icon source. `MobileNavigation` had both a rendered `+` span and the existing CSS `summary::after` marker, which created two plus symbols per row and pushed one toward the center.
 - The JSX-owned plus span was removed so the mobile menu now relies only on the right-aligned CSS marker already defined for `.mobile-group summary::after`.
+
+## 2026-08-04 — Homepage template port
+
+- The approved homepage HTML remains the visual source of truth, but the React port must still honor project safety rules. Where the template used unverified testimonials, success percentages or approval-style claims, the homepage keeps the existing truthful placeholders and cautious wording instead of inventing support for those claims.
+- The remaining homepage was ported as template-like sections rather than a single monolith: recognition band, services, destinations, why DMC, credentials, visit visas, tools, process, stats band, stories, video stories, resources, FAQ, final CTA, and a footer refresh.
+- The homepage buttons now link into existing routes or anchors instead of introducing new modal/form infrastructure in this batch. That keeps the page visually aligned with the template while avoiding premature lead-form behavior before the later forms phase.
+
+## 2026-08-04 — Homepage contrast/logo correction
+
+- The credentials band must use the recovered template hooks verbatim (`credential-proof-stack`, `credential-proof-card`, `credential-proof-icon`, `credential-assurance`, `credential-assurance-mark`) so the existing CSS can provide the intended readability on the dark green panel without inventing a second styling system.
+- The resources grid should render the logo as a bare `brand-logo resource-brand-mark` span, not an image component, because the template CSS applies the plaque treatment and hover motion directly to that class name.
+- The hero core plaque should contain only one brand mark element. The previous image-plus-span combination stacked two logos visually; the approved template only uses the span inside the logo plaque.
+
+## 2026-08-04 — Countries grid completion
+
+- The countries section must include the Germany pathway card so the homepage matches the approved six-card template grid instead of rendering the abbreviated five-card version.
+- The Germany badge should read `EU Blue Card`, not a generic category label, because the template distinguishes that tile explicitly from the other destination cards.

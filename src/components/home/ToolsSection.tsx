@@ -1,9 +1,7 @@
 import { ArrowRight, Calculator, ListChecks, Search } from "lucide-react";
 
 import type { Market } from "@/config/markets";
-import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionShell } from "@/components/home/SectionShell";
 import { marketHref } from "@/lib/routing/routes";
 
 const TOOLS = [
@@ -32,33 +30,57 @@ const TOOLS = [
 
 export function ToolsSection({ market }: { market: Market }) {
   return (
-    <SectionShell id="tools">
-      <Container>
+    <section id="tools" className="bg-white py-20 lg:py-24">
+      <div className="mx-auto max-w-[1280px] px-6">
         <SectionHeading
+          align="left"
           eyebrow="Free assessment"
           title="See how your profile fits, before you commit"
           lede="No obligation, no filing fees — just a clearer sense of what to research or book next."
         />
-        <div className="grid gap-6 md:grid-cols-3">
-          {TOOLS.map((tool) => (
-            <a
-              key={tool.title}
-              href={marketHref(market, tool.href)}
-              className="group flex flex-col rounded-card border border-dmc-card-border bg-white p-7 shadow-card transition-shadow hover:shadow-brand-glow"
-            >
-              <div className="mb-5 flex size-12 items-center justify-center rounded-2xl bg-brand-50">
-                <tool.icon aria-hidden="true" className="size-6 text-brand-600" />
-              </div>
-              <h3 className="font-display text-lg font-bold text-charcoal">{tool.title}</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{tool.text}</p>
-              <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 group-hover:text-brand-600">
-                {tool.cta}
-                <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5" />
-              </span>
-            </a>
-          ))}
+        <div className="grid gap-5 sm:grid-cols-3">
+          {TOOLS.map((tool, index) => {
+            const palette =
+              index === 0
+                ? {
+                    card: "bg-red-50 border-red-100 border-t-red-500 hover:border-red-300",
+                    icon: "bg-red-600 text-white",
+                    text: "text-red-700",
+                  }
+                : index === 1
+                  ? {
+                      card: "bg-blue-50 border-blue-100 border-t-blue-500 hover:border-blue-300",
+                      icon: "bg-blue-600 text-white",
+                      text: "text-blue-700",
+                    }
+                  : {
+                      card: "bg-brand-50 border-brand-100 border-t-brand-500 hover:border-brand-300",
+                      icon: "bg-brand-600 text-white",
+                      text: "text-brand-700",
+                    };
+
+            return (
+              <a
+                key={tool.title}
+                href={marketHref(market, tool.href)}
+                className={`group rounded-2xl border border-slate-100 border-t-4 p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl ${palette.card}`}
+              >
+                <div
+                  className={`mb-4 grid size-11 place-items-center rounded-xl shadow-card transition-transform duration-300 group-hover:scale-110 ${palette.icon}`}
+                >
+                  <tool.icon aria-hidden="true" className="size-5" />
+                </div>
+                <h3 className="font-display font-bold text-ink">{tool.title}</h3>
+                <p className="mt-2 leading-relaxed text-sm text-slate-500">{tool.text}</p>
+                <span className={`mt-4 inline-flex items-center gap-1.5 text-xs font-bold ${palette.text}`}>
+                  {tool.cta}
+                  <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+              </a>
+            );
+          })}
         </div>
-      </Container>
-    </SectionShell>
+      </div>
+    </section>
   );
 }

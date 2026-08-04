@@ -1,9 +1,7 @@
 import { ArrowRight, BookOpen, Camera, Clapperboard, FileText, HelpCircle, Newspaper, PhoneCall, Star } from "lucide-react";
 
 import type { Market } from "@/config/markets";
-import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionShell } from "@/components/home/SectionShell";
 import { marketHref } from "@/lib/routing/routes";
 
 const RESOURCES = [
@@ -67,31 +65,72 @@ const RESOURCES = [
 
 export function ResourcesSection({ market }: { market: Market }) {
   return (
-    <SectionShell id="resources">
-      <Container>
+    <section id="resources" className="bg-white py-20 lg:py-24">
+      <div className="mx-auto max-w-[1280px] px-6">
         <SectionHeading
+          align="left"
           eyebrow="Resources"
           title="Everything you need, in one place"
           lede="Guides, checklists, real outcomes and the latest immigration news — free to browse before you book anything."
         />
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {RESOURCES.map((resource) => (
-            <a
-              key={resource.title}
-              href={marketHref(market, resource.href)}
-              className="group flex flex-col rounded-card border border-dmc-card-border bg-white p-6 shadow-sm transition-shadow hover:shadow-brand-glow"
-            >
-              <resource.icon aria-hidden="true" className="mb-4 size-6 text-brand-600" />
-              <h3 className="font-display text-base font-bold text-charcoal">{resource.title}</h3>
-              <p className="mt-1.5 flex-1 text-sm leading-relaxed text-muted">{resource.text}</p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 group-hover:text-brand-600">
-                {resource.cta}
-                <ArrowRight aria-hidden="true" className="size-4" />
-              </span>
-            </a>
-          ))}
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {RESOURCES.map((resource, index) => {
+            const palette =
+              index === 0
+                ? {
+                    card: "bg-red-50 border-red-100 border-t-red-500 hover:border-red-300",
+                    text: "text-red-700",
+                  }
+                : index === 1
+                  ? {
+                      card: "bg-blue-50 border-blue-100 border-t-blue-500 hover:border-blue-300",
+                      text: "text-blue-700",
+                    }
+                  : index === 2
+                    ? {
+                        card: "bg-brand-50 border-brand-100 border-t-brand-500 hover:border-brand-300",
+                        text: "text-brand-700",
+                      }
+                    : index === 3
+                      ? {
+                          card: "bg-violet-50 border-violet-100 border-t-violet-500 hover:border-violet-300",
+                          text: "text-violet-700",
+                        }
+                      : index === 4
+                        ? {
+                            card: "bg-teal-50 border-teal-100 border-t-teal-500 hover:border-teal-300",
+                            text: "text-teal-700",
+                          }
+                        : index === 5
+                          ? {
+                              card: "bg-amber-50 border-amber-100 border-t-amber-500 hover:border-amber-300",
+                              text: "text-amber-700",
+                            }
+                          : {
+                              card: "bg-rose-50 border-rose-100 border-t-rose-500 hover:border-rose-300",
+                              text: "text-rose-700",
+                            };
+
+            return (
+              <a
+                key={resource.title}
+                href={marketHref(market, resource.href)}
+                className={`group rounded-2xl border border-slate-100 border-t-4 p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl ${palette.card}`}
+              >
+                <span aria-label="DMC Immigration" className="brand-logo resource-brand-mark" role="img" />
+                <h3 className="font-display font-bold text-ink">{resource.title}</h3>
+                <p className="mt-2 leading-relaxed text-sm text-slate-500">{resource.text}</p>
+                {resource.cta ? (
+                  <span className={`mt-4 inline-flex items-center gap-1.5 text-xs font-bold ${palette.text}`}>
+                    {resource.cta}
+                    <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                ) : null}
+              </a>
+            );
+          })}
         </div>
-      </Container>
-    </SectionShell>
+      </div>
+    </section>
   );
 }

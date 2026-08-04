@@ -2,9 +2,7 @@ import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 import type { Market } from "@/config/markets";
 import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { SectionShell } from "@/components/home/SectionShell";
 import { marketHref } from "@/lib/routing/routes";
 
 const PILLARS = [
@@ -29,49 +27,48 @@ const PILLARS = [
 const STATS = [
   { value: "15+", label: "Years of consulting experience" },
   { value: "20+", label: "Countries represented" },
-  { value: "5", label: "Office locations" },
+  { value: "50+", label: "Pathways supported" },
   { value: "3", label: "Regulated practices" },
 ];
 
 export function WhyDmcSection({ market }: { market: Market }) {
   return (
-    <SectionShell id="why-dmc">
-      <Container>
-        <SectionHeading
-          eyebrow="Why DMC"
-          title="One consultancy, three regulated practices"
-          lede="Most consultancies specialise in one country. DMC brings RCIC-licensed Canadian counsel, MARA-registered Australian agents and a multi-country advisory network together — so your case is handled by people who actually practice in your destination, not a generalist working from a template."
-        />
-        <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
-          <ul className="space-y-5">
+    <section id="why-dmc" className="bg-white py-20 lg:py-24">
+      <div className="mx-auto grid max-w-[1280px] gap-14 px-6 lg:grid-cols-2 lg:items-center">
+        <div className="fade-up">
+          <SectionHeading
+            align="left"
+            eyebrow="Why DMC"
+            title="One consultancy, three regulated practices"
+            lede="Most consultancies specialise in one country. DMC brings regulated Canadian counsel, Australian migration expertise and a multi-country advisory network together — so your case is handled by people who actually practice in your destination, not a generalist working from a template."
+          />
+          <div className="space-y-4">
             {PILLARS.map((pillar) => (
-              <li key={pillar.title} className="flex gap-4">
-                <CheckCircle2 aria-hidden="true" className="mt-0.5 size-6 shrink-0 text-brand-600" />
-                <div>
-                  <h3 className="font-display text-lg font-bold text-charcoal">{pillar.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted">{pillar.text}</p>
+              <div key={pillar.title} className="flex items-start gap-3">
+                <div className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-brand-100 text-brand-700">
+                  <CheckCircle2 aria-hidden="true" className="size-3.5" />
                 </div>
-              </li>
+                <p className="text-sm leading-relaxed text-slate-600">
+                  <span className="font-semibold text-ink">{pillar.title}</span> — {pillar.text}
+                </p>
+              </div>
             ))}
-          </ul>
-          <div className="rounded-card bg-brand-50/60 p-8 md:p-10">
-            <dl className="grid grid-cols-2 gap-8">
-              {STATS.map((stat) => (
-                <div key={stat.label}>
-                  <dd className="font-display text-4xl font-bold text-brand-700">{stat.value}</dd>
-                  <dt className="mt-1 text-sm text-muted">{stat.label}</dt>
-                </div>
-              ))}
-            </dl>
-            <div className="mt-10">
-              <Button href={marketHref(market, "/contact")} size="lg">
-                Speak With a Consultant
-                <ArrowRight aria-hidden="true" className="size-4" />
-              </Button>
-            </div>
           </div>
+          <Button href={marketHref(market, "/contact")} size="lg" className="mt-8 rounded-xl">
+            Speak With a Consultant
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </Button>
         </div>
-      </Container>
-    </SectionShell>
+
+        <div className="fade-up grid grid-cols-2 gap-4">
+          {STATS.map((stat) => (
+            <div key={stat.label} className="rounded-2xl border border-slate-100 bg-slate-50 p-6">
+              <p className="font-display text-3xl font-extrabold text-brand-700">{stat.value}</p>
+              <p className="mt-1 text-xs text-slate-500">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
