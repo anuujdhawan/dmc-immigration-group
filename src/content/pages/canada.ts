@@ -4,14 +4,97 @@ export const CANADA_PAGES: PageContent[] = [
   {
     id: "visas/canada/express-entry",
     title: "Canada Express Entry",
+    heroTitle: "Your Canada Express Entry journey starts with clarity.",
+    heroSubtitle:
+      "Structured guidance for UAE professionals and families exploring Canadian permanent residence through Express Entry, from initial profile assessment to a prepared application after invitation.",
     eyebrow: "Canada skilled immigration",
     seoTitle: "Canada Express Entry Visa Guide | DMC Immigration Group",
     seoDescription:
       "Express Entry for the Federal Skilled Worker Program, Canadian Experience Class and Federal Skilled Trades Program — eligibility, CRS factors, documents and process, explained with official sources.",
     lede: "Structured guidance for UAE, GCC and India professionals exploring Canadian permanent residence through Express Entry — from initial profile assessment to a prepared application after invitation.",
+    sectionNav: [
+      { label: "Overview", anchor: "services" },
+      { label: "Programs", anchor: "programs" },
+      { label: "Eligibility", anchor: "eligibility" },
+      { label: "Points & CRS", anchor: "tools" },
+      { label: "Documents", anchor: "documents" },
+      { label: "Process", anchor: "process" },
+      { label: "FAQs", anchor: "faq" },
+      { label: "News", anchor: "resources" },
+      { label: "Success Stories", anchor: "stories" },
+    ],
+    facts: [
+      { label: "System", value: "Online profile management" },
+      { label: "Programs", value: "FSWP · FSTP · CEC · PNP" },
+      { label: "Selection", value: "CRS-ranked invitation rounds" },
+      { label: "After an ITA", value: "60 days to submit" },
+    ],
     sections: [
       {
+        kind: "split",
+        anchor: "services",
+        eyebrow: "Benefits of Express Entry Canada",
+        heading: "A structured route towards Canadian permanent residence.",
+        lede:
+          "Express Entry is Canada’s electronic system for managing skilled-immigration applications under three federal economic programs. Eligible candidates create a profile, enter the pool and are ranked through the Comprehensive Ranking System.",
+        media: {
+          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
+          alt: "Benefits of permanent residence in Canada",
+          caption: "Canada permanent residence",
+        },
+        paragraphs: [
+          "For professionals and families, the pathway can provide an organised route to permanent residence, access to opportunities across Canada and the ability to include eligible accompanying family members.",
+        ],
+        bullets: [
+          "Electronic profile and application management",
+          "Routes for skilled professionals and tradespeople",
+          "Potential provincial nomination opportunities",
+          "Eligible family members can be included",
+          "Access to career, education and settlement opportunities",
+          "A pathway that may lead to citizenship eligibility later",
+        ],
+      },
+      {
+        kind: "lead",
+        eyebrow: "Get in touch with DMC",
+        heading: "Canada Express Entry consultants in Dubai.",
+        paragraphs: [
+          "Express Entry is the online system IRCC uses to invite eligible candidates and manage permanent-residence applications under selected economic immigration programs.",
+          "Applicants may need support to assess program fit, create an accurate profile, understand CRS ranking and coordinate their evidence. DMC supports prospective applicants in Dubai, Abu Dhabi and Sharjah through these preparation stages without guaranteeing an invitation or approval.",
+        ],
+        fields: [
+          { label: "Full name", placeholder: "Full name" },
+          { label: "Phone number", placeholder: "Phone number", type: "tel" },
+          { label: "Email address", placeholder: "Email address", type: "email" },
+          {
+            label: "Country of interest",
+            placeholder: "Migrate, visit or work country",
+            type: "select",
+            options: ["Canada", "Australia", "New Zealand", "Europe", "United Kingdom", "United States", "Germany"],
+          },
+          { label: "Age range", placeholder: "Age range", type: "select", options: ["18–45 years", "45+ years"] },
+          {
+            label: "Highest education",
+            placeholder: "Highest education",
+            type: "select",
+            options: ["3-year diploma", "Bachelor’s degree", "Master’s degree", "Doctorate"],
+          },
+          {
+            label: "Immigration type",
+            placeholder: "Immigration type",
+            type: "select",
+            options: ["General migration", "Student visa", "Business migration", "Visit visa", "High-value migration"],
+          },
+          { label: "Preferred DMC location", placeholder: "Preferred DMC location", type: "select", options: ["Dubai", "Abu Dhabi", "Sharjah"] },
+        ],
+        consent: "I accept the Terms & Conditions and consent to being contacted about my enquiry.",
+        primaryCta: { label: "Book Your Free Assessment", href: "/contact" },
+        secondaryCta: { label: "Call +971 4 344 7757", href: "tel:+97143447757" },
+      },
+      {
         kind: "programs",
+        anchor: "programs",
+        eyebrow: "Programs under Express Entry",
         heading: "Federal programs and an aligned provincial route",
         lede: "Express Entry manages applications under three federal economic immigration programs, while aligned Provincial Nominee Programs can create an additional route for eligible candidates.",
         items: [
@@ -42,16 +125,32 @@ export const CANADA_PAGES: PageContent[] = [
         ],
       },
       {
-        kind: "overview",
-        heading: "How the Express Entry system works",
+        kind: "split",
+        anchor: "overview",
+        reverse: true,
+        eyebrow: "Overview and features",
+        heading: "How the Express Entry system works.",
+        media: {
+          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          alt: "Canadian city and landscape",
+          caption: "Explore opportunities across Canada",
+        },
         paragraphs: [
-          "Immigration, Refugees and Citizenship Canada (IRCC) uses Express Entry to manage candidates for the Canadian Experience Class, Federal Skilled Worker Program and Federal Skilled Trades Program, along with Express Entry-aligned provincial nominations.",
-          "Candidates first complete prerequisites such as an approved language test and, where required, an Educational Credential Assessment (ECA). An eligible profile enters the pool, receives a Comprehensive Ranking System (CRS) score and can remain active for up to 12 months.",
-          "Invitation rounds can be general, program-specific or category-based. An Invitation to Apply (ITA) allows the candidate to submit a complete permanent-residence application; it is not an approval by itself.",
+          "Immigration, Refugees and Citizenship Canada uses Express Entry to manage eligible candidates for the Canadian Experience Class, Federal Skilled Worker Program and Federal Skilled Trades Program, along with Express Entry-aligned provincial nominations.",
+          "Candidates first complete prerequisites such as an approved language test and, where required, an Educational Credential Assessment. An eligible profile enters the pool, receives a CRS score and can remain active for up to 12 months.",
+          "Invitation rounds can be general, program-specific or category-based. An Invitation to Apply allows the candidate to submit a complete permanent-residence application; it is not an approval by itself.",
+        ],
+        cards: [
+          { title: "Career and economic opportunity", body: "Permanent residents can work for eligible employers across Canada, subject to the conditions that apply to them." },
+          { title: "Education and family settlement", body: "Families can explore Canadian education and settlement services after becoming permanent residents." },
+          { title: "Public services and community life", body: "Eligibility for public services depends on the province, residence status and applicable waiting periods." },
+          { title: "Long-term pathway", body: "Permanent residence can create a future path towards citizenship when statutory residence and other requirements are met." },
         ],
       },
       {
         kind: "eligibility",
+        anchor: "eligibility",
+        eyebrow: "Eligibility criteria",
         heading: "What shapes your Express Entry eligibility?",
         lede: "Each federal program has different minimum requirements. A proper assessment considers how the applicant's credentials work together rather than relying on a single number.",
         items: [
@@ -65,6 +164,8 @@ export const CANADA_PAGES: PageContent[] = [
       },
       {
         kind: "panel",
+        anchor: "tools",
+        eyebrow: "Federal Skilled Worker grid",
         heading: "Federal Skilled Worker 67-point selection grid",
         rows: [
           { label: "Official-language skills", value: "Up to 28 points" },
@@ -79,6 +180,8 @@ export const CANADA_PAGES: PageContent[] = [
       },
       {
         kind: "panel",
+        anchor: "points-crs",
+        eyebrow: "CRS points calculator",
         heading: "CRS — how profiles are ranked",
         rows: [
           { label: "Core human-capital factors", value: "Up to 500 (or 460 without a spouse or partner)" },
@@ -90,9 +193,37 @@ export const CANADA_PAGES: PageContent[] = [
         note: "A provincial nomination through an Express Entry-aligned stream adds 600 CRS points and generally leads to an invitation in a subsequent round. Invitation criteria and cut-off scores vary between rounds; there is no permanent cut-off.",
       },
       {
-        kind: "documents",
-        heading: "Prepare the evidence behind your Express Entry profile",
-        items: [
+        kind: "process",
+        anchor: "process",
+        eyebrow: "Application roadmap",
+        heading: "Immigration roadmap.",
+        steps: [
+          { title: "Register online", body: "Share your initial details and begin the assessment of the skilled-immigration pathway that may suit your Canadian goals." },
+          { title: "Immediate response", body: "After receiving the required enquiry details, the DMC team contacts you to understand your requirements." },
+          { title: "Know the process", body: "A consultant explains the Express Entry journey from Dubai, the relevant stages and the responsibilities involved." },
+          { title: "Join us", body: "When you decide to proceed, the sign-up process, service scope, responsibilities and next milestones are explained." },
+          { title: "Documentation", body: "A dedicated case team supports document gathering, ECA preparation, language-test planning and other formalities." },
+          { title: "Submission", body: "After the relevant evaluation, invitation or nomination, the applicable immigration application is prepared for submission." },
+          { title: "Post-landing services", body: "After approval, practical settlement guidance can cover accommodation planning and required initial registrations." },
+          { title: "Get ready to fly", body: "Complete final travel and landing preparations after receiving the necessary approval and documents." },
+        ],
+      },
+      {
+        kind: "split",
+        anchor: "documents",
+        eyebrow: "Documents required to apply",
+        heading: "Prepare the evidence behind your Express Entry profile.",
+        lede:
+          "A complete file depends on consistent, verifiable records. Begin with the core documents that support your profile and, after an invitation, your permanent-residence application.",
+        media: {
+          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
+          alt: "Benefits of permanent residence in Canada",
+          caption: "Canada Express Entry preparation",
+        },
+        paragraphs: [
+          "The checklist below highlights the key evidence categories that support a decision-ready file.",
+        ],
+        bullets: [
           "Passport and travel documents",
           "Birth and identity documents",
           "Approved language-test results",
@@ -106,69 +237,199 @@ export const CANADA_PAGES: PageContent[] = [
           "Job-offer evidence, if claimed",
           "Payment and application records",
         ],
-        note: "Marriage, divorce, adoption, dependent-child, name-change, trade-certification or other supporting records may also be required. Dates, duties and declarations must stay consistent across the profile, forms and evidence.",
       },
       {
-        kind: "process",
-        heading: "From profile creation to a complete application",
-        steps: [
-          { title: "Create an eligible Express Entry profile", body: "Complete the required prerequisites, confirm program fit and enter accurate profile information. Federal Skilled Worker applicants must satisfy the applicable 67-point selection grid." },
-          { title: "Show provincial interest where suitable", body: "Select provinces or territories of interest and consider Express Entry-aligned nomination opportunities that match your background." },
-          { title: "Attach supporting information", body: "Prepare work-experience evidence, education records, proof of funds and any job-offer or nomination evidence being claimed." },
-          { title: "Include eligible family members", body: "Declare a spouse or common-law partner and dependent children accurately, including information required for non-accompanying family members." },
-          { title: "Receive and monitor the CRS score", body: "The eligible profile is ranked in the pool and may be considered in general, program-specific or category-based invitation rounds." },
-          { title: "Proceed after an Invitation to Apply", body: "If invited, review every declaration and submit the complete permanent-residence application and required evidence within the stated deadline." },
-        ],
-      },
-      {
-        kind: "help",
-        heading: "How DMC guides you",
-        paragraphs: [
-          "Express Entry profile creation, CRS planning and documentation can be demanding. DMC helps applicants organise the journey and reduce avoidable inconsistencies without promising an immigration outcome.",
-        ],
-        bullets: [
-          "Program-fit and eligibility review against current federal and provincial criteria",
-          "CRS improvement planning through legitimate language, education, experience and nomination factors",
-          "Occupation and NOC/TEER evidence mapping against credible employment records",
-          "Document and form coordination to keep declarations consistent throughout the file",
-          "Application milestone support — profile validity, invitation deadlines, document expiry and government requests",
-          "Pre-landing and settlement preparation for the practical steps after approval",
+        kind: "cards",
+        anchor: "evidence",
+        eyebrow: "Detailed document evidence",
+        heading: "Supporting evidence for a decision-ready application.",
+        items: [
+          {
+            title: "Passport and travel documents",
+            label: "Document 01",
+            body: "Copies of the original passport, identity pages and relevant travel or invitation records.",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2023/12/Shape-1-2023-12-02T202016.726.png",
+              alt: "Passport and travel documents icon",
+            },
+          },
+          {
+            title: "Birth certificate",
+            label: "Document 02",
+            body: "Birth records that support identity, date and place of birth and declared family relationships.",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2023/12/Shape-1-2023-12-02T202025.502.png",
+              alt: "Birth certificate icon",
+            },
+          },
+          {
+            title: "Identity proof",
+            label: "Document 03",
+            body: "Applicable national identity documents and other records requested for the applicant or family members.",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2023/12/Shape-1-2023-12-02T202034.658.png",
+              alt: "Identity proof icon",
+            },
+          },
+          {
+            title: "Provincial nomination",
+            label: "Document 04",
+            body: "The nomination certificate and related records when points or eligibility depend on a provincial pathway.",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2023/12/Shape-1-2023-12-02T202042.021.png",
+              alt: "Provincial nomination icon",
+            },
+          },
+          {
+            title: "Employment evidence",
+            label: "Document 05",
+            body: "Reference or confirmation letters and supporting records for the skilled work experience being claimed.",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2023/12/Shape-1-2023-12-02T202050.982.png",
+              alt: "Employment evidence icon",
+            },
+          },
+          {
+            title: "Education and ECA",
+            label: "Document 06",
+            body: "Academic credentials and an Educational Credential Assessment where the program or points claim requires it.",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2023/12/Shape-1-2023-12-02T202058.785.png",
+              alt: "Education and ECA icon",
+            },
+          },
+          {
+            title: "Language-test scores",
+            label: "Document 07",
+            body: "Valid results from an approved English or French test covering all four language abilities.",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2023/12/Shape-1-2023-12-04T163248.787.png",
+              alt: "Language test scores icon",
+            },
+          },
+          {
+            title: "Police certificates",
+            label: "Document 08",
+            body: "Police clearance certificates for the countries and periods required by the personalised checklist.",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2023/12/Shape-1-2023-12-04T163301.136.png",
+              alt: "Police certificates icon",
+            },
+          },
         ],
       },
       {
         kind: "faq",
+        anchor: "faq",
+        eyebrow: "Frequently asked questions",
         heading: "Express Entry, explained clearly",
         items: [
           {
+            question: "Which country is best to migrate to from Dubai?",
+            answer: "There is no single best destination for every applicant. Canada can be attractive to UAE residents seeking a structured skilled-immigration pathway, but the right country depends on occupation, age, language, education, family goals, finances and long-term plans.",
+          },
+          {
             question: "Can UAE residents apply for Canada PR from Dubai?",
-            answer: "Yes. Eligible residents can prepare the required language, education and employment evidence from the UAE and create an online Express Entry profile. Residence in the UAE does not itself guarantee eligibility or selection.",
+            answer: "Yes. Eligible UAE residents can prepare the required language, education and employment evidence from Dubai and create an online Express Entry profile. Residence in the UAE does not itself guarantee eligibility or selection.",
+          },
+          {
+            question: "What is the fastest way to get Canadian permanent residence?",
+            answer: "There is no universally fastest route. Express Entry may be suitable for qualifying skilled workers, while entrepreneurs or applicants with provincial opportunities may need different programs. Timelines include preparation, time awaiting an invitation and processing after submission.",
+          },
+          {
+            question: "How long does it take to get Canada PR from Dubai?",
+            answer: "The overall journey varies. Time is needed to prepare prerequisites, enter the pool and receive an invitation, if selected. IRCC’s processing estimate applies only after a complete permanent-residence application is submitted and can change by case and current workload.",
           },
           {
             question: "What is the minimum score for Express Entry?",
             answer: "The 67-point threshold applies to Federal Skilled Worker selection-factor eligibility. It is not a universal CRS invitation score. Eligible pool profiles receive a separate CRS score, and invitation criteria and cut-offs vary by round.",
           },
           {
-            question: "How long does it take to get Canada PR from the UAE?",
-            answer: "The overall journey varies. Time is needed to prepare prerequisites, enter the pool and receive an invitation, if selected. IRCC's six-month processing service standard applies only after a complete application is submitted and can change by case and workload.",
-          },
-          {
             question: "What IELTS score is good for Express Entry?",
             answer: "IRCC converts approved language-test results into Canadian Language Benchmark levels for each ability. The required level depends on the program, and stronger results can materially improve CRS ranking. An overall IELTS band alone does not determine eligibility.",
           },
           {
-            question: "How much does Canada PR cost?",
-            answer: "Applicants should budget for current government fees plus language testing, an ECA where required, biometrics, medical examinations, police certificates, translations and case-specific costs. Settlement funds are separate from fees. Check all amounts against the current official requirements.",
+            question: "How much does Canada PR cost from Dubai?",
+            answer: "Applicants should budget for current government fees plus language testing, an ECA where required, biometrics, medical examinations, police certificates, translations and case-specific costs. Settlement funds are separate from fees. All amounts should be checked against the current official requirements.",
           },
           {
-            question: "Do you guarantee an invitation or approval?",
-            answer: "No. No consultant can guarantee an invitation, nomination or approval. Immigration decisions are made by the relevant government authority, and rules, fees, invitation criteria and processing times can change.",
+            question: "How do I qualify for Express Entry to Canada?",
+            answer: "You must meet the minimum requirements of at least one Express Entry program. Assessment can involve eligible skilled work, approved language results, education and an ECA, funds where required and admissibility. Federal Skilled Worker candidates also use the 67-point selection grid.",
+          },
+          {
+            question: "What is the Express Entry pool?",
+            answer: "The pool contains profiles found eligible for at least one Express Entry program. Candidates are ranked through the Comprehensive Ranking System and may be considered in applicable invitation rounds while their profiles remain valid.",
+          },
+          {
+            question: "Which consultancy is best for Canada immigration support?",
+            answer: "The right consultancy should use regulated professionals where representation requires it, communicate fees and scope clearly, protect personal information and avoid guarantees. DMC provides consultation and application support through its UAE offices, including profile assessment, document coordination and milestone guidance, but no consultant can guarantee an invitation, nomination or approval.",
           },
         ],
+      },
+      {
+        kind: "cards",
+        anchor: "resources",
+        eyebrow: "News & blogs",
+        heading: "Immigration news and updates",
+        lede: "Practical guidance and timely updates to help applicants make informed decisions at every stage of an international immigration journey.",
+        items: [
+          {
+            title: "Complete Guide—When Applying for a Work Visa",
+            label: "Work visas · Guide",
+            body: "A practical overview of the eligibility checks, documents and preparation involved in a work-visa application.",
+            href: "https://dm-consultant.ae/blog/guide-to-applying-work-permit-visa/",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2026/03/Complete_Guide_when_applying-300x242.jpg",
+              alt: "Guide to applying for a work visa",
+            },
+          },
+          {
+            title: "UK Visit Visa Processing Time From the UAE 2026",
+            label: "United Kingdom · Visit visas",
+            body: "Understand the application stages, timing considerations and preparation for a UK visit visa from the UAE.",
+            href: "https://dm-consultant.ae/blog/uk-visit-visa-processing-time-from-uae/",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2026/03/UK_Visit_Visa_Processing_Time-300x242.jpg",
+              alt: "UK visit visa processing time from the UAE",
+            },
+          },
+          {
+            title: "UK Visa Interview Questions & Supporting Documents",
+            label: "United Kingdom · Application support",
+            body: "Review common interview themes and the supporting evidence applicants may need to prepare.",
+            href: "https://dm-consultant.ae/blog/uk-visa-interview-questions/",
+            image: {
+              src: "https://dm-consultant.ae/wp-content/uploads/2026/03/UK_Visa_Interview_Questions-300x242.jpg",
+              alt: "UK visa interview questions and supporting documents",
+            },
+          },
+        ],
+      },
+      {
+        kind: "cards",
+        anchor: "stories",
+        eyebrow: "Success gallery",
+        heading: "Our success stories",
+        lede: "A selection of client outcomes that reflects the breadth of applications and destinations supported by DMC.",
+        items: [
+          { title: "Client success 01", label: "Express Entry", body: "Legacy success-gallery image from the old site.", href: "https://dm-consultant.ae/success-stories/", image: { src: "https://dm-consultant.ae/wp-content/uploads/2025/10/DM_Success_Stories_1.jpg", alt: "DMC client success story 1" } },
+          { title: "Client success 02", label: "Express Entry", body: "Legacy success-gallery image from the old site.", href: "https://dm-consultant.ae/success-stories/", image: { src: "https://dm-consultant.ae/wp-content/uploads/2025/10/DM_Success_Stories_2.jpg", alt: "DMC client success story 2" } },
+          { title: "Client success 03", label: "Express Entry", body: "Legacy success-gallery image from the old site.", href: "https://dm-consultant.ae/success-stories/", image: { src: "https://dm-consultant.ae/wp-content/uploads/2025/10/DM_Success_Stories_3.jpg", alt: "DMC client success story 3" } },
+          { title: "Client success 04", label: "Express Entry", body: "Legacy success-gallery image from the old site.", href: "https://dm-consultant.ae/success-stories/", image: { src: "https://dm-consultant.ae/wp-content/uploads/2025/10/DM_Success_Stories_4.jpg", alt: "DMC client success story 4" } },
+          { title: "Client success 05", label: "Express Entry", body: "Legacy success-gallery image from the old site.", href: "https://dm-consultant.ae/success-stories/", image: { src: "https://dm-consultant.ae/wp-content/uploads/2025/10/DM_Success_Stories_5.jpg", alt: "DMC client success story 5" } },
+          { title: "Client success 06", label: "Express Entry", body: "Legacy success-gallery image from the old site.", href: "https://dm-consultant.ae/success-stories/", image: { src: "https://dm-consultant.ae/wp-content/uploads/2025/10/DM_Success_Stories_6.jpg", alt: "DMC client success story 6" } },
+          { title: "Client success 07", label: "Express Entry", body: "Legacy success-gallery image from the old site.", href: "https://dm-consultant.ae/success-stories/", image: { src: "https://dm-consultant.ae/wp-content/uploads/2025/10/DM_Success_Stories_7.jpg", alt: "DMC client success story 7" } },
+          { title: "Client success 08", label: "Express Entry", body: "Legacy success-gallery image from the old site.", href: "https://dm-consultant.ae/success-stories/", image: { src: "https://dm-consultant.ae/wp-content/uploads/2025/10/DM_Success_Stories_8.jpg", alt: "DMC client success story 8" } },
+        ],
+      },
+      {
+        kind: "disclaimer",
+        body: "DMC is not a recruitment or placement agency and does not guarantee any job offer, employment, Invitation to Apply, nomination, visa or permanent-residence approval. Immigration decisions are made by the relevant government authority, and rules, fees, invitation criteria and processing times can change.",
       },
     ],
     relatedPages: ["visas/canada/provincial-nominee-programs", "visas/canada/study-permits", "visit-visas/canada"],
     relatedTools: ["tools/canada/crs-calculator"],
-    lastVerified: "2026-08-03",
+    lastVerified: "2026-08-04",
     officialSources: [
       { label: "IRCC — Immigrate through Express Entry", url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry.html" },
       { label: "IRCC — Express Entry: Rounds of invitations", url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/invitations-to-apply.html" },

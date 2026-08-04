@@ -1,4 +1,5 @@
 import type { Market } from "@/config/markets";
+import { MARKET_LABELS } from "@/config/markets";
 import { RecognitionBandSection } from "@/components/home/RecognitionBandSection";
 import { ContactCtaSection } from "@/components/home/ContactCtaSection";
 import { CountriesSection } from "@/components/home/CountriesSection";
@@ -18,7 +19,11 @@ import { WhyDmcSection } from "@/components/home/WhyDmcSection";
 export function HomeSections({ market }: { market: Market }) {
   return (
     <>
-      <Hero market={market} />
+      <Hero
+        market={market}
+        eyebrow={`${MARKET_LABELS[market]} market · Global opportunity network`}
+        subtitle={`Premium, structured immigration support for professionals, families, students, employers and investors in the ${MARKET_LABELS[market]} market and across Canada, Australia, the United Kingdom and a complete international destination network.`}
+      />
       <RecognitionBandSection />
       <ServicesSection market={market} />
       <CountriesSection />

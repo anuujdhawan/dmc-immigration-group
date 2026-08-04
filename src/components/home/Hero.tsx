@@ -65,9 +65,65 @@ const LEAVES = [
 const LEAF_SVG =
   "M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22L6.66 19.7C7.14 19.87 7.64 20 8 20C19 20 22 3 22 3C21 5 14 5.25 9 6.25C4 7.25 2 11.5 2 13.5C2 15.5 3.75 17.25 3.75 17.25C7 8 17 8 17 8Z";
 
-export function Hero({ market }: { market: Market }) {
+interface HeroAction {
+  label: string;
+  href: string;
+}
+
+interface HeroProofStat {
+  value: string;
+  label: string;
+}
+
+export interface HeroProps {
+  market: Market;
+  sectionId?: string;
+  eyebrow?: string;
+  titlePrefix?: string;
+  titleAccent?: string;
+  subtitle?: string;
+  primaryAction?: HeroAction;
+  secondaryAction?: HeroAction;
+  proofStats?: HeroProofStat[];
+  disclaimer?: string;
+  scrollTarget?: string;
+  scrollLabel?: string;
+}
+
+const DEFAULT_PRIMARY_ACTION = (market: Market): HeroAction => ({
+  label: "Book Consultation",
+  href: marketHref(market, "/contact"),
+});
+
+const DEFAULT_SECONDARY_ACTION = (market: Market): HeroAction => ({
+  label: "Free Eligibility Assessment",
+  href: marketHref(market, "/tools/eligibility-checker"),
+});
+
+const DEFAULT_PROOF_STATS: HeroProofStat[] = [
+  { value: "15+", label: "Years" },
+  { value: "12,000+", label: "Clients guided" },
+  { value: "20", label: "Countries represented" },
+];
+
+export function Hero({
+  market,
+  sectionId = "home",
+  eyebrow = "Global opportunity network",
+  titlePrefix = "Your journey towards a",
+  titleAccent = "better future",
+  subtitle = "Premium, structured immigration support for professionals, families, students, employers and investors across Canada, Australia, the United Kingdom and a complete international destination network.",
+  primaryAction,
+  secondaryAction,
+  proofStats = DEFAULT_PROOF_STATS,
+  disclaimer = "Government authorities make all final visa and immigration decisions. Previous outcomes do not guarantee future approval.",
+  scrollTarget = "#services",
+  scrollLabel = "Explore the journey",
+}: HeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const primary = primaryAction ?? DEFAULT_PRIMARY_ACTION(market);
+  const secondary = secondaryAction ?? DEFAULT_SECONDARY_ACTION(market);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -195,7 +251,7 @@ export function Hero({ market }: { market: Market }) {
   return (
     <section
       ref={heroRef}
-      id="home"
+      id={sectionId}
       className="hero aurora-hero botanical-hero editorial-hero"
       data-observe-section=""
     >
@@ -220,47 +276,29 @@ export function Hero({ market }: { market: Market }) {
           <div className="botanical-license-pill">
             <span /> RCIC · MARA · ICCRC regulated guidance
           </div>
-          <p className="botanical-overline">Global opportunity network</p>
+          <p className="botanical-overline">{eyebrow}</p>
           <h1 className="botanical-hero-title">
-            Your journey towards a <span>better future</span> begins here.
+            {titlePrefix}
+            {titleAccent ? <span>{titleAccent}</span> : null} begins here.
           </h1>
-          <p className="botanical-hero-subtitle">
-            Premium, structured immigration support for professionals, families, students,
-            employers and investors across Canada, Australia, the United Kingdom and a complete
-            international destination network.
-          </p>
+          <p className="botanical-hero-subtitle">{subtitle}</p>
           <div className="botanical-hero-actions">
-            <a
-              href={marketHref(market, "/contact")}
-              className="botanical-primary-btn magnetic"
-            >
-              Book Consultation <i className="fa-solid fa-arrow-right" />
+            <a href={primary.href} className="botanical-primary-btn magnetic">
+              {primary.label} <i className="fa-solid fa-arrow-right" />
             </a>
-            <a
-              href={marketHref(market, "/tools/eligibility-checker")}
-              className="botanical-secondary-btn magnetic"
-            >
-              <i className="fa-solid fa-shield-halved" /> Free Eligibility Assessment
+            <a href={secondary.href} className="botanical-secondary-btn magnetic">
+              <i className="fa-solid fa-shield-halved" /> {secondary.label}
             </a>
           </div>
           <div className="botanical-proof-row">
-            <span>
-              <strong>15+</strong>
-              <small>Years</small>
-            </span>
-            <span>
-              <strong>12,000+</strong>
-              <small>Clients guided</small>
-            </span>
-            <span>
-              <strong>20</strong>
-              <small>Countries represented</small>
-            </span>
+            {proofStats.map((stat) => (
+              <span key={`${stat.value}-${stat.label}`}>
+                <strong>{stat.value}</strong>
+                <small>{stat.label}</small>
+              </span>
+            ))}
           </div>
-          <p className="botanical-disclaimer">
-            Government authorities make all final visa and immigration decisions. Previous outcomes
-            do not guarantee future approval.
-          </p>
+          <p className="botanical-disclaimer">{disclaimer}</p>
         </div>
 
         <div
@@ -400,8 +438,8 @@ export function Hero({ market }: { market: Market }) {
         </div>
       </div>
 
-      <a className="botanical-scroll-cue" href="#services">
-        <span>Explore the journey</span>
+      <a className="botanical-scroll-cue" href={scrollTarget}>
+        <span>{scrollLabel}</span>
         <i />
       </a>
     </section>

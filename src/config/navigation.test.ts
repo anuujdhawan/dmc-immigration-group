@@ -57,7 +57,13 @@ describe("navigation registry", () => {
     expect(paths).toContain("/visas/canada/express-entry");
     expect(paths).toContain("/visas/australia/national-innovation-visa-858");
     expect(paths).toContain("/legal/privacy-policy");
-    expect(paths).not.toContain("#tools");
+    expect(paths).toContain("/blog");
+    expect(paths).toContain("/success-stories");
+    expect(paths).toContain("/gallery");
+    expect(paths).toContain("/press-media");
+    expect(paths).toContain("/tools/eligibility-checker");
+    expect(paths).toContain("/tools/canada");
+    expect(paths).toContain("/tools/australia");
     for (const path of paths) {
       expect(path.startsWith("/")).toBe(true);
       expect(path.startsWith("/dubai")).toBe(false);

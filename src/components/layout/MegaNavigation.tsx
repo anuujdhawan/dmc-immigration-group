@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
 import { NAV_PRIMARY, marketHrefForNav } from "@/config/navigation";
@@ -20,6 +21,26 @@ const panelWidths: Record<string, string> = {
 
 export function MegaNavigation({ market }: MegaNavigationProps) {
   const [openLabel, setOpenLabel] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  const isActiveItem = (label: string) => {
+    if (label === "Home") {
+      return pathname === `/${market}` || pathname === `/${market}/`;
+    }
+    if (label === "Visas") {
+      return pathname.includes(`/${market}/visas`);
+    }
+    if (label === "Services") {
+      return pathname.includes(`/${market}/services`) || pathname.includes(`/${market}/study-abroad`) || pathname.includes(`/${market}/business-investment`);
+    }
+    if (label === "Resources") {
+      return pathname.includes(`/${market}/blog`) || pathname.includes(`/${market}/gallery`) || pathname.includes(`/${market}/success-stories`) || pathname.includes(`/${market}/press-media`);
+    }
+    if (label === "Tools") {
+      return pathname.includes(`/${market}/tools`);
+    }
+    return false;
+  };
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -55,9 +76,9 @@ export function MegaNavigation({ market }: MegaNavigationProps) {
                     aria-haspopup="menu"
                     onFocus={() => setOpenLabel(item.label)}
                     onClick={() => setOpenLabel((current) => (current === item.label ? null : item.label))}
-                    className={cn(
-                      "nav-link nav-trigger inline-flex items-center gap-1 rounded-[10px] px-[0.72rem] py-[0.72rem] text-[0.68rem] font-[780] whitespace-nowrap text-[rgba(20,32,16,.62)] transition-colors",
-                      isOpen && "bg-[rgba(69,179,24,.055)] text-[#173D0D]",
+                  className={cn(
+                    "nav-link nav-trigger inline-flex items-center gap-1 rounded-[10px] px-[0.72rem] py-[0.72rem] text-[0.68rem] font-[780] whitespace-nowrap text-[rgba(20,32,16,.62)] transition-colors",
+                      (isOpen || isActiveItem(item.label)) && "bg-[rgba(69,179,24,.055)] text-[#173D0D]",
                     )}
                   >
                     {item.label}
@@ -124,7 +145,7 @@ export function MegaNavigation({ market }: MegaNavigationProps) {
                   href={href}
                   className={cn(
                     "nav-link block rounded-[10px] px-[0.72rem] py-[0.72rem] text-[0.68rem] font-[780] whitespace-nowrap text-[rgba(20,32,16,.62)] transition-colors hover:bg-[rgba(69,179,24,.055)] hover:text-[#173D0D]",
-                    href && item.label === "Home" && "active",
+                    isActiveItem(item.label) && "bg-[rgba(69,179,24,.055)] text-[#173D0D]",
                   )}
                 >
                   {item.label}

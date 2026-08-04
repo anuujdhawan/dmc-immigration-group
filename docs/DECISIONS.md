@@ -133,6 +133,17 @@ Record architectural and content decisions, deviations from templates, renamed/c
 
 - `suppressHydrationWarning` is applied solely to the root `<html>` and `<body>` in `src/app/layout.tsx`. This addresses third-party extension attributes injected before hydration (`webcrx`, `__processed_*`, `bis_register`) without concealing application-level component hydration defects.
 
+## 2026-08-04 — Shared hero shell
+
+- `src/components/home/Hero.tsx` is the canonical botanical hero shell for both the homepage and the content pages. The homepage keeps its default brand copy and stat row, while `ProgramPage` passes page-specific eyebrow/title/lede/CTA props and points the scroll cue at the first content section.
+- Content pages should continue using that shared hero shell instead of the older plain content-page header so the site reads as one component family across the built routes.
+
+## 2026-08-04 — Internal page expansion
+
+- Internal pages added through the shared registry should prefer Tailwind-first card and grid layouts where practical, but must not strip or rewrite the recovered CSS layers that already power the homepage and shell components.
+- `src/content/pages/site.ts` is the registry entry point for the new menu-driven internal pages, and the hero copy on every market page should explicitly state the market context so users never land on an ambiguous page.
+- Vitest needs a small local env bootstrap for this repo because the server-only office config parses placeholder environment values at import time; loading `.env.example` inside the test harness keeps that behavior deterministic without creating a second active env file.
+
 ## 2026-08-04 — Navbar/header parity batch
 
 - `src/config/navigation.ts` was aligned more closely with the homepage template's dropdown structure and menu labels so the visible navbar reads like the source HTML while still resolving to real app routes where the production site already has them.
@@ -184,3 +195,21 @@ Record architectural and content decisions, deviations from templates, renamed/c
 
 - The countries section must include the Germany pathway card so the homepage matches the approved six-card template grid instead of rendering the abbreviated five-card version.
 - The Germany badge should read `EU Blue Card`, not a generic category label, because the template distinguishes that tile explicitly from the other destination cards.
+
+## 2026-08-04 — Express Entry template pass
+
+- `src/components/pages/ProgramPage.tsx` now treats the Express Entry internal page as the reference structure for the remaining dropdown pages, with reusable support for `facts`, `split`, `lead`, `cards`, and `disclaimer` sections layered onto the shared hero/breadcrumb/CTA shell.
+- The lead-band form shell is intentionally static server-rendered markup without React submit handlers so it can be reused on all content pages without introducing client-side interaction before the forms phase.
+- Anchor navigation only includes real content sections; facts, lead, and disclaimer bands stay in the flow but do not get fragment anchors, which keeps the page outline consistent with the source template.
+
+## 2026-08-04 — Express Entry template alignment
+
+- The Express Entry page now follows the template cadence more closely: benefits, lead capture, programs, overview, eligibility, FSW grid, CRS grid, roadmap, guidance, documents, document evidence, FAQ, news, success stories, disclaimer, and a stronger closing CTA.
+- Section kickers are now explicit on the major content bands so the page reads like a serious service landing page instead of a generic long-form article.
+- The closing CTA now mirrors the source template more closely by pairing a consultation button with a direct call action, while keeping the rest of the page server-rendered and reusable.
+
+## 2026-08-04 — Express Entry parity follow-up
+
+- `SectionNav` is now a reusable sticky scrollspy pill bar for internal pages, and the Express Entry page uses explicit anchors to keep the active tab state aligned with the source template.
+- The template-style program, CRS and roadmap sections now use stronger visual hierarchy: numbered program cards, a dark score panel, and a grid-based roadmap layout that can be reused for other content pages with different copy.
+- `MegaNavigation` highlights the `Visas` top-level item on the Express Entry route so the desktop header state matches the approved sample instead of defaulting to `Home`.

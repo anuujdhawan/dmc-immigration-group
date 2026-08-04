@@ -9,6 +9,7 @@ import { BUSINESS_INVESTMENT_PAGES } from "@/content/pages/business-investment";
 import { STUDY_ABROAD_PAGES } from "@/content/pages/study-abroad";
 import { SERVICE_PAGES } from "@/content/pages/services";
 import { RESOURCE_PAGES } from "@/content/pages/resources";
+import { SITE_PAGES } from "@/content/pages/site";
 
 const ALL_PAGES: PageContent[] = [
   ...CANADA_PAGES,
@@ -19,6 +20,7 @@ const ALL_PAGES: PageContent[] = [
   ...STUDY_ABROAD_PAGES,
   ...SERVICE_PAGES,
   ...RESOURCE_PAGES,
+  ...SITE_PAGES,
 ];
 
 export const PAGE_REGISTRY: Record<string, PageContent> = Object.fromEntries(

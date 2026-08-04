@@ -16,7 +16,8 @@ export const TESTIMONIALS: Testimonial[] = [
     name: "Mir Ali",
     program: "Skilled pathway",
     market: "Canada",
-    quote: "",
+    quote:
+      "I would totally recommend DM Consultants to anyone who is pursuing Canadian skilled immigration. Right from the first consultation, their team demonstrated a deep understanding of the immigration process.",
     status: "candidate",
     sourceUrl: "https://dm-consultant.ae/client-testimonials/",
   },
@@ -25,7 +26,8 @@ export const TESTIMONIALS: Testimonial[] = [
     name: "Nandita Prakash",
     program: "Family pathway",
     market: "Australia",
-    quote: "",
+    quote:
+      "Recently had the chance to use DM Consultants for my Australian visit visa. And it was such a smooth experience. The team helped me prepare everything.",
     status: "candidate",
     sourceUrl: "https://dm-consultant.ae/client-testimonials/",
   },
@@ -34,7 +36,8 @@ export const TESTIMONIALS: Testimonial[] = [
     name: "Aditya Kain",
     program: "Express Entry",
     market: "Canada",
-    quote: "",
+    quote:
+      "I had an incredible experience with DM Consultants regarding my skilled immigration application to Canada. I found the team knowledgeable, experienced, and completed invested in my case.",
     status: "candidate",
     sourceUrl: "https://dm-consultant.ae/client-testimonials/",
   },

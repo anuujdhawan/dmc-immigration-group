@@ -39,6 +39,24 @@ Last updated: 2026-08-04
 
 ## Current work
 
+- Shared hero component batch completed:
+  - `src/components/home/Hero.tsx` is now the reusable botanical hero shell for the homepage and the content pages.
+  - `src/components/pages/ProgramPage.tsx` now passes page-specific eyebrow, title, lede, CTA labels, and a scroll cue that points to the first content section, so the existing pages all share the same hero structure instead of the older plain content-page header.
+
+- Internal page expansion batch completed:
+  - `src/content/pages/site.ts` now carries the market-aware content for the dropdown/menu pages and uses Tailwind-heavy card and link layouts while preserving the existing shared CSS stack.
+  - `vitest.config.ts` now aliases `server-only` for tests and loads placeholder env values from `.env.example`, which keeps the server boundary intact while allowing the registry tests to import office data.
+
+- Internal page template batch completed:
+  - `src/components/pages/ProgramPage.tsx` now supports the Express Entry reference layout with shared facts, split-media, lead-band, cards, FAQ, disclaimer, and a stronger closing CTA, while keeping the old-site media/content adapted to the new market-aware shell.
+  - The Express Entry page now follows the template cadence much more closely: programs, overview, eligibility, CRS, roadmap, documents, FAQ, news, success stories, disclaimer, then the closing CTA.
+
+- Express Entry template parity follow-up completed:
+  - `src/components/pages/ProgramPage.tsx` now renders stronger template-style section treatments for the Express Entry page, including numbered program cards, template-like split sections, a dark CRS/selection-factor panel, and a roadmap grid instead of the earlier plain list.
+  - `src/components/pages/SectionNav.tsx` now provides sticky scrollspy-style anchor pills so the in-page nav behaves like the approved internal-page sample.
+  - `src/components/layout/MegaNavigation.tsx` now highlights `Visas` on the Express Entry route so the top shell matches the template state.
+  - Verification: `npm run typecheck` ✓, `npm run lint` ✓, `npm run build` ✓ (escalated; Turbopack sandbox port/process limitation reproduced without escalation).
+
 - Navbar/header parity batch completed:
   - `src/config/navigation.ts` now mirrors the template menu labels and group structure more closely, including the exact dropdown section naming and legal route normalization.
   - `src/components/layout/SiteHeader.tsx` now carries the template-derived header CSS directly in the component via `style jsx global`, so the floating header, plaque/deck/action styling, dropdown treatment, and mobile menu chrome stay self-contained.
@@ -64,8 +82,16 @@ Last updated: 2026-08-04
   - Catch-all `src/app/[market]/[...segments]/page.tsx`: `generateStaticParams` from `MARKET_LIST × PAGE_IDS`, `generateMetadata` (seoTitle/seoDescription, canonical from `SITE_URL`, `noindex` when `page.noindex`), `notFound()` for unknown ids.
   - Nav fix: primary "Express Entry" item href `/express-entry` → `/visas/canada/express-entry` (was a dead route).
   - Facts verified via web search this batch: UK Student maintenance £1,529/£1,171 per month (rates from 11 Nov 2025; previous £1,334/£1,023 cited by stale sources), student visa fee £558 (Apr 2026), IHS £776/yr students; Australia 500: GS requirement (replaced GTE Mar 2024), 48h/fortnight term work (unlimited breaks, research uncapped), ~AUD 29,710 funds benchmark; Canada: SDS ended 8 Nov 2024, PAL, 24h/week off-campus, CAD 20,635 (2024–25).
-  - `study-abroad/ielts-coaching` published **noindex** with honest status banner pending client confirmation of in-house coaching.
-  - Tests: `src/content/pages/content-registry.test.ts` (8 tests — unique ids, metadata completeness, relatedPages/links-path resolution, relatedTools shape, noindex flag); `tests/e2e/content-pages.spec.ts` (7 tests — hero/sections/sources, FAQ accordion, overflow at 768/390/320, breadcrumbs, all 5 markets, unknown path 404, robots noindex).
+- `study-abroad/ielts-coaching` published **noindex** with honest status banner pending client confirmation of in-house coaching.
+- Tests: `src/content/pages/content-registry.test.ts` (8 tests — unique ids, metadata completeness, relatedPages/links-path resolution, relatedTools shape, noindex flag); `tests/e2e/content-pages.spec.ts` (7 tests — hero/sections/sources, FAQ accordion, overflow at 768/390/320, breadcrumbs, all 5 markets, unknown path 404, robots noindex).
+
+## 2026-08-04 — Site pages expansion
+
+- Expanded the shared content registry with the menu-driven internal pages the user called out: `about`, `contact`, `credentials`, `success-stories`, `video-success-stories`, `gallery`, `press-media`, `blog`, `tools`, `tools/eligibility-checker`, `tools/canada`, `tools/australia`, `visas/canada`, `visas/australia`, `visas/uk`, and the legal set under `/legal/*`.
+- Kept the shared CSS layers intact while building the new pages with Tailwind-first card/grid layouts in `src/content/pages/site.ts`, and kept every market page explicitly market-aware in the hero copy.
+- Added a Vitest env bootstrap that loads placeholders from `.env.example` so server-only content modules can be tested without introducing a second active env file.
+- Verification: `npm test` ✓, `npm run lint` ✓, `npm run build` ✓ (escalated for Turbopack's sandbox port-binding restriction).
+
 - **Phase 4 (routing + redirects) complete** — see earlier entry below.
 - **Phase 3 COMPLETE**: shared shell + homepage sections built and verified end-to-end:
   - Layout primitives: `Container`, `Button` (primary/dark/outline/white/ghost + sm/md/lg), `SectionHeading`, `AccordionItem` (grid-rows collapse), `Dialog`, `SocialIcon` (hand-drawn SVG paths — lucide-react has no Instagram/Facebook/YouTube exports).
@@ -109,19 +135,19 @@ Last updated: 2026-08-04
 
 - `node -e "postcss.parse(...)"` on `src/app/globals.css` — valid CSS ✓
 - `npm run typecheck` — clean ✓
-- `npm run build` — started successfully but an earlier interrupted `next build` process remained active and held `.next/lock`; no CSS compilation error was reported. Rerun after that process exits.
 - `npm run test:e2e` — **68/68 passed** (desktop-chromium + mobile-390; homepage 9, routing 22, content pages 7 — Phase 5 suite incl. hero/sections/sources, FAQ accordion, content overflow 768/390/320, breadcrumbs, 5-market render, unknown-path 404, robots noindex) ✓
+- `npm run test:e2e -- tests/e2e/content-pages.spec.ts` — sandbox webserver start failed with Turbopack port-binding error; escalated rerun stalled and was cancelled, so browser verification of this batch is still pending in this environment.
 - `npm test` — 41 passed (6 files: env schema, markets, routes, navigation, legacy-redirects, content registry) ✓
 - `npm run lint` — 0 errors, 0 warnings ✓
-- `npm run typecheck` — clean ✓
-- `npm run build` — ✓ **311 routes** (11 infra + 5 markets × 60 content pages); Turbopack; TypeScript pass ✓
+- `npm run build` — ✓ **411 static pages / 311 routes** after the internal-page template alignment pass; Turbopack; TypeScript pass ✓
+- `npm run build` — ✓ **411 static pages / 311 routes** after the Express Entry template parity follow-up; Turbopack; TypeScript pass ✓
 - NOTE: kill stale dev/start servers on :3000 before `test:e2e` — `reuseExistingServer: true` will silently reuse an outdated build (caused 15 phantom failures this session; root cause: pre-Phase-5 `next dev` still listening).
 - `npm audit --omit=dev` — 3 high, all `sharp <0.35.0` via Next 16.2.12 optionalDep (postcss fixed via override) — accepted debt, revisit on Next update
 - Logo pipeline (temp): `logo-process.mjs` — flood-fill white→transparent + trim + WebP/PNG variants → `public/media/brand/` + app icons
 
 ## Incomplete counts
 
-- Routes: ~90 canonical routes inventoried; 60 of ~90 built as content pages (all 5 markets live via catch-all); blog/legal/credentials/about/contact/tools remain (later phases).
+- Routes: ~90 canonical routes inventoried; 60 of ~90 built as content pages (all 5 markets live via catch-all); shared-registry internal pages now cover about/contact/credentials/resources/legal/tools, while blog MDX and calculator/tool implementations remain later phases.
 - Blog articles: 91 (`.ae`) + 23 + 8 + 19 + 4 crawled into inventory; 0 migrated (Phase 6).
 - Legacy authentic assets: 144 success-story + 16 gallery + video/press items inventoried as sources; 0 approved/manifested.
 - Tools: 0 of 16 implemented (Phase 10).

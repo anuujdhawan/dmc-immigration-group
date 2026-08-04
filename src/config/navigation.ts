@@ -108,13 +108,13 @@ export const NAV_PRIMARY: PrimaryNavItem[] = [
       {
         heading: "Resources",
         links: [
-          { label: "Blog / Immigration News", href: "#resources" },
-          { label: "FAQs", href: "#faq" },
-          { label: "Guides & Checklists", href: "#resources" },
-          { label: "Success Stories / Testimonials", href: "#stories" },
-          { label: "Video Success Stories", href: "#video-stories" },
-          { label: "Gallery", href: "#resources" },
-          { label: "Press & Media Mentions", href: "#resources" },
+          { label: "Blog / Immigration News", href: "/blog" },
+          { label: "FAQs", href: "/faqs" },
+          { label: "Guides & Checklists", href: "/guides" },
+          { label: "Success Stories / Testimonials", href: "/success-stories" },
+          { label: "Video Success Stories", href: "/video-success-stories" },
+          { label: "Gallery", href: "/gallery" },
+          { label: "Press & Media Mentions", href: "/press-media" },
         ],
       },
     ],
@@ -125,11 +125,11 @@ export const NAV_PRIMARY: PrimaryNavItem[] = [
       {
         heading: "Tools & Free Assessment",
         links: [
-          { label: "General Eligibility Quiz", href: "#tools" },
-          { label: "Canada: CRS / FSW-67 / PNP Matcher", href: "#tools" },
-          { label: "Australia: Points / Visa Finder / ANZSCO", href: "#tools" },
-          { label: "Document Checklists & Guides", href: "#tools" },
-          { label: "Call Me Back / Free Counselling", href: "#contact" },
+          { label: "General Eligibility Quiz", href: "/tools/eligibility-checker" },
+          { label: "Canada: CRS / FSW-67 / PNP Matcher", href: "/tools/canada" },
+          { label: "Australia: Points / Visa Finder / ANZSCO", href: "/tools/australia" },
+          { label: "Document Checklists & Guides", href: "/guides/document-checklists" },
+          { label: "Call Me Back / Free Counselling", href: "/contact" },
         ],
       },
     ],
@@ -168,6 +168,9 @@ export const NAV_FOOTER: NavFooterColumn[] = [
       { label: "Guides & Checklists", href: "/guides" },
       { label: "FAQs", href: "/faqs" },
       { label: "Success Stories", href: "/success-stories" },
+      { label: "Video Success Stories", href: "/video-success-stories" },
+      { label: "Gallery", href: "/gallery" },
+      { label: "Press & Media", href: "/press-media" },
     ],
   },
   {
@@ -191,11 +194,11 @@ export const NAV_LEGAL: NavLink[] = [
 ];
 
 export const NAV_TOOLS: NavLink[] = [
-  { label: "General Eligibility Quiz", href: "#tools" },
-  { label: "Canada: CRS / FSW-67 / PNP Matcher", href: "#tools" },
-  { label: "Australia: Points / Visa Finder / ANZSCO", href: "#tools" },
-  { label: "Document Checklists & Guides", href: "#tools" },
-  { label: "Call Me Back / Free Counselling", href: "#contact" },
+  { label: "General Eligibility Quiz", href: "/tools/eligibility-checker" },
+  { label: "Canada: CRS / FSW-67 / PNP Matcher", href: "/tools/canada" },
+  { label: "Australia: Points / Visa Finder / ANZSCO", href: "/tools/australia" },
+  { label: "Document Checklists & Guides", href: "/guides/document-checklists" },
+  { label: "Call Me Back / Free Counselling", href: "/contact" },
 ];
 
 export function allNavPaths(): string[] {

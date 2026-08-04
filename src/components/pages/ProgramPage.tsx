@@ -1,13 +1,23 @@
 import { MARKET_LABELS, type Market } from "@/config/markets";
-import { type PageContent, type PageSection } from "@/content/pages/types";
+import {
+  type CardItem,
+  type DisclaimerSection,
+  type ExtendedPageSection,
+  type FactsSection,
+  type LeadSection,
+  type PageContent,
+  type PageSection,
+} from "@/content/pages/types";
 import { breadcrumbsFor, getPageContent } from "@/content/pages";
 import { marketHref } from "@/lib/routing/routes";
 import { cn } from "@/lib/utils/cn";
 
+import { Hero } from "@/components/home/Hero";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { AccordionItem } from "@/components/ui/AccordionItem";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionNav } from "@/components/pages/SectionNav";
 
 function slugify(text: string): string {
   return text
@@ -16,9 +26,11 @@ function slugify(text: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-function sectionId(section: PageSection, index: number): string {
-  if (section.kind === "status") return `section-${index}`;
-  return section.anchor ?? (slugify(section.heading) || `section-${index}`);
+function sectionId(section: ExtendedPageSection, index: number): string {
+  if (section.kind === "status" || section.kind === "facts" || section.kind === "disclaimer" || section.kind === "lead") {
+    return `section-${index}`;
+  }
+  return section.anchor ?? `${slugify(section.heading) || "section"}-${index}`;
 }
 
 function splitTitle(title: string): { first: string; rest: string } {
@@ -66,16 +78,227 @@ function BenefitsGrid({ items }: { items: string[] }) {
 function CardGrid({ items }: { items: { title: string; body: string }[] }) {
   return (
     <ul className="grid gap-4 md:grid-cols-2">
-      {items.map((item) => (
+      {items.map((item, index) => (
         <li
-          key={item.title}
-          className="rounded-2xl border border-brand-600/10 bg-white/80 p-6 shadow-sm"
+          key={`${item.title}-${index}`}
+          className="rounded-[26px] border border-brand-600/10 bg-white/85 p-6 shadow-sm"
         >
-          <h3 className="font-display text-lg font-bold text-charcoal">{item.title}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{item.body}</p>
+          <span className="block text-[11px] font-bold uppercase tracking-[0.16em] text-brand-600">
+            {String(index + 1).padStart(2, "0")} · {item.title}
+          </span>
+          <p className="mt-3 text-sm leading-relaxed text-muted">{item.body}</p>
         </li>
       ))}
     </ul>
+  );
+}
+
+function CardsGrid({ items }: { items: CardItem[] }) {
+  return (
+    <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      {items.map((item) => {
+        const external = item.href?.startsWith("http");
+        const card = (
+          <>
+            {item.image ? (
+              <div className="overflow-hidden rounded-2xl bg-slate-100">
+                {/* Next/Image is not required for the current text-first content cards. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.image.src}
+                  alt={item.image.alt}
+                  className="h-52 w-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            ) : null}
+            {item.label ? (
+              <span className="inline-flex w-fit rounded-full bg-brand-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-mega text-brand-700">
+                {item.label}
+              </span>
+            ) : null}
+            <span className="font-display text-lg font-bold text-charcoal">{item.title}</span>
+            {item.body ? <span className="text-sm leading-relaxed whitespace-pre-line text-muted">{item.body}</span> : null}
+            {item.href ? (
+              <span className="mt-auto pt-3 text-xs font-bold uppercase tracking-wide text-brand-600">
+                View →
+              </span>
+            ) : null}
+          </>
+        );
+
+        return (
+          <li key={`${item.title}-${item.label ?? item.href ?? "card"}`}>
+            {item.href ? (
+              <a
+                href={item.href}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noreferrer noopener" : undefined}
+                className="group flex h-full flex-col gap-3 rounded-2xl border border-brand-600/10 bg-white/80 p-6 shadow-sm transition-colors hover:border-brand-600/30 hover:bg-brand-50/50"
+              >
+                {card}
+              </a>
+            ) : (
+              <div className="flex h-full flex-col gap-3 rounded-2xl border border-brand-600/10 bg-white/80 p-6 shadow-sm">
+                {card}
+              </div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+function FactsStrip({ section }: { section: FactsSection }) {
+  return (
+    <aside className="border-b border-brand-600/10 bg-white/90">
+      <Container className="grid gap-4 py-5 sm:grid-cols-2 xl:grid-cols-4">
+        {section.items.map((item) => (
+          <div key={item.label} className="rounded-2xl border border-brand-600/10 bg-brand-50/70 px-5 py-4">
+            <span className="block text-[11px] font-bold uppercase tracking-mega text-brand-700">{item.label}</span>
+            <strong className="mt-1 block text-sm font-bold text-charcoal">{item.value}</strong>
+          </div>
+        ))}
+      </Container>
+    </aside>
+  );
+}
+
+function SplitSection({ section, tone }: { section: Extract<ExtendedPageSection, { kind: "split" }>; tone: "white" | "slate" | "aurora" }) {
+  const reverse = section.reverse ?? false;
+  const isHeroSplit = ["services", "overview", "documents"].includes(section.anchor ?? "");
+  const cardTone =
+    tone === "aurora"
+      ? "border-white/10 bg-white/5 text-aurora-text"
+      : "border-brand-600/10 bg-white/80 text-charcoal";
+  return (
+    <div className={cn("grid gap-8 lg:items-center", reverse ? "lg:grid-cols-[0.94fr_1.06fr]" : "lg:grid-cols-[1.06fr_0.94fr]")}>
+      <figure className={cn("overflow-hidden rounded-[32px] border shadow-sm", tone === "aurora" ? "border-white/10 bg-white/5" : "border-brand-600/10 bg-slate-100", reverse ? "lg:order-2" : "lg:order-1")}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={section.media.src} alt={section.media.alt} className="h-full w-full object-cover" loading="lazy" />
+        {section.media.caption ? (
+          <figcaption className="border-t border-inherit px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-muted">
+            {section.media.caption}
+          </figcaption>
+        ) : null}
+      </figure>
+      <div className={reverse ? "lg:order-1" : "lg:order-2"}>
+        {section.eyebrow ? (
+          <span className="mb-3 inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-mega text-brand-700">
+            {section.eyebrow}
+          </span>
+        ) : null}
+        <h3
+          className={cn(
+            "font-display font-semibold tracking-tight",
+            isHeroSplit ? "max-w-3xl text-[clamp(2.45rem,5.4vw,4.8rem)] leading-[0.95]" : "text-3xl md:text-[2.6rem]",
+            tone === "aurora" ? "text-aurora-text" : "text-charcoal",
+          )}
+        >
+          {section.heading}
+        </h3>
+        {section.lede ? <p className={cn("mt-4 text-base leading-relaxed", tone === "aurora" ? "text-aurora-muted" : "text-muted")}>{section.lede}</p> : null}
+        {section.paragraphs?.length ? (
+          <div className={cn("mt-5 space-y-4 text-sm leading-7", tone === "aurora" ? "text-aurora-muted" : "text-muted")}>
+            {section.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+        ) : null}
+        {section.cards?.length ? (
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {section.cards.map((card) => (
+              <div key={card.title} className={cn("rounded-[24px] p-4 shadow-sm", cardTone)}>
+                <h4 className={cn("font-display text-base font-bold", tone === "aurora" ? "text-aurora-text" : "text-charcoal")}>{card.title}</h4>
+                <p className={cn("mt-2 text-sm leading-relaxed", tone === "aurora" ? "text-aurora-muted" : "text-muted")}>{card.body}</p>
+              </div>
+            ))}
+          </div>
+        ) : null}
+        {section.bullets?.length ? (
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            {section.bullets.map((bullet) => (
+              <li key={bullet} className={cn("flex items-start gap-3 rounded-2xl p-4 text-sm leading-relaxed shadow-sm", cardTone)}>
+                <span aria-hidden="true" className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-brand-100 font-bold text-brand-700">
+                  ✓
+                </span>
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function LeadBand({ section }: { section: LeadSection }) {
+  return (
+    <section className="border-y border-brand-600/10 bg-gradient-to-br from-brand-50 to-white py-16 md:py-20">
+      <Container className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <header className="space-y-4">
+          {section.eyebrow ? <span className="inline-flex font-mono text-[11px] font-bold uppercase tracking-mega text-brand-700">{section.eyebrow}</span> : null}
+          <h3 className="font-display text-3xl font-semibold tracking-tight text-charcoal md:text-[2.5rem]">{section.heading}</h3>
+          {section.paragraphs.map((paragraph) => (
+            <p key={paragraph} className="text-sm leading-7 text-muted">
+              {paragraph}
+            </p>
+          ))}
+          {section.note ? <p className="text-xs leading-6 text-muted">{section.note}</p> : null}
+        </header>
+        <div className="grid gap-4 rounded-[28px] border border-brand-600/10 bg-white/90 p-6 shadow-sm md:grid-cols-2 md:p-8">
+          {section.fields.map((field) => (
+            <label key={field.label} className="grid gap-2 md:col-span-1">
+              <span className="text-[11px] font-bold uppercase tracking-mega text-brand-700">{field.label}</span>
+              {field.type === "select" ? (
+                <select className="rounded-2xl border border-brand-600/10 bg-white px-4 py-3 text-sm text-charcoal outline-none transition focus:border-brand-600/40" defaultValue="">
+                  <option value="" disabled>
+                    {field.placeholder}
+                  </option>
+                  {(field.options ?? []).map((option) => (
+                    <option key={option}>{option}</option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  className="rounded-2xl border border-brand-600/10 bg-white px-4 py-3 text-sm text-charcoal outline-none transition placeholder:text-muted focus:border-brand-600/40"
+                  placeholder={field.placeholder}
+                  type={field.type ?? "text"}
+                />
+              )}
+            </label>
+          ))}
+          {section.consent ? (
+            <label className="md:col-span-2 flex items-start gap-3 rounded-2xl bg-brand-50/70 px-4 py-3 text-xs leading-6 text-muted">
+              <input className="mt-1" type="checkbox" />
+              <span>{section.consent}</span>
+            </label>
+          ) : null}
+          <div className="md:col-span-2 flex flex-wrap gap-3 pt-2">
+            <Button href={section.primaryCta.href}>{section.primaryCta.label}</Button>
+            {section.secondaryCta ? (
+              <Button variant="outline" href={section.secondaryCta.href}>
+                {section.secondaryCta.label}
+              </Button>
+            ) : null}
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+function DisclaimerBand({ section }: { section: DisclaimerSection }) {
+  return (
+    <aside className="border-t border-brand-600/10 bg-slate-50 py-6">
+      <Container className="flex items-start gap-3 text-sm leading-relaxed text-muted">
+        <span aria-hidden="true" className="mt-0.5 text-brand-700">i</span>
+        <p>
+          <strong className="text-charcoal">Important:</strong> {section.body}
+        </p>
+      </Container>
+    </aside>
   );
 }
 
@@ -108,21 +331,66 @@ function ProgramsGrid({ items }: { items: PageSection & { kind: "programs" } }) 
 }
 
 function PanelTable({ section }: { section: PageSection & { kind: "panel" } }) {
+  const isCrsPanel = section.anchor === "points-crs";
+  const isSkillsGrid = section.anchor === "tools";
   return (
-    <div className="overflow-hidden rounded-2xl border border-brand-600/10 bg-white/80 shadow-sm">
-      <dl className="divide-y divide-brand-600/10">
-        {section.rows.map((row) => (
-          <div key={row.label} className="grid gap-1 px-6 py-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] sm:gap-8">
-            <dt className="text-sm font-bold text-charcoal">{row.label}</dt>
-            <dd className="text-sm leading-relaxed text-muted">{row.value}</dd>
+    <div
+      className={cn(
+        "overflow-hidden rounded-[32px] border shadow-sm",
+        isSkillsGrid
+          ? "border-brand-900/10 bg-gradient-to-br from-brand-950 via-brand-900 to-brand-950 text-white"
+          : "border-brand-600/10 bg-white/85",
+      )}
+    >
+      {isSkillsGrid ? (
+        <div className="relative p-6 md:p-8">
+          <div className="flex items-end justify-between gap-4">
+            <strong className="font-display text-[clamp(4rem,8vw,5.6rem)] leading-none text-brand-100">
+              {section.rows[0]?.value?.match(/\d+/)?.[0] ?? "67"}
+            </strong>
+            <span className="max-w-[12rem] text-right text-[11px] leading-relaxed text-brand-100/70">
+              {section.note ? section.note : "Federal Skilled Worker selection-factor threshold out of 100"}
+            </span>
           </div>
-        ))}
-      </dl>
-      {section.note ? (
-        <p className="border-t border-brand-600/10 bg-brand-50/50 px-6 py-4 text-xs leading-relaxed text-muted">
-          {section.note}
-        </p>
-      ) : null}
+          <dl className="mt-8 divide-y divide-white/10">
+            {section.rows.map((row) => (
+              <div key={row.label} className="flex items-center justify-between gap-4 py-4 text-sm">
+                <dt className="text-white/70">{row.label}</dt>
+                <dd className="font-semibold text-white">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ) : (
+        <div className="p-6 md:p-8">
+          {isCrsPanel ? (
+            <div className="mb-6 flex flex-col gap-3">
+              <span className="inline-flex w-fit rounded-full bg-brand-100 px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-mega text-brand-700">
+                CRS overview
+              </span>
+              <p className="max-w-2xl text-sm leading-7 text-muted">
+                The Comprehensive Ranking System assigns points to eligible profiles. Scores and invitation criteria vary between rounds, so there is no permanent invitation cut-off.
+              </p>
+            </div>
+          ) : null}
+          <dl className="grid gap-3">
+            {section.rows.map((row) => (
+              <div
+                key={row.label}
+                className="grid gap-2 rounded-[24px] border border-brand-600/10 bg-white/80 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] sm:items-center sm:gap-6"
+              >
+                <dt className="text-sm font-bold text-charcoal">{row.label}</dt>
+                <dd className="text-sm leading-relaxed text-muted">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+          {section.note ? (
+            <p className="mt-5 rounded-[22px] border border-brand-600/10 bg-brand-50/70 px-5 py-4 text-xs leading-relaxed text-muted">
+              {section.note}
+            </p>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }
@@ -153,26 +421,42 @@ function DocumentsChecklist({ section }: { section: PageSection & { kind: "docum
 }
 
 function ProcessSteps({ section, dark }: { section: PageSection & { kind: "process" }; dark?: boolean }) {
+  const roadmapLabels = [
+    "START",
+    "CONNECT",
+    "REVIEW",
+    "ONBOARD",
+    "PREPARE",
+    "FILE",
+    "SETTLE",
+    "MOVE",
+  ];
   return (
-    <ol className="relative space-y-8">
+    <ol className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {section.steps.map((step, index) => (
-        <li key={step.title} className="relative flex gap-5">
+        <li
+          key={step.title}
+          className={cn(
+            "group relative overflow-hidden rounded-[28px] border p-6 shadow-sm transition-transform duration-300 hover:-translate-y-1",
+            dark
+              ? "border-white/10 bg-white/5 text-aurora-text"
+              : "border-brand-600/10 bg-white/85 text-charcoal",
+          )}
+        >
           <span
             className={cn(
-              "flex size-11 shrink-0 items-center justify-center rounded-full font-display text-base font-bold",
+              "inline-flex rounded-full px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-mega",
               dark ? "bg-brand-600 text-white" : "bg-brand-100 text-brand-700",
             )}
           >
-            {index + 1}
+            {String(index + 1).padStart(2, "0")} · {roadmapLabels[index] ?? "STEP"}
           </span>
-          <div>
-            <h3 className={cn("font-display text-lg font-bold", dark ? "text-aurora-text" : "text-charcoal")}>
-              {step.title}
-            </h3>
-            <p className={cn("mt-1.5 text-sm leading-relaxed", dark ? "text-aurora-muted" : "text-muted")}>
-              {step.body}
-            </p>
-          </div>
+          <h3 className={cn("mt-4 font-display text-lg font-bold", dark ? "text-aurora-text" : "text-charcoal")}>
+            {step.title}
+          </h3>
+          <p className={cn("mt-2 text-sm leading-relaxed", dark ? "text-aurora-muted" : "text-muted")}>
+            {step.body}
+          </p>
         </li>
       ))}
     </ol>
@@ -262,7 +546,7 @@ function StatusBanner({ section }: { section: PageSection & { kind: "status" } }
   );
 }
 
-function SectionContent({ section, tone }: { section: PageSection; tone: "white" | "slate" | "aurora" }) {
+function SectionContent({ section, tone }: { section: ExtendedPageSection; tone: "white" | "slate" | "aurora" }) {
   switch (section.kind) {
     case "status":
       return <StatusBanner section={section} />;
@@ -293,8 +577,18 @@ function SectionContent({ section, tone }: { section: PageSection; tone: "white"
       return <FaqList items={section.items} />;
     case "help":
       return <HelpBand section={section} />;
+    case "cards":
+      return <CardsGrid items={section.items} />;
     case "links":
       return <LinksGrid section={section} />;
+    case "split":
+      return <SplitSection section={section} tone={tone} />;
+    case "lead":
+      return <LeadBand section={section} />;
+    case "facts":
+      return <FactsStrip section={section} />;
+    case "disclaimer":
+      return <DisclaimerBand section={section} />;
     default:
       return null;
   }
@@ -326,42 +620,6 @@ function RelatedCards({ page, market }: { page: PageContent; market: Market }) {
         </li>
       ))}
     </ul>
-  );
-}
-
-function Hero({ page, market }: { page: PageContent; market: Market }) {
-  const { first, rest } = splitTitle(page.title);
-  return (
-    <header className="relative overflow-hidden bg-[linear-gradient(145deg,#fbfdf8,#f4f8ef_58%,#edf6e7)] pb-14 pt-[var(--header-offset-mobile)] md:pb-20 md:pt-[var(--header-offset)]">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_76%_18%,rgba(69,179,24,0.13),transparent_31rem),radial-gradient(circle_at_12%_82%,rgba(53,142,26,0.08),transparent_28rem)]"
-      />
-      <Container className="relative">
-        <p className="text-xs font-bold uppercase tracking-mega text-brand-600">{page.eyebrow}</p>
-        <h1 className="mt-4 max-w-4xl text-balance font-display text-[clamp(2.5rem,6vw,4.5rem)] font-medium leading-[0.95] tracking-tight text-charcoal">
-          {first}
-          {rest ? <span className="block font-bold text-brand-700">{rest}</span> : null}
-        </h1>
-        <p className="mt-6 max-w-2xl text-pretty text-base leading-relaxed text-muted md:text-lg">
-          {page.lede}
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <Button href={marketHref(market, "/#contact")} size="lg">
-            Book a consultation
-          </Button>
-          {page.relatedPages?.[0] ? (
-            <Button href={marketHref(market, `/${page.relatedPages[0]}`)} variant="outline" size="lg">
-              Read related guides
-            </Button>
-          ) : null}
-        </div>
-        <p className="mt-8 max-w-2xl text-xs leading-relaxed text-muted">
-          Government authorities make all final visa and immigration decisions. Previous outcomes do not
-          guarantee future approval.
-        </p>
-      </Container>
-    </header>
   );
 }
 
@@ -398,43 +656,47 @@ function Breadcrumbs({ page, market }: { page: PageContent; market: Market }) {
   );
 }
 
-function AnchorNav({ page }: { page: PageContent }) {
-  const anchors = page.sections
-    .filter((section) => section.kind !== "status")
-    .map((section, index) => ({ id: sectionId(section, index), label: section.heading }));
-  if (anchors.length === 0) return null;
-  return (
-    <nav
-      aria-label="On this page"
-      className="sticky top-[var(--header-offset-mobile)] z-20 border-b border-brand-600/10 bg-[rgba(250,251,247,0.93)] backdrop-blur-lg md:top-[var(--header-offset)]"
-    >
-      <Container className="flex min-h-14 items-center gap-6 overflow-x-auto py-3 [scrollbar-width:none]">
-        {anchors.map((anchor) => (
-          <a
-            key={anchor.id}
-            href={`#${anchor.id}`}
-            className="shrink-0 text-xs font-bold uppercase tracking-wide text-muted transition-colors hover:text-brand-700"
-          >
-            {anchor.label}
-          </a>
-        ))}
-      </Container>
-    </nav>
-  );
-}
-
 export function ProgramPage({ page, market }: { page: PageContent; market: Market }) {
-  const contentSections = page.sections.filter((section) => section.kind !== "status");
+  const contentSections = page.sections.filter((section) => section.kind !== "status" && section.kind !== "facts");
   const statusSections = page.sections.filter((section) => section.kind === "status");
+  const { first, rest } = splitTitle(page.heroTitle ?? page.title);
+  const marketLabel = MARKET_LABELS[market];
+  const heroSectionId = `hero-${page.id.replace(/[^a-z0-9]+/gi, "-")}`;
+  const firstContentSection = contentSections[0];
+  const scrollTarget = firstContentSection ? `#${sectionId(firstContentSection, 0)}` : undefined;
+  const secondaryActionHref = page.relatedPages?.[0]
+    ? marketHref(market, `/${page.relatedPages[0]}`)
+    : marketHref(market, "/#tools");
+  const secondaryActionLabel = page.relatedPages?.[0] ? "Read related guides" : "Explore tools";
+  const sectionNavItems =
+    page.sectionNav ??
+    contentSections
+      .filter((section) => section.kind !== "lead" && section.kind !== "disclaimer")
+      .map((section, index) => ({
+        anchor: sectionId(section, index),
+        label: "eyebrow" in section && section.eyebrow ? section.eyebrow : section.heading,
+      }));
 
   return (
     <>
-      <Hero page={page} market={market} />
+      <Hero
+        market={market}
+        sectionId={heroSectionId}
+        eyebrow={`${page.eyebrow} · ${marketLabel} market`}
+        titlePrefix={first}
+        titleAccent={rest ?? ""}
+        subtitle={page.heroSubtitle ?? `${page.lede} This page is written for the ${marketLabel} market.`}
+        primaryAction={{ label: "Book Consultation", href: marketHref(market, "/#contact") }}
+        secondaryAction={{ label: secondaryActionLabel, href: secondaryActionHref }}
+        scrollTarget={scrollTarget}
+        scrollLabel={`Explore the ${marketLabel} page`}
+      />
       {statusSections.map((section, index) => (
         <StatusBanner key={index} section={section} />
       ))}
       <Breadcrumbs page={page} market={market} />
-      <AnchorNav page={page} />
+      {page.facts ? <FactsStrip section={{ kind: "facts", items: page.facts }} /> : null}
+      <SectionNav items={sectionNavItems} />
 
       {contentSections.map((section, index) => {
         const id = sectionId(section, index);
@@ -443,10 +705,10 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
         return (
           <section key={id} id={id} className={cn("anchor-offset py-14 md:py-20", tone === "white" ? "bg-white" : tone === "slate" ? "bg-slate-50" : "bg-aurora-bg text-aurora-text")}>
             <Container>
-              {section.kind === "faq" ? null : (
+              {section.kind === "faq" || section.kind === "lead" || section.kind === "disclaimer" ? null : (
                 <SectionHeadingBlock
-                  eyebrow={page.eyebrow}
-                  heading={section.heading}
+                  eyebrow={"eyebrow" in section && section.eyebrow ? section.eyebrow : page.eyebrow}
+                  heading={"heading" in section ? section.heading : page.title}
                   lede={"lede" in section ? section.lede : undefined}
                   dark={dark}
                 />
@@ -499,16 +761,24 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
 
       <section className="bg-aurora-bg py-16 text-aurora-text md:py-24">
         <Container>
-          <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-xs font-bold uppercase tracking-mega text-leaf-soft">Next step</p>
-              <h2 className="mt-3 max-w-xl text-balance font-display text-3xl font-bold leading-tight md:text-4xl">
-                Get a structured assessment of your case
+              <p className="text-xs font-bold uppercase tracking-mega text-leaf-soft">Start with clarity</p>
+              <h2 className="mt-3 max-w-2xl text-balance font-display text-3xl font-bold leading-tight md:text-4xl">
+                Could Express Entry be the right route for you?
               </h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-aurora-muted">
+                Speak with the DMC team about program fit, documentation priorities, CRS factors and a realistic next step for your profile.
+              </p>
             </div>
-            <Button href={marketHref(market, "/#contact")} variant="white" size="lg">
-              Book a consultation
-            </Button>
+            <div className="flex flex-wrap gap-3">
+              <Button href={marketHref(market, "/#contact")} variant="white" size="lg">
+                Book Consultation
+              </Button>
+              <Button href="tel:+97143447757" variant="outline" size="lg">
+                Call +971 4 344 7757
+              </Button>
+            </div>
           </div>
         </Container>
       </section>
