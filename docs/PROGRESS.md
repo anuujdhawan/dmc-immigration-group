@@ -39,6 +39,26 @@ Last updated: 2026-08-04
 
 ## Current work
 
+- Homepage credentials section density pass completed:
+  - `src/components/home/CredentialsSection.tsx` now uses a fuller dark-left panel with an added proof card, a verification-trail panel, and smaller trust chips at the bottom so the section feels intentional instead of empty.
+  - `src/app/globals.css` now widens the proof stack/assurance blocks and turns the proof stack into a two-column desktop layout so the dark green section reads as a complete band on desktop and mobile.
+  - Follow-up tweak: the verification mini-cards and trust chips now use darker text on lighter green-white cards, and the trust-chip row sits before the reassurance copy as requested.
+  - Follow-up fix: the verification-trail and trust-chip text now has explicit scoped contrast overrides so it does not inherit the dark-band white text rules.
+  - Latest spacing pass: the proof cards, verification-trail cards, and trust-chip cards now have more even internal padding, consistent minimum heights, and slightly larger gaps so the dark band feels more elegant and symmetrical.
+  - Verification: `npm run typecheck` ✓, `npm run lint` ✓ with the same pre-existing `<img>` warnings in `src/components/pages/ExpressEntryPage.tsx`.
+
+- Homepage resources section parity completed:
+  - `src/components/home/ResourcesSection.tsx` now mirrors the approved template structure more closely with a template-style heading block, per-card CTAs, and a non-clickable article/card pattern instead of the earlier fully clickable tiles.
+  - `src/app/globals.css` now adds a scoped `#resources.template-resources` override so the homepage resources grid stays in the site’s soft green gradient language and picks up the same hover lift/shimmer feel as the other homepage cards.
+  - Verification: `npm run typecheck` ✓, `npm run lint` ✓ (7 pre-existing `<img>` warnings in `src/components/pages/ExpressEntryPage.tsx`; no new errors from this batch).
+
+- **Express Entry template parity batch completed**: exact CSS + HTML replication from the approved `DMC_Express_Entry_Mobile Responsive(2).html` template:
+  - Extracted all three EE-specific CSS layers (`ee-page-styles`, `dmc-express-editorial-responsive-v5`, `dmc-express-image-stability-v1` — ~64KB total) into `src/app/globals.css`, scoped under `.ee-page` / `#express-entry-content` selectors.
+  - Created `src/components/pages/ExpressEntryPage.tsx` — a client component that renders the template's exact HTML structure (breadcrumb, facts bar, sticky anchor nav, benefits split, lead form, programs grid, overview split, eligibility + score card, CRS calculator, documents grid, process dark, consultation band, guidance panel, evidence grid, roadmap, FAQ accordion, blog grid, story carousel, disclaimer, CTA). Interactive FAQ accordion and story carousel use React state.
+  - Created dedicated route at `src/app/[market]/visas/canada/express-entry/page.tsx` — takes precedence over the catch-all `[...segments]` route for this path. Generates static params for all 5 markets. Uses `ExpressEntryPage` component directly.
+  - Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 7 `<img>` warnings for external template images), `npm run build` ✓ (411 static pages / both catch-all and specific EE routes generated).
+  - The catch-all route still exists for all other content pages; the specific EE route shadows it for `/visas/canada/express-entry` only.
+
 - Shared hero component batch completed:
   - `src/components/home/Hero.tsx` is now the reusable botanical hero shell for the homepage and the content pages.
   - `src/components/pages/ProgramPage.tsx` now passes page-specific eyebrow, title, lede, CTA labels, and a scroll cue that points to the first content section, so the existing pages all share the same hero structure instead of the older plain content-page header.
@@ -56,6 +76,10 @@ Last updated: 2026-08-04
   - `src/components/pages/SectionNav.tsx` now provides sticky scrollspy-style anchor pills so the in-page nav behaves like the approved internal-page sample.
   - `src/components/layout/MegaNavigation.tsx` now highlights `Visas` on the Express Entry route so the top shell matches the template state.
   - Verification: `npm run typecheck` ✓, `npm run lint` ✓, `npm run build` ✓ (escalated; Turbopack sandbox port/process limitation reproduced without escalation).
+
+- Internal-page hero offset fix:
+  - `src/components/pages/ProgramPage.tsx` now wraps the full internal-page content in a top-padded container so the Express Entry page begins under the fixed header instead of at the very top edge of the viewport.
+  - Verification: `npm run typecheck` ✓, `npm run lint` ✓ (warnings only from existing `<img>` usage in `src/components/pages/ExpressEntryPage.tsx`).
 
 - Navbar/header parity batch completed:
   - `src/config/navigation.ts` now mirrors the template menu labels and group structure more closely, including the exact dropdown section naming and legal route normalization.

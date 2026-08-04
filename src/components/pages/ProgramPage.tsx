@@ -678,7 +678,7 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
       }));
 
   return (
-    <>
+    <div className="pt-[calc(var(--header-offset-mobile)+1rem)] md:pt-[calc(var(--header-offset)+1rem)]">
       <Hero
         market={market}
         sectionId={heroSectionId}
@@ -782,6 +782,6 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
           </div>
         </Container>
       </section>
-    </>
+    </div>
   );
 }

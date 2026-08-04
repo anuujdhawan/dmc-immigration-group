@@ -8,7 +8,7 @@ export function CredentialsSection({ market }: { market: Market }) {
   return (
     <section id="credentials" className="bg-white">
       <div className="grid lg:grid-cols-2">
-        <div className="relative overflow-hidden bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 px-8 py-16 lg:px-16 lg:py-24">
+        <div className="relative flex min-h-[760px] flex-col overflow-hidden bg-gradient-to-br from-brand-700 via-brand-800 to-brand-900 px-8 py-16 lg:px-16 lg:py-24">
           <div
             aria-hidden="true"
             className="absolute -right-24 -bottom-24 h-96 w-96 rounded-full bg-white/5 blur-3xl"
@@ -55,6 +55,72 @@ export function CredentialsSection({ market }: { market: Market }) {
                 <strong>Ethical case handling</strong>
                 <small>Clear advice, documented steps, no false promises.</small>
               </div>
+            </div>
+            <div className="credential-proof-card">
+              <span className="credential-proof-icon">
+                <i className="fa-solid fa-file-circle-check" />
+              </span>
+              <div>
+                <strong>Source trail kept current</strong>
+                <small>We link the register, the issuer and the live status.</small>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative mt-10 rounded-[24px] border border-white/10 bg-white/6 p-5 shadow-[0_18px_42px_rgba(0,0,0,0.16)] backdrop-blur-xl">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="credential-trail-kicker text-[10px] font-bold uppercase tracking-[0.2em] text-brand-100/80">
+                  Verification trail
+                </p>
+                <h3 className="credential-trail-intro mt-1 text-sm font-semibold text-white">
+                  Every credential is checked against a live public source.
+                </h3>
+              </div>
+              <span className="credential-trail-pill rounded-full border border-brand-300/20 bg-brand-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-brand-100">
+                Live links
+              </span>
+            </div>
+            <div className="mt-5 grid gap-4 md:grid-cols-3">
+              <div className="credential-trail-card rounded-2xl border border-white/12 bg-white/88 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+                <p className="credential-trail-label text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/80">
+                  Issuing authority
+                </p>
+                <p className="credential-trail-copy mt-1 text-sm text-slate-700">Regulator or licensing body named on every card.</p>
+              </div>
+              <div className="credential-trail-card rounded-2xl border border-white/12 bg-white/88 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+                <p className="credential-trail-label text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/80">
+                  Register status
+                </p>
+                <p className="credential-trail-copy mt-1 text-sm text-slate-700">Verified, pending or subject to final confirmation.</p>
+              </div>
+              <div className="credential-trail-card rounded-2xl border border-white/12 bg-white/88 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+                <p className="credential-trail-label text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/80">
+                  Public route
+                </p>
+                <p className="credential-trail-copy mt-1 text-sm text-slate-700">Direct outbound link to the official register page.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative mt-8 grid gap-4 sm:grid-cols-3">
+            <div className="credential-trust-card rounded-2xl border border-white/12 bg-white/88 px-4 py-3 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+              <p className="credential-trust-label text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/80">
+                Public record first
+              </p>
+              <p className="credential-trust-copy mt-1 text-sm text-slate-700">No badge appears without a live source.</p>
+            </div>
+            <div className="credential-trust-card rounded-2xl border border-white/12 bg-white/88 px-4 py-3 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+              <p className="credential-trust-label text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/80">
+                Country aware
+              </p>
+              <p className="credential-trust-copy mt-1 text-sm text-slate-700">Licensing is shown where it actually applies.</p>
+            </div>
+            <div className="credential-trust-card rounded-2xl border border-white/12 bg-white/88 px-4 py-3 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+              <p className="credential-trust-label text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/80">
+                No empty claims
+              </p>
+              <p className="credential-trust-copy mt-1 text-sm text-slate-700">We keep the language measurable and honest.</p>
             </div>
           </div>
 

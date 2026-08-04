@@ -196,6 +196,11 @@ Record architectural and content decisions, deviations from templates, renamed/c
 - The countries section must include the Germany pathway card so the homepage matches the approved six-card template grid instead of rendering the abbreviated five-card version.
 - The Germany badge should read `EU Blue Card`, not a generic category label, because the template distinguishes that tile explicitly from the other destination cards.
 
+## 2026-08-04 — Credentials density pass
+
+- The dark credentials band should feel complete on its own, not like a sparse sidebar. The left panel now carries an additional proof card, a verification-trail callout, and a short trust-chip row so the section reads as a finished trust block instead of a single stacked list.
+- The proof stack and assurance copy are widened in CSS and the proof cards become a two-column desktop grid so the dark panel holds visual weight without changing the site’s green theme language.
+
 ## 2026-08-04 — Express Entry template pass
 
 - `src/components/pages/ProgramPage.tsx` now treats the Express Entry internal page as the reference structure for the remaining dropdown pages, with reusable support for `facts`, `split`, `lead`, `cards`, and `disclaimer` sections layered onto the shared hero/breadcrumb/CTA shell.
@@ -213,3 +218,17 @@ Record architectural and content decisions, deviations from templates, renamed/c
 - `SectionNav` is now a reusable sticky scrollspy pill bar for internal pages, and the Express Entry page uses explicit anchors to keep the active tab state aligned with the source template.
 - The template-style program, CRS and roadmap sections now use stronger visual hierarchy: numbered program cards, a dark score panel, and a grid-based roadmap layout that can be reused for other content pages with different copy.
 - `MegaNavigation` highlights the `Visas` top-level item on the Express Entry route so the desktop header state matches the approved sample instead of defaulting to `Home`.
+
+## 2026-08-04 — Internal hero offset
+
+- The shared hero shell should add extra top padding only on non-home pages so internal landing pages clear the fixed header/utility stack before the copy and image block begin.
+- The homepage hero keeps its existing spacing, but market content pages now get the offset through the shared hero component rather than ad hoc page-specific wrappers.
+
+## 2026-08-04 — Homepage resources parity
+
+- The homepage resources block should follow the approved template's lighter 8-card grid rather than the older editorial card treatment.
+- `ResourcesSection` now renders a template-style heading block plus per-card CTAs, and `#resources.template-resources` in `globals.css` scopes the background/radius/card overrides so this section keeps the site's soft green gradient language and hover feel without changing the rest of the site.
+
+## 2026-08-04 — Internal page top spacing
+
+- The internal market content pages should start below the fixed header as a whole, not only offset the hero copy. `ProgramPage` now wraps the full content stack in a top-padded container so the page begins in the correct vertical position.
