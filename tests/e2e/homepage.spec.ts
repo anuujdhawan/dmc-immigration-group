@@ -43,11 +43,11 @@ test("no horizontal overflow at desktop and mobile widths", async ({ page }) => 
   }
 });
 
-test("desktop header shows primary navigation and switcher", async ({ page }) => {
+test("desktop header shows primary navigation and utility strip", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/dubai");
   await expect(page.getByRole("navigation", { name: "Primary" })).toBeVisible();
-  await expect(page.getByRole("button", { name: /Dubai/ })).toBeVisible();
+  await expect(page.getByText("RCIC · MARA · ICCRC Regulated")).toBeVisible();
   await expect(page.getByRole("link", { name: "Book Consultation" }).first()).toBeVisible();
 });
 
@@ -56,30 +56,22 @@ test("mega menu opens on hover and links are market-prefixed", async ({ page }) 
   await page.goto("/dubai");
   const visas = page.getByRole("button", { name: /^Visas/ });
   await visas.hover();
-  await expect(page.getByRole("link", { name: "Express Entry" }).first()).toBeVisible();
-  const href = await page.getByRole("link", { name: "Express Entry" }).first().getAttribute("href");
+  await expect(page.getByRole("link", { name: "Express Entry (FSW / CEC / FST)" }).first()).toBeVisible();
+  const href = await page
+    .getByRole("link", { name: "Express Entry (FSW / CEC / FST)" })
+    .first()
+    .getAttribute("href");
   expect(href).toBe("/dubai/visas/canada/express-entry");
 });
 
 test("mobile menu opens and navigates", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/dubai");
-  await page.getByRole("button", { name: "Open menu" }).click();
+  await page.getByRole("button", { name: "Open navigation menu" }).click();
   const mobileNav = page.getByRole("navigation", { name: "Mobile" });
   await expect(mobileNav).toBeVisible();
-  await mobileNav.getByRole("link", { name: "Express Entry" }).click();
+  await mobileNav.getByRole("link", { name: "Express Entry (FSW / CEC / FST)" }).click();
   await expect(page).toHaveURL(/\/dubai\/visas\/canada\/express-entry$/);
-});
-
-test("market switcher sets cookie and navigates", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/dubai");
-  await page.getByRole("button", { name: /Dubai/ }).click();
-  await page.getByRole("option", { name: /Qatar/ }).click();
-  await expect(page).toHaveURL(/\/qatar$/);
-  const cookies = await page.context().cookies();
-  const marketCookie = cookies.find((cookie) => cookie.name === "dmc_market");
-  expect(marketCookie?.value).toBe("qatar");
 });
 
 test("footer shows current-market office details", async ({ page }) => {

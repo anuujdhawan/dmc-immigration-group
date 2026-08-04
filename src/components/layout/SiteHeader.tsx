@@ -1,87 +1,85 @@
-import { Mail, Phone } from "lucide-react";
+import { ArrowRight, Mail, Phone, Shield } from "lucide-react";
 
-import { env } from "@/config/env";
-import { getOffice } from "@/config/offices";
-import { marketHref } from "@/lib/routing/routes";
 import type { Market } from "@/config/markets";
+import { getOffice } from "@/config/offices";
+import { marketSectionHref } from "@/lib/routing/routes";
 import { BrandLogo } from "@/components/layout/BrandLogo";
 import { MegaNavigation } from "@/components/layout/MegaNavigation";
 import { MobileNavigation } from "@/components/layout/MobileNavigation";
-import { MarketSwitcher } from "@/components/layout/MarketSwitcher";
 import { Button } from "@/components/ui/Button";
-import { SocialIcon } from "@/components/ui/SocialIcon";
-
-const socialLinks = [
-  { label: "Instagram", href: env.SOCIAL_INSTAGRAM_URL, name: "instagram" as const },
-  { label: "Facebook", href: env.SOCIAL_FACEBOOK_URL, name: "facebook" as const },
-  { label: "YouTube", href: env.SOCIAL_YOUTUBE_URL, name: "youtube" as const },
-];
 
 export function SiteHeader({ market }: { market: Market }) {
   const office = getOffice(market);
+
   return (
-    <header className="sticky top-0 z-40">
-      <div className="hidden bg-brand-950 text-white md:block">
-        <div className="mx-auto flex max-w-site items-center justify-between gap-6 px-5 py-2 text-xs sm:px-6 lg:px-8">
+    <header
+      id="siteHeader"
+      aria-label="Primary navigation"
+      className="dmc-architectural-header fixed inset-x-0 top-0 z-110 px-4 pt-[max(10px,env(safe-area-inset-top))] pointer-events-none lg:px-4.5"
+    >
+      <div className="premium-utility-bar hidden h-8.5 pointer-events-auto lg:block">
+        <div className="premium-utility-inner mx-auto flex h-full w-[min(1210px,calc(100%-2rem))] items-center justify-between gap-4 text-[0.66rem] text-white/70">
           <div className="flex items-center gap-5">
-            <a
-              href={`tel:${office.phoneE164}`}
-              className="flex items-center gap-1.5 font-medium hover:text-leaf-soft"
-            >
+            <a href={`tel:${office.phoneE164}`} className="inline-flex items-center gap-1.5 hover:text-white">
               <Phone aria-hidden="true" className="size-3.5" />
               {office.phoneDisplay}
             </a>
-            <a
-              href={`mailto:${office.email}`}
-              className="flex items-center gap-1.5 hover:text-leaf-soft"
-            >
+            <a href={`mailto:${office.email}`} className="inline-flex items-center gap-1.5 hover:text-white">
               <Mail aria-hidden="true" className="size-3.5" />
               {office.email}
             </a>
           </div>
-          <div className="flex items-center gap-4">
-            <p className="text-brand-200">RCIC · MARA · CICC Regulated</p>
-            <div className="flex items-center gap-2">
-              {socialLinks
-                .filter((link) => link.href)
-                .map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={link.label}
-                    className="text-brand-200 transition-colors hover:text-leaf-soft"
-                  >
-                    <SocialIcon name={link.name} />
-                  </a>
-                ))}
-            </div>
+          <div className="flex items-center gap-5">
+            <span className="inline-flex items-center gap-1.5">
+              <Shield aria-hidden="true" className="size-3.5 text-brand-400" />
+              RCIC · MARA · ICCRC Regulated
+            </span>
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/55">
+              <span className="text-white/80">EN</span>
+              <span aria-hidden="true" className="h-3 w-px bg-white/20" />
+              <span>AR</span>
+            </span>
           </div>
         </div>
       </div>
 
-      <div className="border-b border-slate-100 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex max-w-site items-center justify-between gap-4 px-5 py-3 sm:px-6 lg:px-8">
-          <a href={marketHref(market, "/")} aria-label={`${env.SITE_NAME} — ${office.label}`}>
-            <BrandLogo variant="header" priority />
-          </a>
+      <div className="header-assembly mx-auto mt-2.5 hidden w-[min(1240px,calc(100%-2rem))] items-stretch gap-2.5 rounded-pill border border-[rgba(255,255,255,.64)] bg-[rgba(250,249,245,.69)] px-2.75 py-2 shadow-[0_18px_54px_rgba(16,41,10,.085)] backdrop-blur-[21px] pointer-events-auto lg:grid lg:grid-cols-[auto_minmax(0,1fr)_auto]">
+        <a
+          aria-label="DMC Immigration home"
+          className="header-plaque flex min-h-19 items-center justify-center rounded-[999px_18px_18px_999px] bg-white px-3.25 py-2 shadow-[0_16px_38px_rgba(23,61,13,.08)]"
+          href={marketSectionHref(market, "home")}
+        >
+          <BrandLogo variant="header" priority className="brand-logo-header h-11.5 w-auto" />
+        </a>
 
+        <div className="header-deck flex min-w-0 items-center justify-center rounded-[18px] px-1.5">
           <MegaNavigation market={market} />
+        </div>
 
-          <div className="flex items-center gap-2.5">
-            <div className="hidden sm:block">
-              <MarketSwitcher market={market} />
-            </div>
-            <Button
-              href={marketHref(market, "/contact")}
-              size="sm"
-              className="max-sm:hidden"
-            >
-              Book Consultation
-            </Button>
-            <MobileNavigation market={market} />
-          </div>
+        <div className="header-action flex min-h-19 items-center justify-end rounded-[18px_999px_999px_18px] p-1.75">
+          <Button
+            href={marketSectionHref(market, "contact")}
+            size="md"
+            variant="primary"
+            className="flex min-h-12 items-center gap-2 whitespace-nowrap rounded-full px-4 py-3 text-sm font-bold shadow-[0_12px_34px_rgba(69,179,24,.28)] lg:px-[1.15rem]"
+          >
+            <span>Book Consultation</span>
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="mobile-header relative mx-auto mt-2.5 flex w-[min(1200px,calc(100%-2rem))] items-center gap-2.5 rounded-3xl border border-[rgba(255,255,255,.64)] bg-[rgba(250,249,245,.69)] px-2.75 py-2 shadow-[0_18px_54px_rgba(16,41,10,.085)] backdrop-blur-[21px] pointer-events-auto lg:hidden">
+        <a
+          aria-label="DMC Immigration home"
+          className="header-plaque flex min-h-17 items-center justify-center rounded-[22px] bg-white px-3.25 py-2 shadow-[0_16px_38px_rgba(23,61,13,.08)]"
+          href={marketSectionHref(market, "home")}
+        >
+          <BrandLogo variant="header" priority className="brand-logo-mobile h-10.5 w-auto" />
+        </a>
+
+        <div className="flex flex-1 items-center justify-end">
+          <MobileNavigation market={market} />
         </div>
       </div>
     </header>

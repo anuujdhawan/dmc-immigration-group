@@ -122,3 +122,43 @@ Record architectural and content decisions, deviations from templates, renamed/c
 - **Hydration bug (Phase 3 latent)**: `MobileNavigation` rendered its portal as `typeof document !== "undefined" && createPortal(..., document.body)` — server rendered nothing, client rendered the panel → hydration mismatch on every page (React regenerated the tree; surfaced as a browser console error in dev; invisible to e2e since Playwright ignores console noise).
 - **Fix pattern (rule going forward)**: SSR portals must be mount-gated with `useSyncExternalStore(() => () => {}, () => true, () => false)` — the server snapshot returns `false` so hydration matches, and the client flips to `true` post-hydration. Do NOT use `useEffect(() => setMounted(true))` — ESLint react-hooks v6 errors on setState-in-effect. Do NOT use `typeof document` conditionals in render.
 - **Guard added**: `tests/e2e/console-errors.spec.ts` asserts zero console/page errors (filtered for hydration messages) on `/dubai`, an Express Entry content page, a noindex page, and a second-market page — runs against the production build in both projects. This catches the whole class of "works but React is angry" regressions.
+
+## 2026-08-04 — Global stylesheet recovery
+
+- The supplied homepage HTML remains the visual source of truth. `src/app/globals.css` now recovers all 14 of its style blocks verbatim (including `dmc-static-utilities` and `dmc-imported-utility-fallbacks`, as well as the named DMC theme, polish, layout, aurora, botanical, editorial, contrast, and responsive layers).
+- The app-specific Tailwind theme bridge remains at the top of `globals.css` so the existing React classes continue to compile. The user-provided damaged source remains untouched in `src/app/globals.css.broken-backup-20260804.txt`.
+- CSS recovery alone cannot create template-identical output while the React components have a different DOM/class structure. Port the template structure into the homepage components as a separate, intentional implementation task.
+
+## 2026-08-04 — Browser-extension hydration noise
+
+- `suppressHydrationWarning` is applied solely to the root `<html>` and `<body>` in `src/app/layout.tsx`. This addresses third-party extension attributes injected before hydration (`webcrx`, `__processed_*`, `bis_register`) without concealing application-level component hydration defects.
+
+## 2026-08-04 — Navbar/header parity batch
+
+- `src/config/navigation.ts` was aligned more closely with the homepage template's dropdown structure and menu labels so the visible navbar reads like the source HTML while still resolving to real app routes where the production site already has them.
+- `src/components/layout/SiteHeader.tsx` now contains the template-derived header CSS in-component via `style jsx global`, keeping the floating plaque/deck/action shell and desktop/mobile menu chrome self-contained.
+- `MegaNavigation` and `MobileNavigation` remain the interaction layer for that header and continue to use the shared nav registry as the single source of truth.
+
+## 2026-08-04 — Header breakpoint correction
+
+- The template-aligned header must remain a single desktop shell plus a single mobile shell. A nested `mobile-header` class inside `MobileNavigation` caused the shell styles to apply twice, so the mobile shell now lives only in `SiteHeader`.
+- Desktop nav visibility now begins at `lg` rather than `xl`, matching the template breakpoint and preventing a blank middle state on tablet widths.
+- The final header CSS override in `globals.css` is now breakpoint-gated instead of unconditional, so later theme layers cannot force the desktop assembly visible on mobile widths.
+
+## 2026-08-04 — Navbar follow-up stabilization
+
+- The desktop header shell already owns responsive visibility, so `MegaNavigation` should render as `block`; keeping `hidden lg:block` at the nav level allowed the recovered stylesheet stack to collapse the desktop menu deck.
+- The mobile dropdown must anchor to the single `SiteHeader` mobile shell, not to the narrow hamburger wrapper. `SiteHeader` owns the relative positioning context and `MobileNavigation` stretches `#mobileMenu` from `left: 0` to `right: 0` so the open panel matches the template's full-width mobile sheet.
+- Shared-layout React keys should not rely on `href` alone when two legal items intentionally resolve to the same route. `SiteFooter` now keys legal links by `label + href`, removing the duplicate-key console warning without changing URLs.
+- Desktop mega-menu alignment must use one transform source. The recovered template CSS already positions `.nav-dropdown` with `left: 50%` and `translate(-50%, ...)`; adding Tailwind `-translate-x-1/2` on top of that double-shifted the panel left. `MegaNavigation` now sets width and translate state directly, keeping each dropdown centered under its own trigger.
+
+## 2026-08-04 — Workspace warning cleanup
+
+- The built-in CSS language service does not understand Tailwind v4's `@theme` directive, so workspace-level CSS `unknownAtRules` linting is disabled via `.vscode/settings.json` rather than rewriting valid Tailwind syntax.
+- Header and mobile-nav class strings now prefer canonical Tailwind utilities where they exist (`rounded-card`, `rounded-xl`, `rounded-pill`, spacing/z-index aliases, and brand color tokens) to keep Tailwind IntelliSense warnings out of the navbar implementation.
+- The shared media reset no longer sets `vertical-align` on elements forced to `display: block`, removing the editor's ignored-property warning without affecting layout.
+
+## 2026-08-04 — Hero orbit flag border source
+
+- The dark square around the hero orbit flags was not coming from `.country-orbit-flag`; it came from the parent `.country-orbit-node` being rendered as a native `<button>` and picking up a default button appearance/box-shadow from the browser.
+- The fix is scoped to `.botanical-network-stage .country-orbit-node` in `src/app/globals.css`: reset `appearance`, `-webkit-appearance`, `box-shadow`, and `outline` there so the intended light flag card styling remains visible without the browser-drawn square.

@@ -12,6 +12,11 @@ export function marketHref(market: Market, path: string): string {
   return `/${market}${normalized}`;
 }
 
+export function marketSectionHref(market: Market, section: string): string {
+  const anchor = section.replace(/^#/, "").replace(/^\/+/, "");
+  return `/${market}#${anchor}`;
+}
+
 export function stripMarketPrefix(href: string): string {
   const match = href.match(new RegExp(`^${MARKET_SLUG_PATTERN}(/|$)`));
   if (!match) return href;

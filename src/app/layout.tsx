@@ -41,8 +41,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} ${dmSans.variable}`}>
-      <body className="flex min-h-dvh flex-col antialiased">
+    <html
+      lang="en"
+      className={`${manrope.variable} ${dmSans.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <link
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+          rel="stylesheet"
+        />
+      </head>
+      <body
+        className="flex min-h-dvh flex-col antialiased"
+        suppressHydrationWarning
+      >
         <div className="flex grow flex-col">{children}</div>
       </body>
     </html>

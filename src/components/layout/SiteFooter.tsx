@@ -88,7 +88,7 @@ export function SiteFooter({ market }: { market: Market }) {
         <Container className="flex flex-wrap items-center gap-x-5 gap-y-2 py-4">
           {NAV_LEGAL.map((link) => (
             <a
-              key={link.href}
+              key={`${link.label}:${link.href}`}
               href={link.href}
               className="text-xs text-slate-500 transition-colors hover:text-brand-700"
             >

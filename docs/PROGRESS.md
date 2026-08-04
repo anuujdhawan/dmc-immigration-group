@@ -2,7 +2,7 @@
 
 Living checklist. Update after every meaningful batch. Never delete completed history.
 
-Last updated: 2026-08-03
+Last updated: 2026-08-04
 
 ## Completed
 
@@ -38,6 +38,24 @@ Last updated: 2026-08-03
   - Verified: `npm run build` ✓ (11 routes: /, /_not-found, 5 markets, /icon.png, /apple-icon.png, /favicon.ico), `typecheck` ✓, `lint` ✓ 0 problems, `test` ✓ 21/21.
 
 ## Current work
+
+- Navbar/header parity batch completed:
+  - `src/config/navigation.ts` now mirrors the template menu labels and group structure more closely, including the exact dropdown section naming and legal route normalization.
+  - `src/components/layout/SiteHeader.tsx` now carries the template-derived header CSS directly in the component via `style jsx global`, so the floating header, plaque/deck/action styling, dropdown treatment, and mobile menu chrome stay self-contained.
+- `src/components/layout/MegaNavigation.tsx` and `src/components/layout/MobileNavigation.tsx` already match the template interaction model and were kept aligned with the updated nav registry.
+- Verification: `npm run lint -- src/config/navigation.ts src/components/layout/SiteHeader.tsx src/components/layout/MegaNavigation.tsx src/components/layout/MobileNavigation.tsx` ✓, `npm run typecheck` ✓, `npm run build` ✓ (escalated; sandbox Turbopack process-spawn restriction reproduced without escalation).
+
+- Header duplication fixed after the first parity pass: `SiteHeader` now renders separate desktop/mobile shells, `MobileNavigation` no longer carries the shell class, `MegaNavigation` starts at `lg`, and the final `globals.css` override is breakpoint-gated so the desktop header can’t leak into tablet/mobile widths.
+- Verification for the follow-up fix: `npm run typecheck` ✓, `npm run build` ✓ (escalated once for the sandbox port/process limitation).
+- Navbar follow-up fix: removed the desktop nav's `hidden lg:block` dependency because the recovered stylesheet stack left it visually collapsed at desktop widths, and anchored the mobile dropdown to the full mobile header shell so it opens as a full-width panel instead of a narrow strip beside the hamburger button.
+- Verification for the latest navbar fix: live browser reload at `1600x900` shows desktop links visible in the center deck; live browser reload at `390x844` shows the mobile menu opening at full shell width; `npm run typecheck` ✓.
+- Shared-layout cleanup: `SiteFooter` legal links no longer use bare `href` keys, which removes the duplicate-key React console warning caused by the `Privacy Policy` and `Cookie Policy` entries sharing the same target route.
+- Desktop dropdown alignment fix: removed the extra Tailwind X-translation from `MegaNavigation` and moved dropdown width/transform to a single inline source so the recovered template CSS no longer double-shifts the panel left.
+- Verification for dropdown alignment: live browser measurement on `http://localhost:3000/dubai#home` now reports `delta: 0` for Visas, Services, Resources, and Tools, meaning each dropdown center matches its trigger center exactly; `npm run typecheck` ✓.
+- Workspace warning cleanup: canonicalized the flagged Tailwind classes in `SiteHeader` and `MobileNavigation`, removed the ignored `vertical-align` declaration from the shared media reset in `globals.css`, and added `.vscode/settings.json` so the editor stops misreporting Tailwind v4 `@theme` as an unknown at-rule.
+- Verification for warning cleanup: `npm run typecheck` ✓.
+- Hero orbit flag cleanup: removed the dark square outline around the animated flag chips by resetting the parent orbit node button appearance instead of changing the flag span styling.
+- Verification for the flag cleanup: live browser inspection now reports `.botanical-network-stage .country-orbit-node` with `appearance: none` and `box-shadow: none`; `npm run typecheck` ✓.
 
 - **Phase 5 COMPLETE (uncommitted → commit this batch)**: content pages — 60 content pages across 8 group files, ProgramPage renderer, catch-all route, tests:
   - Content registry (`src/content/pages/`): `types.ts` (added `ProgramItem`, `LinkItem`, `programs`/`links` kinds, `anchor` on sections), 8 group files — `canada.ts` (7), `australia.ts` (8), `uk.ts` (2), `visit-visas.ts` (23: directory + 6 hubs + 16 destinations), `business-investment.ts` (9), `study-abroad.ts` (6), `services.ts` (2), `resources.ts` (3). `index.ts` exports `PAGE_REGISTRY`, `PAGE_IDS`, `getPageContent`, `breadcrumbsFor`, `pageTitleForMarket`.
@@ -88,6 +106,9 @@ Last updated: 2026-08-03
 
 ## Latest commands / test results
 
+- `node -e "postcss.parse(...)"` on `src/app/globals.css` — valid CSS ✓
+- `npm run typecheck` — clean ✓
+- `npm run build` — started successfully but an earlier interrupted `next build` process remained active and held `.next/lock`; no CSS compilation error was reported. Rerun after that process exits.
 - `npm run test:e2e` — **68/68 passed** (desktop-chromium + mobile-390; homepage 9, routing 22, content pages 7 — Phase 5 suite incl. hero/sections/sources, FAQ accordion, content overflow 768/390/320, breadcrumbs, 5-market render, unknown-path 404, robots noindex) ✓
 - `npm test` — 41 passed (6 files: env schema, markets, routes, navigation, legacy-redirects, content registry) ✓
 - `npm run lint` — 0 errors, 0 warnings ✓
@@ -103,3 +124,15 @@ Last updated: 2026-08-03
 - Blog articles: 91 (`.ae`) + 23 + 8 + 19 + 4 crawled into inventory; 0 migrated (Phase 6).
 - Legacy authentic assets: 144 success-story + 16 gallery + video/press items inventoried as sources; 0 approved/manifested.
 - Tools: 0 of 16 implemented (Phase 10).
+
+## 2026-08-04 — Global stylesheet recovery
+
+- Repaired `src/app/globals.css` after a broken recovery paste. The invalid 1,781-line transcription contained CSS syntax errors and prevented parsing.
+- Superseding the initial minimal recovery, the stylesheet now contains all 14 CSS layers recovered verbatim from `DMC_Homepage_Mobile_Responsive_Final(1).html`, including its generated utility layers (6,505 lines, 673,473 bytes). `globals.css` remains PostCSS-valid.
+- The user-provided damaged source is preserved untouched at `src/app/globals.css.broken-backup-20260804.txt` (SHA-256 `7058e07cab2d584d1ade164d6eaf9dc3b853a965e7a200f78ed69e433b92b840`).
+- The current React homepage uses different markup from the source template, so exact visual parity requires a subsequent JSX/component port in addition to this CSS recovery.
+
+## 2026-08-04 — Root hydration warning suppression
+
+- Browser-extension attributes (`webcrx`, `__processed_*`, and `bis_register`) were injected into the root `<html>`/`<body>` before React hydration, producing a development-only mismatch warning despite a successful page response.
+- Added `suppressHydrationWarning` only to the root `<html>` and `<body>` in `src/app/layout.tsx`; nested component hydration mismatches remain visible. `npm run typecheck` passes.
