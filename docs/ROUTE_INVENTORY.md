@@ -16,8 +16,8 @@ All routes are under `/[market]/` for the five markets: `dubai`, `abu-dhabi`, `q
 | Route ID | Label | Component/content | 5-market | Meta | Test | Legacy aliases |
 |---|---|---|---|---|---|---|
 | `visas/canada/express-entry` | Express Entry | ProgramPage (reference impl, EE template) | done | done | done | pending |
-| `visas/canada/provincial-nominee-programs` | PNP hub | ProgramPage hub | done | done | done | pending |
-| `visas/canada/atlantic-immigration-program` | Atlantic Immigration | ProgramPage | done | done | done | pending |
+| `visas/canada/provincial-nominee-programs` | PNP hub | InternalPageTemplate via `CanadaInternalProgramPages` | done | done | done | pending |
+| `visas/canada/atlantic-immigration-program` | Atlantic Immigration | InternalPageTemplate via `CanadaInternalProgramPages` | done | done | done | pending |
 | `visas/canada/rural-and-northern-immigration-pilot` | RNIP (legacy status) | ProgramPage w/ status banner (closed 31 Aug 2024 → RCIP) | done | done | done | pending |
 | `visas/canada/study-permits` | Study permits | ProgramPage (SDS history + NCLEX context) | done | done | done | pending |
 | `visas/canada/family-sponsorship-parent-grandparent-program` | Parent/Grandparent | ProgramPage | done | done | done | pending |

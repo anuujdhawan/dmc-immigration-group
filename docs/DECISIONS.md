@@ -232,3 +232,15 @@ Record architectural and content decisions, deviations from templates, renamed/c
 ## 2026-08-04 — Internal page top spacing
 
 - The internal market content pages should start below the fixed header as a whole, not only offset the hero copy. `ProgramPage` now wraps the full content stack in a top-padded container so the page begins in the correct vertical position.
+
+## 2026-08-04 — Reusable internal-page system after Express Entry
+
+- The approved Canada Express Entry internal page is now the reference implementation for the remaining serious immigration content pages. Instead of cloning one giant page file per route, the shared structure now lives in `src/components/pages/internal/InternalPageTemplate.tsx`.
+- That internal template layer owns the repeated content-page building blocks: breadcrumbs, facts bar, anchor nav, split media/content band, lead-form section, program/criteria/process/FAQ/source sections, and the closing CTA.
+- Canada follow-up pages should be assembled from those extracted components first, then customized with route-specific content. This keeps the approved template rhythm consistent while avoiding drift between internal pages.
+- `src/components/pages/CanadaInternalProgramPages.tsx` is the first route-family wrapper built on top of that template layer and now powers:
+  - `/{market}/visas/canada/provincial-nominee-programs`
+  - `/{market}/visas/canada/atlantic-immigration-program`
+- Market context remains mandatory even on reused template pages. Phone labels, consultation copy, breadcrumbs, and route-level metadata should continue to resolve through the market/office registries rather than hardcoded Dubai-only copy.
+- The internal-page stack under the shared fixed header now follows this sequence intentionally: breadcrumb bar, facts bar, anchor nav, then the first content section. Spacing tweaks should preserve that order rather than pushing the whole page downward with arbitrary top margin.
+- The extracted template layer still uses centralized remote `<img>` tags for parity speed. This is accepted temporary debt while the reusable system is stabilizing; a later image pass should migrate them to `next/image` or approved optimized local assets once the required CSS selectors and sizing behavior are preserved.

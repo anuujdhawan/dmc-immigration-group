@@ -39,6 +39,22 @@ Last updated: 2026-08-04
 
 ## Current work
 
+- Reusable internal-page rollout expanded beyond Express Entry:
+  - Added `src/components/pages/internal/InternalPageTemplate.tsx` as the shared internal-page system and moved the Express Entry route onto that extracted component layer instead of keeping the entire template inline on one page.
+  - Added `src/components/pages/CanadaInternalProgramPages.tsx` to hold the next Canada template pages built from the same internal building blocks, including shared breadcrumbs, facts bar, anchor nav, split hero-content section, lead form band, FAQ block, source cards, and closing CTA.
+  - Added dedicated market routes for:
+    - `src/app/[market]/visas/canada/provincial-nominee-programs/page.tsx`
+    - `src/app/[market]/visas/canada/atlantic-immigration-program/page.tsx`
+  - Both new pages now use the same internal-page component family as Express Entry while keeping market-aware phone/CTA context from the office registry.
+  - Express Entry follow-up fixes included market-aware FAQ JSON-LD, market-aware consultation copy, and the adjusted breadcrumb/facts/anchor/content stack spacing under the shared fixed header.
+  - Development-mode responsive verification completed against the live dev server at `http://localhost:3001` for:
+    - `/dubai/visas/canada/express-entry`
+    - `/dubai/visas/canada/provincial-nominee-programs`
+    - `/dubai/visas/canada/atlantic-immigration-program`
+  - Widths checked: `768x1024` (tablet) and `390x844` (mobile).
+  - Results: no horizontal overflow on any checked page; breadcrumb/facts/anchor stack renders below the fixed header at both widths; visual spot-check screenshots looked consistent with the template-derived layout.
+  - Known follow-up still pending: the centralized template media inside `src/components/pages/internal/InternalPageTemplate.tsx` still uses `<img>` tags and continues to emit the expected `@next/next/no-img-element` lint warnings until the image pass migrates them to `next/image` or approved optimized local assets.
+
 - Homepage credentials section density pass completed:
   - `src/components/home/CredentialsSection.tsx` now uses a fuller dark-left panel with an added proof card, a verification-trail panel, and smaller trust chips at the bottom so the section feels intentional instead of empty.
   - `src/app/globals.css` now widens the proof stack/assurance blocks and turns the proof stack into a two-column desktop layout so the dark green section reads as a complete band on desktop and mobile.
@@ -130,14 +146,15 @@ Last updated: 2026-08-04
 
 ## Next work
 
-1. Commit Phase 5 (verified below).
-2. Phase 6: blog MDX migration from crawl inventory (91 posts), blog index + `[slug]` market filtering.
-3. Phase 7: lead forms (`react-hook-form` + zod), Resend route handler (env-gated), CRM adapter (env-gated), honeypot/rate-limit.
-4. Phase 8: React ChatBotify v2 `DmcGuidedChat` + eligibility checker.
-5. Phase 9: consent + analytics (vanilla-cookieconsent, consent-gated GTM/GA4/Meta from env).
-6. Phase 10: calculators/tools (16 tools from inventory, pure modules + unit tests).
-7. Phase 11: WhatsApp launcher (env numbers, per-market) + office directory + credentials page.
-8. Phase 12: legal/anti-fraud hub + copy review; Phase 13: SEO (metadata, sitemap, robots, OG, structured data); Phase 14: QA sweep + e2e suite + readiness checklist.
+1. Continue applying the extracted internal-page component system to the next Canada and dropdown-menu internal pages after Express Entry, PNP, and AIP.
+2. Replace the centralized template `<img>` tags in `src/components/pages/internal/InternalPageTemplate.tsx` with `next/image` or approved optimized local assets, then re-check the recovered template CSS selectors so layout parity is preserved while removing the lint warnings.
+3. Phase 6: blog MDX migration from crawl inventory (91 posts), blog index + `[slug]` market filtering.
+4. Phase 7: lead forms (`react-hook-form` + zod), Resend route handler (env-gated), CRM adapter (env-gated), honeypot/rate-limit.
+5. Phase 8: React ChatBotify v2 `DmcGuidedChat` + eligibility checker.
+6. Phase 9: consent + analytics (vanilla-cookieconsent, consent-gated GTM/GA4/Meta from env).
+7. Phase 10: calculators/tools (16 tools from inventory, pure modules + unit tests).
+8. Phase 11: WhatsApp launcher (env numbers, per-market) + office directory + credentials page.
+9. Phase 12: legal/anti-fraud hub + copy review; Phase 13: SEO (metadata, sitemap, robots, OG, structured data); Phase 14: QA sweep + e2e suite + readiness checklist.
 
 ## Blockers / TODO(client)
 
@@ -159,10 +176,16 @@ Last updated: 2026-08-04
 
 - `node -e "postcss.parse(...)"` on `src/app/globals.css` — valid CSS ✓
 - `npm run typecheck` — clean ✓
+- `npm run typecheck` — clean ✓ after adding the reusable internal Canada route pages (`provincial-nominee-programs`, `atlantic-immigration-program`)
 - `npm run test:e2e` — **68/68 passed** (desktop-chromium + mobile-390; homepage 9, routing 22, content pages 7 — Phase 5 suite incl. hero/sections/sources, FAQ accordion, content overflow 768/390/320, breadcrumbs, 5-market render, unknown-path 404, robots noindex) ✓
 - `npm run test:e2e -- tests/e2e/content-pages.spec.ts` — sandbox webserver start failed with Turbopack port-binding error; escalated rerun stalled and was cancelled, so browser verification of this batch is still pending in this environment.
 - `npm test` — 41 passed (6 files: env schema, markets, routes, navigation, legacy-redirects, content registry) ✓
 - `npm run lint` — 0 errors, 0 warnings ✓
+- `npm run lint` — 0 errors, 7 warnings ✓ after the internal-page extraction; warnings are limited to the centralized template `<img>` elements in `src/components/pages/internal/InternalPageTemplate.tsx`
+- Development-mode responsive check on the host dev server (`localhost:3001`) via Playwright at `768x1024` and `390x844`:
+  - Express Entry: no horizontal overflow; breadcrumb/facts/anchor/content stack sits below the fixed header.
+  - Provincial Nominee Programs: no horizontal overflow; template stack spacing and first content band render cleanly at both widths.
+  - Atlantic Immigration Program: no horizontal overflow; template stack spacing and first content band render cleanly at both widths.
 - `npm run build` — ✓ **411 static pages / 311 routes** after the internal-page template alignment pass; Turbopack; TypeScript pass ✓
 - `npm run build` — ✓ **411 static pages / 311 routes** after the Express Entry template parity follow-up; Turbopack; TypeScript pass ✓
 - NOTE: kill stale dev/start servers on :3000 before `test:e2e` — `reuseExistingServer: true` will silently reuse an outdated build (caused 15 phantom failures this session; root cause: pre-Phase-5 `next dev` still listening).
