@@ -49,15 +49,9 @@ export function MobileNavigation({ market }: MobileNavigationProps) {
           </a>
 
           {NAV_PRIMARY.filter((item) => item.columns?.length).map((item) => (
-            <details key={item.label} className="mobile-group group rounded-xl">
+            <details key={item.label} className="mobile-group rounded-xl">
               <summary className="flex cursor-pointer items-center justify-between gap-4 rounded-xl px-[0.85rem] py-[0.86rem] text-[0.8rem] font-extrabold text-charcoal hover:bg-dmc-soft-green hover:text-brand-700">
                 <span>{item.label}</span>
-                <span
-                  aria-hidden="true"
-                  className="text-brand-600 transition-transform duration-200 group-open:rotate-45"
-                >
-                  +
-                </span>
               </summary>
               <div className="mobile-group-links grid gap-[0.36rem] px-[1.15rem] pb-[0.8rem] pt-[0.2rem]">
                 {(item.columns ?? []).map((column) => (

@@ -56,6 +56,7 @@ Last updated: 2026-08-04
 - Verification for warning cleanup: `npm run typecheck` ✓.
 - Hero orbit flag cleanup: removed the dark square outline around the animated flag chips by resetting the parent orbit node button appearance instead of changing the flag span styling.
 - Verification for the flag cleanup: live browser inspection now reports `.botanical-network-stage .country-orbit-node` with `appearance: none` and `box-shadow: none`; `npm run typecheck` ✓.
+- Mobile/tablet menu alignment cleanup: removed the duplicate JSX `+` from each accordion row in `MobileNavigation`, leaving the existing CSS disclosure marker as the single right-aligned icon.
 
 - **Phase 5 COMPLETE (uncommitted → commit this batch)**: content pages — 60 content pages across 8 group files, ProgramPage renderer, catch-all route, tests:
   - Content registry (`src/content/pages/`): `types.ts` (added `ProgramItem`, `LinkItem`, `programs`/`links` kinds, `anchor` on sections), 8 group files — `canada.ts` (7), `australia.ts` (8), `uk.ts` (2), `visit-visas.ts` (23: directory + 6 hubs + 16 destinations), `business-investment.ts` (9), `study-abroad.ts` (6), `services.ts` (2), `resources.ts` (3). `index.ts` exports `PAGE_REGISTRY`, `PAGE_IDS`, `getPageContent`, `breadcrumbsFor`, `pageTitleForMarket`.

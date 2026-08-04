@@ -162,3 +162,8 @@ Record architectural and content decisions, deviations from templates, renamed/c
 
 - The dark square around the hero orbit flags was not coming from `.country-orbit-flag`; it came from the parent `.country-orbit-node` being rendered as a native `<button>` and picking up a default button appearance/box-shadow from the browser.
 - The fix is scoped to `.botanical-network-stage .country-orbit-node` in `src/app/globals.css`: reset `appearance`, `-webkit-appearance`, `box-shadow`, and `outline` there so the intended light flag card styling remains visible without the browser-drawn square.
+
+## 2026-08-04 — Mobile menu icon alignment
+
+- The tablet/mobile accordion rows should use a single disclosure icon source. `MobileNavigation` had both a rendered `+` span and the existing CSS `summary::after` marker, which created two plus symbols per row and pushed one toward the center.
+- The JSX-owned plus span was removed so the mobile menu now relies only on the right-aligned CSS marker already defined for `.mobile-group summary::after`.
