@@ -58,12 +58,7 @@ export function LeadForm({
   const [errorMsg, setErrorMsg] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<LeadFormData>({
+  const form = useForm({
     resolver: zodResolver(leadSchema),
     defaultValues: {
       preferredMarket: market,
@@ -74,14 +69,17 @@ export function LeadForm({
     },
   });
 
+  const { register, handleSubmit, formState: { errors }, reset } = form;
+
   const onSubmit = useCallback(
-    async (data: LeadFormData) => {
+    async (data: Record<string, unknown>) => {
+      const formData = data as LeadFormData;
       setStatus("submitting");
       setErrorMsg("");
 
       try {
         const result = await submitLead({
-          ...data,
+          ...formData,
           sourcePage: typeof window !== "undefined" ? window.location.pathname : "",
           currentMarket: market,
         });

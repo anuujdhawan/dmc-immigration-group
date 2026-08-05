@@ -2,6 +2,7 @@ import { MARKET_LABELS, type Market } from "@/config/markets";
 import { getPageContent } from "@/content/pages";
 import type { PageContent } from "@/content/pages/types";
 import { marketHref } from "@/lib/routing/routes";
+import { pageMedia } from "@/config/page-media";
 import { Hero } from "@/components/home/Hero";
 import {
   CriteriaGrid,
@@ -77,6 +78,7 @@ export function SkilledIndependent189Page({
 }) {
   const page = requirePage("visas/australia/skilled-independent-189");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/australia/skilled-independent-189");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const process = page.sections.find((section) => section.kind === "process");
@@ -136,10 +138,10 @@ export function SkilledIndependent189Page({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Skilled Independent visa Australia",
-          label: "189 visa pathway",
+          alt: media.split?.alt ?? "Skilled Independent visa Australia",
+          label: media.split?.label ?? "189 visa pathway",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="Skilled Independent Visa (189)"
         title={
@@ -216,8 +218,8 @@ export function SkilledIndependent189Page({
           }
           copy="The 189 process involves skills assessment, EOI submission, invitation rounds and the permanent-residence application."
           image={{
-            alt: "189 visa process",
-            src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+            alt: media.process?.alt ?? "189 visa process",
+            src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
           }}
           steps={process.steps.map((step, index) => ({
             num: String(index + 1).padStart(2, "0"),
@@ -269,6 +271,7 @@ export function SkilledNominated190Page({
 }) {
   const page = requirePage("visas/australia/skilled-nominated-190");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/australia/skilled-nominated-190");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const process = page.sections.find((section) => section.kind === "process");
@@ -328,10 +331,10 @@ export function SkilledNominated190Page({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Skilled Nominated visa Australia",
-          label: "190 visa pathway",
+          alt: media.split?.alt ?? "Skilled Nominated visa Australia",
+          label: media.split?.label ?? "190 visa pathway",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="Skilled Nominated Visa (190)"
         title={
@@ -408,8 +411,8 @@ export function SkilledNominated190Page({
           }
           copy="The 190 process involves skills assessment, state nomination application, invitation and the federal PR application."
           image={{
-            alt: "190 visa process",
-            src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+            alt: media.process?.alt ?? "190 visa process",
+            src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
           }}
           steps={process.steps.map((step, index) => ({
             num: String(index + 1).padStart(2, "0"),
@@ -461,6 +464,7 @@ export function SkilledWorkRegional491Page({
 }) {
   const page = requirePage("visas/australia/skilled-work-regional-491");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/australia/skilled-work-regional-491");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const process = page.sections.find((section) => section.kind === "process");
@@ -520,10 +524,10 @@ export function SkilledWorkRegional491Page({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Regional Australia immigration",
-          label: "491 regional pathway",
+          alt: media.split?.alt ?? "Regional Australia immigration",
+          label: media.split?.label ?? "491 regional pathway",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="Skilled Work Regional Visa (491)"
         title={
@@ -600,8 +604,8 @@ export function SkilledWorkRegional491Page({
           }
           copy="The 491 visa is a stepping stone to permanent residence through the 191 visa after meeting regional living and working requirements."
           image={{
-            alt: "491 to 191 pathway",
-            src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+            alt: media.process?.alt ?? "491 to 191 pathway",
+            src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
           }}
           steps={process.steps.map((step, index) => ({
             num: String(index + 1).padStart(2, "0"),
@@ -653,6 +657,7 @@ export function PermanentResidence191Page({
 }) {
   const page = requirePage("visas/australia/permanent-residence-skilled-regional-191");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/australia/permanent-residence-skilled-regional-191");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const faq = page.sections.find((section) => section.kind === "faq");
@@ -710,10 +715,10 @@ export function PermanentResidence191Page({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Permanent residence through 191 visa",
-          label: "191 PR pathway",
+          alt: media.split?.alt ?? "Permanent residence through 191 visa",
+          label: media.split?.label ?? "191 PR pathway",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
         }}
         kicker="Permanent Residence (191)"
         title={
@@ -821,6 +826,7 @@ export function EmployerSponsored482Page({
 }) {
   const page = requirePage("visas/australia/employer-sponsored-482");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/australia/employer-sponsored-482");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const process = page.sections.find((section) => section.kind === "process");
@@ -880,10 +886,10 @@ export function EmployerSponsored482Page({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Employer sponsored visa Australia",
-          label: "482 visa pathway",
+          alt: media.split?.alt ?? "Employer sponsored visa Australia",
+          label: media.split?.label ?? "482 visa pathway",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="Skills in Demand Visa (482)"
         title={
@@ -960,8 +966,8 @@ export function EmployerSponsored482Page({
           }
           copy="The 482 process involves employer nomination, skills assessment where required, and the visa application."
           image={{
-            alt: "482 visa process",
-            src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+            alt: media.process?.alt ?? "482 visa process",
+            src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
           }}
           steps={process.steps.map((step, index) => ({
             num: String(index + 1).padStart(2, "0"),
@@ -1013,6 +1019,7 @@ export function EmployerNomination186Page({
 }) {
   const page = requirePage("visas/australia/employer-nomination-scheme-186");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/australia/employer-nomination-scheme-186");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const process = page.sections.find((section) => section.kind === "process");
@@ -1072,10 +1079,10 @@ export function EmployerNomination186Page({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Employer Nomination Scheme Australia",
-          label: "186 visa pathway",
+          alt: media.split?.alt ?? "Employer Nomination Scheme Australia",
+          label: media.split?.label ?? "186 visa pathway",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="Employer Nomination Scheme (186)"
         title={
@@ -1152,8 +1159,8 @@ export function EmployerNomination186Page({
           }
           copy="The 186 process involves employer nomination, skills assessment where required and the permanent-residence application."
           image={{
-            alt: "186 visa process",
-            src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+            alt: media.process?.alt ?? "186 visa process",
+            src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
           }}
           steps={process.steps.map((step, index) => ({
             num: String(index + 1).padStart(2, "0"),
@@ -1205,6 +1212,7 @@ export function NationalInnovationVisa858Page({
 }) {
   const page = requirePage("visas/australia/national-innovation-visa-858");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/australia/national-innovation-visa-858");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const faq = page.sections.find((section) => section.kind === "faq");
@@ -1262,10 +1270,10 @@ export function NationalInnovationVisa858Page({
       <SplitContentSection
         id="services"
         media={{
-          alt: "National Innovation Visa Australia",
-          label: "858 visa pathway",
+          alt: media.split?.alt ?? "National Innovation Visa Australia",
+          label: media.split?.label ?? "858 visa pathway",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="National Innovation Visa (858)"
         title={
@@ -1373,6 +1381,7 @@ export function StateTerritoryNominationsPage({
 }) {
   const page = requirePage("visas/australia/state-territory-nominations");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/australia/state-territory-nominations");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const faq = page.sections.find((section) => section.kind === "faq");
@@ -1430,10 +1439,10 @@ export function StateTerritoryNominationsPage({
       <SplitContentSection
         id="services"
         media={{
-          alt: "State and territory nominations Australia",
-          label: "Nomination pathways",
+          alt: media.split?.alt ?? "State and territory nominations Australia",
+          label: media.split?.label ?? "Nomination pathways",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="State & Territory Nominations"
         title={

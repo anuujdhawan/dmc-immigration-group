@@ -1,7 +1,6 @@
 "use server";
 
 import { Resend } from "resend";
-import { z } from "zod";
 import { env } from "@/config/env/server";
 import { leadSchema, type LeadFormData } from "./schema";
 import { sendToCrm } from "./crm";
@@ -79,20 +78,14 @@ async function sendViaResend(data: LeadFormData): Promise<boolean> {
 
     const from = `${env.RESEND_FROM_NAME} <${env.RESEND_FROM_LOCAL_PART}@${env.RESEND_SENDING_DOMAIN}>`;
 
-    const payload: Record<string, unknown> = {
+    const { error } = await resend.emails.send({
       from,
       to: [toEmail as string],
       subject,
       html,
       text,
       replyTo: env.RESEND_REPLY_TO_EMAIL || undefined,
-    };
-
-    if (env.RESEND_CENTRAL_BCC_EMAIL) {
-      payload.bcc = [env.RESEND_CENTRAL_BCC_EMAIL];
-    }
-
-    const { error } = await resend.emails.send(payload as Parameters<typeof resend.emails.send>[0]);
+    });
     if (error) {
       console.error("Resend error:", error);
       return false;
@@ -126,12 +119,9 @@ export async function submitLead(formData: LeadFormData): Promise<LeadResult> {
   ]);
 
   const emailResult = results[0];
-  const crmResult = results[1];
 
   const emailSuccess =
     emailResult.status === "fulfilled" && emailResult.value;
-  const crmSuccess =
-    crmResult.status === "fulfilled" && crmResult.value;
 
   // If both Resend and CRM are disabled, still return success (form was validated)
   const resendAttempted = env.RESEND_ENABLED;

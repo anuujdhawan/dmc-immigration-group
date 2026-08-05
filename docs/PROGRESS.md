@@ -144,17 +144,65 @@ Last updated: 2026-08-04
   2. **Mobile menu "Express Entry"** — test ambiguity: TWO matches (drawer accordion link + Tools card whose accessible name contains "Express Entry" → `.last()` hit `/dubai/tools/canada/crs-calculator`) → scoped to mobile nav; plus drawer visibility bug (above) fixed via portal.
   3. **Footer phone strict-mode violation** — `getByText('+974 4436 7929')` matched utility bar + footer → scoped to `footer`; footer label now `{office.city} Office` (matches "Doha, Qatar Office").
 
+## 2026-08-05 — Lead pipeline + WhatsApp + calculators + SEO batch
+
+- **Phase 7 COMPLETE — Lead pipeline**:
+  - Installed `react-hook-form`, `@hookform/resolvers`, `resend`.
+  - Created `src/features/leads/schema.ts` — Zod validation schema with honeypot, consent, market-aware fields.
+  - Created `src/features/leads/actions.ts` — Server action: honeypot check, server-side validation, Resend email delivery (env-gated, per-market recipient), disabled CRM adapter.
+  - Created `src/features/leads/crm.ts` — CRM adapter interface, disabled by default (`CRM_ENABLED=false`), sends normalized payload to configured endpoint.
+  - Created `src/components/forms/LeadForm.tsx` — Reusable form component: name, email, phone, destination dropdown (13 options), age range, education, preferred market, message, consent checkbox, honeypot, success/error states, accessible error messages with `aria-live`, loading spinner.
+  - All env-backed: `RESEND_ENABLED`, `RESEND_API_KEY`, `DMC_<MARKET>_LEAD_TO_EMAIL`, `CRM_ENABLED`, `CRM_BASE_URL`, etc.
+
+- **Phase 8 PARTIAL — WhatsApp launcher**:
+  - Created `src/components/ui/WhatsAppLauncher.tsx` — Floating green button (lower-right), opens 5-market selector panel, env-backed `wa.me` links, prefilled message, hides markets with no number.
+  - Created `src/components/layout/MarketFloatingWidgets.tsx` — Server component providing env WhatsApp data to client launcher.
+  - Integrated into `src/app/[market]/layout.tsx` — WhatsApp floats on every market page.
+
+- **Phase 9 PARTIAL — Consent manager**:
+  - Installed `vanilla-cookieconsent`.
+  - Created `src/components/ui/ConsentManager.tsx` — CookieConsent v3 wrapper: necessary/analytics/marketing categories, accept all, save preferences, close, revision support, `dmc-consent-change` custom event.
+  - Created `src/components/ui/ConsentProvider.tsx` — Client wrapper.
+  - Integrated into `src/app/layout.tsx` — Consent banner loads on every page (disabled by default via `CONSENT_BANNER_ENABLED=false`).
+
+- **Phase 10 PARTIAL — Calculators**:
+  - Created `src/components/calculators/CLBCalculator.tsx` — CLB converter for IELTS/CELPIP/TEF scores → CLB levels, 4 abilities, per-ability and overall results.
+  - Created `src/components/calculators/FSW67Calculator.tsx` — Federal Skilled Worker 67-point selection factor calculator: age, education, work experience, first/second language, arranged employment, adaptability.
+  - Created `src/components/calculators/AustraliaPointsCalculator.tsx` — Australia skilled migration points calculator: age, English, second language, overseas/Australian employment, education, nomination (65-point threshold).
+  - All calculators include informational-estimate disclaimers, official source links, and `lastVerified` dates.
+
+- **Phase 13 PARTIAL — SEO**:
+  - Created `src/app/sitemap.ts` — XML sitemap: 5 market homepages + all content pages across 5 markets.
+  - Created `src/app/robots.ts` — Robots.txt: allow all, disallow `/api/` and `/admin/`, sitemap link.
+  - Updated `next.config.ts` — Security headers: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection, Referrer-Policy, Permissions-Policy.
+
+- Dependencies added: `react-hook-form`, `@hookform/resolvers`, `resend`, `vanilla-cookieconsent`.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 warnings — pre-existing `<img>` + 2 minor unused vars now fixed), `npm run build` ✓ (sitemap.xml + robots.txt now generated), `npm test` ✓ 41/41.
+
+## 2026-08-05 — Destination-appropriate image pass for every internal page
+
+- Every internal page in the navbar dropdown now serves destination-appropriate, locally-hosted images instead of the old reused Canada photos (`canada_image_07.jpg` / `canada_image_7.jpg` / `PR_in_Canada_2.jpg` from `dm-consultant.ae` were being shown on Australia and UK pages too).
+- Downloaded **55 licensed free-to-use stock images** (Unsplash, verified HTTP 200 + valid JPEG via `file`) into `public/media/pages/{canada,australia,uk,visit-visas,business,study,services,common}/` — Toronto skyline, Moraine Lake, Niagara, Sydney Opera House/Harbour/Melbourne/outback/kangaroo, Big Ben/Tower Bridge/London, destination cityscapes for every visit-visa page, family/office/study/airport support imagery.
+- Added `src/config/page-media.ts` — a central typed registry (`PAGE_MEDIA`, `pageMedia()`) mapping every content-page id to its `split` (hero-adjacent), `process`, `media`, and `extra` images.
+- Wired the bespoke internal pages to the registry:
+  - `ExpressEntryPage.tsx` (Toronto split, Montreal media, flag process)
+  - `CanadaInternalProgramPages.tsx` (PNP: Moraine Lake; AIP: Niagara; RNIP: rural; Study Permits: campus; Family Sponsorship: family)
+  - `AustraliaInternalProgramPages.tsx` (189/190/491/191/482/186/858/state nominations — each with country-appropriate imagery)
+  - `UKInternalProgramPages.tsx` (Big Ben/Tower Bridge/London street/Thames)
+- Updated `canada.ts` content split media to local paths, and wired `ProgramPage` to render a lead-image band from `pageMedia(page.id)` for every content-driven page (visit-visas, business-investment, study-abroad, services, resources, site pages) that lacks an inline split image.
+- Verified in the live dev server (`localhost:3000`): no `dm-consultant.ae/wp-content/uploads/2023/12` images remain on any checked page; each page serves its own local image; `npm run typecheck` ✓, `npm run lint` ✓ (0 errors), `npm run build` ✓ (413 static pages), `npm test` ✓ 41/41.
+
 ## Next work
 
-1. Continue applying the extracted internal-page component system to the next Canada and dropdown-menu internal pages after Express Entry, PNP, and AIP.
-2. Replace the centralized template `<img>` tags in `src/components/pages/internal/InternalPageTemplate.tsx` with `next/image` or approved optimized local assets, then re-check the recovered template CSS selectors so layout parity is preserved while removing the lint warnings.
-3. Phase 6: blog MDX migration from crawl inventory (91 posts), blog index + `[slug]` market filtering.
-4. Phase 7: lead forms (`react-hook-form` + zod), Resend route handler (env-gated), CRM adapter (env-gated), honeypot/rate-limit.
-5. Phase 8: React ChatBotify v2 `DmcGuidedChat` + eligibility checker.
-6. Phase 9: consent + analytics (vanilla-cookieconsent, consent-gated GTM/GA4/Meta from env).
-7. Phase 10: calculators/tools (16 tools from inventory, pure modules + unit tests).
-8. Phase 11: WhatsApp launcher (env numbers, per-market) + office directory + credentials page.
-9. Phase 12: legal/anti-fraud hub + copy review; Phase 13: SEO (metadata, sitemap, robots, OG, structured data); Phase 14: QA sweep + e2e suite + readiness checklist.
+1. Continue applying the extracted internal-page component system to the remaining Canada, Australia, and UK internal pages.
+2. Replace the centralized template `<img>` tags with `next/image` or approved optimized local assets.
+3. Phase 6: blog MDX migration from crawl inventory (91 posts).
+4. Phase 8: React ChatBotify v2 `DmcGuidedChat` + eligibility checker.
+5. Phase 9: Consent-gated GTM/GA4/Meta adapters (analytics IDs still needed from client).
+6. Phase 10: Remaining 13 calculators/tools (CRS is built into EE page; CLB, FSW-67, and Australia points now built).
+7. Phase 11: Authentic resource migration + credentials verification.
+8. Phase 12: Legal/anti-fraud hub copy finalization.
+9. Phase 14: QA sweep + e2e suite + readiness checklist.
 
 ## Blockers / TODO(client)
 
@@ -194,10 +242,10 @@ Last updated: 2026-08-04
 
 ## Incomplete counts
 
-- Routes: ~90 canonical routes inventoried; 60 of ~90 built as content pages (all 5 markets live via catch-all); shared-registry internal pages now cover about/contact/credentials/resources/legal/tools, while blog MDX and calculator/tool implementations remain later phases.
+- Routes: ~90 canonical routes inventoried; 60 of ~90 built as content pages (all 5 markets live via catch-all); shared-registry internal pages now cover about/contact/credentials/resources/legal/tools; sitemap + robots now generated.
 - Blog articles: 91 (`.ae`) + 23 + 8 + 19 + 4 crawled into inventory; 0 migrated (Phase 6).
 - Legacy authentic assets: 144 success-story + 16 gallery + video/press items inventoried as sources; 0 approved/manifested.
-- Tools: 0 of 16 implemented (Phase 10).
+- Tools: 3 of 16 implemented (CRS built into EE page, CLB, FSW-67, Australia points calculator).
 
 ## 2026-08-04 — Global stylesheet recovery
 

@@ -2,6 +2,7 @@
 
 import { MARKET_LABELS, type Market } from "@/config/markets";
 import { marketHref } from "@/lib/routing/routes";
+import { pageMedia } from "@/config/page-media";
 import { Hero } from "@/components/home/Hero";
 import { CRSCalculator } from "@/components/calculators/CRSCalculator";
 import {
@@ -272,6 +273,7 @@ export function ExpressEntryPage({
   const marketLabel = MARKET_LABELS[market];
   const faqItems = faqItemsForMarket(marketLabel);
   const overviewCopy = overviewCopyForMarket(marketLabel);
+  const media = pageMedia("visas/canada/express-entry");
 
   return (
     <div className="ee-page" id="express-entry-content">
@@ -313,10 +315,10 @@ export function ExpressEntryPage({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Benefits of permanent residence in Canada",
-          label: "Canada permanent residence",
+          alt: media.split?.alt ?? "Benefits of permanent residence in Canada",
+          label: media.split?.label ?? "Canada permanent residence",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
         }}
         kicker="Benefits of Express Entry Canada"
         title={
@@ -364,9 +366,9 @@ export function ExpressEntryPage({
         id="overview"
         reverse
         media={{
-          alt: "Canadian city and landscape",
-          label: "Explore opportunities across Canada",
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          alt: media.media?.alt ?? "Canadian city and landscape",
+          label: media.media?.label ?? "Explore opportunities across Canada",
+          src: media.media?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         mediaVariant="portrait"
         kicker="Overview and features"
@@ -443,9 +445,9 @@ export function ExpressEntryPage({
           </div>
           <MediaFrame
             asset={{
-              alt: "Benefits of permanent residence in Canada",
-              label: "Canada Express Entry preparation",
-              src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
+              alt: media.media?.alt ?? "Benefits of permanent residence in Canada",
+              label: media.media?.label ?? "Canada Express Entry preparation",
+              src: media.media?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
             }}
           />
         </div>
@@ -461,8 +463,8 @@ export function ExpressEntryPage({
         }
         copy="A disciplined six-stage process helps keep eligibility, declarations, supporting evidence and post-invitation deadlines aligned from the outset."
         image={{
-          alt: "Express Entry permanent residence application process",
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+          alt: media.process?.alt ?? "Express Entry permanent residence application process",
+          src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
         }}
         steps={PROCESS_STEPS}
       />

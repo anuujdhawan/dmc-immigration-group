@@ -229,6 +229,12 @@ Record architectural and content decisions, deviations from templates, renamed/c
 - The homepage resources block should follow the approved template's lighter 8-card grid rather than the older editorial card treatment.
 - `ResourcesSection` now renders a template-style heading block plus per-card CTAs, and `#resources.template-resources` in `globals.css` scopes the background/radius/card overrides so this section keeps the site's soft green gradient language and hover feel without changing the rest of the site.
 
+## 2026-08-05 — Local destination images for all internal pages
+
+- All internal pages now use locally-hosted, licensed stock imagery (`public/media/pages/...`) instead of remote `dm-consultant.ae` photos that were reused across unrelated destinations.
+- `src/config/page-media.ts` is the single registry for page imagery (split/process/media/extra); bespoke template pages and `ProgramPage` both resolve through it.
+- No fake/copied imagery: every image is a free-to-use stock photo from Unsplash, and legacy client media (success stories, partner logos) stays untouched pending the authentic-asset approval pass.
+
 ## 2026-08-04 — Internal page top spacing
 
 - The internal market content pages should start below the fixed header as a whole, not only offset the hero copy. `ProgramPage` now wraps the full content stack in a top-padded container so the page begins in the correct vertical position.

@@ -10,6 +10,7 @@ import {
 } from "@/content/pages/types";
 import { breadcrumbsFor, getPageContent } from "@/content/pages";
 import { marketHref } from "@/lib/routing/routes";
+import { pageMedia } from "@/config/page-media";
 import { cn } from "@/lib/utils/cn";
 
 import { Hero } from "@/components/home/Hero";
@@ -662,6 +663,9 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
   const { first, rest } = splitTitle(page.heroTitle ?? page.title);
   const marketLabel = MARKET_LABELS[market];
   const heroSectionId = `hero-${page.id.replace(/[^a-z0-9]+/gi, "-")}`;
+  const media = pageMedia(page.id);
+  const hasSplitContent = contentSections.some((section) => section.kind === "split");
+  const leadImage = media.split && !hasSplitContent ? media.split : undefined;
   const firstContentSection = contentSections[0];
   const scrollTarget = firstContentSection ? `#${sectionId(firstContentSection, 0)}` : undefined;
   const secondaryActionHref = page.relatedPages?.[0]
@@ -697,6 +701,22 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
       <Breadcrumbs page={page} market={market} />
       {page.facts ? <FactsStrip section={{ kind: "facts", items: page.facts }} /> : null}
       <SectionNav items={sectionNavItems} />
+
+      {leadImage ? (
+        <section className="bg-white py-14 md:py-16" aria-label={`${page.title} overview image`}>
+          <Container>
+            <figure className="overflow-hidden rounded-[32px] border border-brand-600/10 shadow-sm">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={leadImage.src} alt={leadImage.alt} className="h-56 w-full object-cover md:h-80" loading="lazy" />
+              {leadImage.label ? (
+                <figcaption className="border-t border-inherit px-5 py-3 text-xs font-bold uppercase tracking-[0.14em] text-muted">
+                  {leadImage.label}
+                </figcaption>
+              ) : null}
+            </figure>
+          </Container>
+        </section>
+      ) : null}
 
       {contentSections.map((section, index) => {
         const id = sectionId(section, index);

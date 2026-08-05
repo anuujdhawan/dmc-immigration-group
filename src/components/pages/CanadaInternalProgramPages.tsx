@@ -2,6 +2,7 @@ import { MARKET_LABELS, type Market } from "@/config/markets";
 import { getPageContent } from "@/content/pages";
 import type { PageContent } from "@/content/pages/types";
 import { marketHref } from "@/lib/routing/routes";
+import { pageMedia } from "@/config/page-media";
 import { Hero } from "@/components/home/Hero";
 import {
   BenefitsGrid,
@@ -107,6 +108,7 @@ export function ProvincialNomineeProgramsPage({
 }) {
   const page = requirePage("visas/canada/provincial-nominee-programs");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/canada/provincial-nominee-programs");
   const overview = page.sections.find((section) => section.kind === "overview");
   const streams = page.sections.find((section) => section.kind === "programs");
   const panel = page.sections.find((section) => section.kind === "panel");
@@ -172,10 +174,10 @@ export function ProvincialNomineeProgramsPage({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Provincial nomination strategy for Canada",
-          label: "Province-specific immigration planning",
+          alt: media.split?.alt ?? "Provincial nomination strategy for Canada",
+          label: media.split?.label ?? "Province-specific immigration planning",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="Canada Provincial Nominee Programs"
         title={
@@ -263,8 +265,8 @@ export function ProvincialNomineeProgramsPage({
         }
         copy="The practical sequence usually starts with identifying the right province, then building either a provincial registration or an Express Entry-aligned nomination case before the federal stage."
         image={{
-          alt: "Provincial nomination process for Canadian immigration",
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+          alt: media.process?.alt ?? "Provincial nomination process for Canadian immigration",
+          src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
         }}
         steps={process.steps.map((step, index) => ({
           num: String(index + 1).padStart(2, "0"),
@@ -309,6 +311,7 @@ export function AtlanticImmigrationProgramPage({
 }) {
   const page = requirePage("visas/canada/atlantic-immigration-program");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/canada/atlantic-immigration-program");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const process = page.sections.find((section) => section.kind === "process");
@@ -372,10 +375,10 @@ export function AtlanticImmigrationProgramPage({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Atlantic Canada immigration route",
-          label: "Atlantic Canada employer pathway",
+          alt: media.split?.alt ?? "Atlantic Canada immigration route",
+          label: media.split?.label ?? "Atlantic Canada employer pathway",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
         }}
         kicker="Atlantic Immigration Program"
         title={
@@ -476,8 +479,8 @@ export function AtlanticImmigrationProgramPage({
         }
         copy="The Atlantic pathway becomes real only when the employer, province and applicant documents all line up in the right sequence."
         image={{
-          alt: "Atlantic Immigration Program process",
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+          alt: media.process?.alt ?? "Atlantic Immigration Program process",
+          src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
         }}
         steps={process.steps.map((step, index) => ({
           num: String(index + 1).padStart(2, "0"),
@@ -522,6 +525,7 @@ export function RuralAndNorthernImmigrationPilotPage({
 }) {
   const page = requirePage("visas/canada/rural-and-northern-immigration-pilot");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/canada/rural-and-northern-immigration-pilot");
   const overview = page.sections.find((section) => section.kind === "overview");
   const faq = page.sections.find((section) => section.kind === "faq");
 
@@ -595,10 +599,10 @@ export function RuralAndNorthernImmigrationPilotPage({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Rural Canada immigration communities",
-          label: "Rural community settlement",
+          alt: media.split?.alt ?? "Rural Canada immigration communities",
+          label: media.split?.label ?? "Rural community settlement",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="What the RNIP was"
         title={
@@ -668,6 +672,7 @@ export function StudyPermitsPage({
 }) {
   const page = requirePage("visas/canada/study-permits");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/canada/study-permits");
   const overview = page.sections.find((section) => section.kind === "overview");
   const faq = page.sections.find((section) => section.kind === "faq");
 
@@ -742,10 +747,10 @@ export function StudyPermitsPage({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Canada study permit guidance",
-          label: "Study in Canada",
+          alt: media.split?.alt ?? "Canada study permit guidance",
+          label: media.split?.label ?? "Study in Canada",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="How a study permit works"
         title={
@@ -819,6 +824,7 @@ export function FamilySponsorshipPage({
 }) {
   const page = requirePage("visas/canada/family-sponsorship-parent-grandparent-program");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/canada/family-sponsorship-parent-grandparent-program");
   const overview = page.sections.find((section) => section.kind === "overview");
   const faq = page.sections.find((section) => section.kind === "faq");
 
@@ -883,10 +889,10 @@ export function FamilySponsorshipPage({
       <SplitContentSection
         id="services"
         media={{
-          alt: "Family sponsorship for Canada immigration",
-          label: "Bring family to Canada",
+          alt: media.split?.alt ?? "Family sponsorship for Canada immigration",
+          label: media.split?.label ?? "Bring family to Canada",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
         }}
         kicker="Parents and Grandparents Program"
         title={

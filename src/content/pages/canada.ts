@@ -38,8 +38,8 @@ export const CANADA_PAGES: PageContent[] = [
         lede:
           "Express Entry is Canada’s electronic system for managing skilled-immigration applications under three federal economic programs. Eligible candidates create a profile, enter the pool and are ranked through the Comprehensive Ranking System.",
         media: {
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
-          alt: "Benefits of permanent residence in Canada",
+          src: "/media/pages/canada/express-entry.jpg",
+          alt: "Toronto skyline at dusk, Canada",
           caption: "Canada permanent residence",
         },
         paragraphs: [
@@ -131,8 +131,8 @@ export const CANADA_PAGES: PageContent[] = [
         eyebrow: "Overview and features",
         heading: "How the Express Entry system works.",
         media: {
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
-          alt: "Canadian city and landscape",
+          src: "/media/pages/canada/montreal.jpg",
+          alt: "Montreal cityscape, Canada",
           caption: "Explore opportunities across Canada",
         },
         paragraphs: [
@@ -216,8 +216,8 @@ export const CANADA_PAGES: PageContent[] = [
         lede:
           "A complete file depends on consistent, verifiable records. Begin with the core documents that support your profile and, after an invitation, your permanent-residence application.",
         media: {
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
-          alt: "Benefits of permanent residence in Canada",
+          src: "/media/pages/canada/montreal.jpg",
+          alt: "Montreal cityscape, Canada",
           caption: "Canada Express Entry preparation",
         },
         paragraphs: [

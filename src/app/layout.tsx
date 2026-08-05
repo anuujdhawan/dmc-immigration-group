@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, DM_Sans } from "next/font/google";
 
 import { env } from "@/config/env";
+import { ConsentProvider } from "@/components/ui/ConsentProvider";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -56,6 +57,11 @@ export default function RootLayout({
         className="flex min-h-dvh flex-col antialiased"
         suppressHydrationWarning
       >
+        <ConsentProvider
+          enabled={env.CONSENT_BANNER_ENABLED}
+          cookieName={env.CONSENT_COOKIE_NAME}
+          policyRevision={env.CONSENT_POLICY_REVISION}
+        />
         <div className="flex grow flex-col">{children}</div>
       </body>
     </html>

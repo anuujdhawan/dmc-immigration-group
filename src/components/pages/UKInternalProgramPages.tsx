@@ -2,6 +2,7 @@ import { MARKET_LABELS, type Market } from "@/config/markets";
 import { getPageContent } from "@/content/pages";
 import type { PageContent } from "@/content/pages/types";
 import { marketHref } from "@/lib/routing/routes";
+import { pageMedia } from "@/config/page-media";
 import { Hero } from "@/components/home/Hero";
 import {
   CriteriaGrid,
@@ -75,6 +76,7 @@ export function SkilledWorkerPage({
 }) {
   const page = requirePage("visas/uk/skilled-worker");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/uk/skilled-worker");
   const overview = page.sections.find((section) => section.kind === "overview");
   const requirements = page.sections.find((section) => section.kind === "requirements");
   const panel = page.sections.find((section) => section.kind === "panel");
@@ -135,10 +137,10 @@ export function SkilledWorkerPage({
       <SplitContentSection
         id="services"
         media={{
-          alt: "UK Skilled Worker visa",
-          label: "Skilled Worker pathway",
+          alt: media.split?.alt ?? "UK Skilled Worker visa",
+          label: media.split?.label ?? "Skilled Worker pathway",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_07.jpg",
         }}
         kicker="UK Skilled Worker Visa"
         title={
@@ -239,8 +241,8 @@ export function SkilledWorkerPage({
           }
           copy="The Skilled Worker process involves employer sponsorship, salary verification, English testing and the visa application."
           image={{
-            alt: "UK Skilled Worker visa process",
-            src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+            alt: media.process?.alt ?? "UK Skilled Worker visa process",
+            src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
           }}
           steps={process.steps.map((step, index) => ({
             num: String(index + 1).padStart(2, "0"),
@@ -292,6 +294,7 @@ export function SkilledWorkerDependentPage({
 }) {
   const page = requirePage("visas/uk/skilled-worker-dependent");
   const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia("visas/uk/skilled-worker-dependent");
   const overview = page.sections.find((section) => section.kind === "overview");
   const eligibility = page.sections.find((section) => section.kind === "eligibility");
   const panel = page.sections.find((section) => section.kind === "panel");
@@ -352,10 +355,10 @@ export function SkilledWorkerDependentPage({
       <SplitContentSection
         id="services"
         media={{
-          alt: "UK Skilled Worker dependent visa",
-          label: "Family settlement in the UK",
+          alt: media.split?.alt ?? "UK Skilled Worker dependent visa",
+          label: media.split?.label ?? "Family settlement in the UK",
           priority: true,
-          src: "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
+          src: media.split?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/PR_in_Canada_2.jpg",
         }}
         kicker="Skilled Worker Dependent Visa"
         title={
@@ -455,8 +458,8 @@ export function SkilledWorkerDependentPage({
           }
           copy="The dependent application process is linked to the main applicant's status and requires relationship evidence."
           image={{
-            alt: "UK dependent visa process",
-            src: "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
+            alt: media.process?.alt ?? "UK dependent visa process",
+            src: media.process?.src ?? "https://dm-consultant.ae/wp-content/uploads/2023/12/canada_image_7.jpg",
           }}
           steps={process.steps.map((step, index) => ({
             num: String(index + 1).padStart(2, "0"),
