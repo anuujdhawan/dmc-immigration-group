@@ -79,6 +79,10 @@ export const UK_PAGES: PageContent[] = [
             question: "Is the Immigration Health Surcharge required?",
             answer: "Yes — the IHS is charged per applicant per year of the visa (currently over £1,000 per adult per year; the exact rate depends on your category and application date).",
           },
+          {
+            question: "Can I apply for the Skilled Worker visa {marketFrom}?",
+            answer: "Yes — the route is open to applicants wherever they live. The key requirements are a licensed sponsor, a Certificate of Sponsorship, and meeting the salary, English and maintenance rules. {market} residents can prepare the evidence locally and apply from home.",
+          },
         ],
       },
     ],

@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 
 import type { Market } from "@/config/markets";
+import { MARKET_LABELS } from "@/config/markets";
 import { Button } from "@/components/ui/Button";
 import { marketHref } from "@/lib/routing/routes";
 
@@ -22,7 +23,7 @@ export function ContactCtaSection({ market }: { market: Market }) {
         </h2>
         <p className="mt-4 leading-relaxed text-slate-600">
           Begin with a private conversation about your profile, priorities and possible
-          destinations. No rushed decisions. No unrealistic guarantees.
+          destinations — in {MARKET_LABELS[market]} or online. No rushed decisions. No unrealistic guarantees.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Button href={marketHref(market, "/contact")} size="lg" className="rounded-xl">

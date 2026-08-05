@@ -488,7 +488,7 @@ export function ExpressEntryPage({
         items={GUIDANCE_ITEMS}
       />
 
-      <MediaGallerySection pageId="visas/canada/express-entry" id="gallery" tone="soft" />
+      <MediaGallerySection pageId="visas/canada/express-entry" id="gallery" tone="soft" market={market} />
 
       <InternalSection labelledBy="ee-evidence-title">
         <div className="ee-shell">
@@ -522,7 +522,7 @@ export function ExpressEntryPage({
         </div>
       </InternalSection>
 
-      <FaqSection id="faq" items={faqItems} />
+      <FaqSection id="faq" items={faqItems} market={market} />
 
       <InternalSection id="resources">
         <div className="ee-shell">

@@ -1,209 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import type { Market } from "@/config/markets";
-import { buildFlow } from "@/config/guided-chat.flow";
 
-const ChatBot = dynamic(() => import("react-chatbotify").then((m) => m.default), {
+const GuidedChatApp = dynamic(() => import("./GuidedChatApp"), {
   ssr: false,
   loading: () => null,
 });
 
-const CHAT_SETTINGS = {
-  general: {
-    primaryColor: "#358e1a",
-    secondaryColor: "#2a7015",
-    fontFamily: "var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif",
-    showHeader: true,
-    showFooter: false,
-    showInputRow: true,
-  },
-  tooltip: {
-    mode: "CLOSE",
-    text: "Need help? Chat with us! 💬",
-  },
-  chatWindow: {
-    showScrollbar: true,
-    showTypingIndicator: true,
-    autoJumpToBottom: true,
-    defaultOpen: false,
-  },
-  header: {
-    showAvatar: false,
-    title: (
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <div
-          style={{
-            width: "36px",
-            height: "36px",
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #43aa1b, #358e1a)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            fontSize: "15px",
-            fontWeight: 700,
-            fontFamily: "var(--font-manrope), ui-sans-serif, system-ui, sans-serif",
-            boxShadow: "0 2px 6px rgba(7, 29, 4, 0.25)",
-          }}
-        >
-          DM
-        </div>
-        <div>
-          <div
-            style={{
-              fontSize: "15px",
-              fontWeight: 700,
-              color: "#ffffff",
-              fontFamily: "var(--font-manrope), ui-sans-serif, system-ui, sans-serif",
-            }}
-          >
-            DM Consultants
-          </div>
-          <div style={{ fontSize: "11px", color: "rgba(255,255,255,0.85)", marginTop: "1px" }}>
-            Immigration Experts
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  botBubble: {
-    showAvatar: false,
-  },
-  userBubble: {
-    showAvatar: false,
-  },
-  notification: {
-    disabled: false,
-    volume: 0.5,
-  },
-  emoji: {
-    disabled: true,
-  },
-  audio: {
-    disabled: true,
-  },
-  voice: {
-    disabled: true,
-  },
-  fileAttachment: {
-    disabled: true,
-  },
-  chatHistory: {
-    disabled: true,
-  },
-  device: {
-    desktopEnabled: true,
-    mobileEnabled: true,
-  },
-};
-
-const CHAT_STYLES = {
-  chatWindowStyle: {
-    width: "380px",
-    height: "560px",
-    borderRadius: "24px",
-    overflow: "hidden",
-    boxShadow:
-      "0 25px 50px -12px rgba(7, 29, 4, 0.28), 0 0 0 1px rgba(53, 142, 26, 0.14)",
-  },
-  chatWindowContainerStyle: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column" as const,
-    background: "#ffffff",
-  },
-  chatContentContainerStyle: {
-    flex: 1,
-    overflowY: "auto" as const,
-    padding: "16px",
-    background: "linear-gradient(180deg, #f4f9f1 0%, #ffffff 35%)",
-  },
-  botBubbleContainerStyle: {
-    maxWidth: "80%",
-    marginBottom: "8px",
-  },
-  botBubbleStyle: {
-    background: "linear-gradient(135deg, #f4f9f1, #e5f3df)",
-    color: "#1d241b",
-    borderRadius: "20px 20px 20px 6px",
-    padding: "12px 16px",
-    fontSize: "14px",
-    lineHeight: "1.5",
-    border: "1px solid rgba(53, 142, 26, 0.14)",
-    boxShadow: "0 1px 3px rgba(23, 61, 13, 0.05)",
-  },
-  userBubbleContainerStyle: {
-    maxWidth: "80%",
-    display: "flex",
-    justifyContent: "flex-end",
-    marginBottom: "8px",
-  },
-  userBubbleStyle: {
-    background: "linear-gradient(135deg, #43aa1b, #358e1a)",
-    color: "#ffffff",
-    borderRadius: "20px 20px 6px 20px",
-    padding: "12px 16px",
-    fontSize: "14px",
-    lineHeight: "1.5",
-    boxShadow: "0 1px 3px rgba(23, 61, 13, 0.12)",
-  },
-  sendButtonContainerStyle: {
-    background: "#ffffff",
-    borderTop: "1px solid #e5f3df",
-  },
-  inputContainerStyle: {
-    background: "#ffffff",
-    borderTop: "1px solid #e5f3df",
-    padding: "12px 16px",
-  },
-  textAreaStyle: {
-    width: "100%",
-    border: "1px solid #cce9c3",
-    borderRadius: "16px",
-    padding: "10px 14px",
-    fontSize: "14px",
-    fontFamily: "var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif",
-    resize: "none" as const,
-    outline: "none",
-    transition: "border-color 0.15s ease",
-  },
-  textAreaFocusStyle: {
-    borderColor: "#358e1a",
-    boxShadow: "0 0 0 3px rgba(53, 142, 26, 0.12)",
-  },
-  optionStyle: {
-    background: "#ffffff",
-    color: "#2a7015",
-    border: "1.5px solid #358e1a",
-    borderRadius: "999px",
-    padding: "9px 20px",
-    fontSize: "13px",
-    fontWeight: 600,
-    cursor: "pointer",
-    transition: "all 0.15s ease",
-    fontFamily: "var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif",
-  },
-  optionHoverStyle: {
-    background: "linear-gradient(135deg, #43aa1b, #358e1a)",
-    color: "#ffffff",
-  },
-};
-
 export function DmcGuidedChat({ market }: { market: Market }) {
-  const flow = useMemo(() => buildFlow(market), [market]);
-
   return (
     <>
-      <ChatBot
-        id="dmc-guided-chat"
-        flow={flow}
-        settings={CHAT_SETTINGS}
-        styles={CHAT_STYLES}
-      />
+      <GuidedChatApp market={market} />
 
       <style jsx global>{`
         /* ── Reposition the library's own chat button to bottom-left ── */
@@ -211,9 +19,16 @@ export function DmcGuidedChat({ market }: { market: Market }) {
           left: 24px !important;
           right: auto !important;
           bottom: 24px !important;
+          width: 56px !important;
+          height: 56px !important;
           box-shadow:
             0 8px 24px rgba(53, 142, 26, 0.38),
             0 0 0 1px rgba(53, 142, 26, 0.2) !important;
+        }
+
+        .rcb-toggle-icon {
+          width: 56px !important;
+          height: 56px !important;
         }
 
         /* Move the "Need help?" tooltip to sit beside the left bubble */

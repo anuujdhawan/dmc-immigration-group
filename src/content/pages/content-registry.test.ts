@@ -62,6 +62,21 @@ describe("content page registry", () => {
     expect(getPageContent("study-abroad/ielts-coaching")?.noindex).toBe(true);
   });
 
+  it("never leaks {market} tokens through non-interpolated render paths", () => {
+    // Sections with kinds that are rendered without market interpolation (in
+    // both the ProgramPage renderer and the bespoke Canada/Australia/UK
+    // internal-page renderers) must not contain raw {market…} tokens, or they
+    // would appear literally on the page.
+    const interpolatedKinds = new Set(["overview", "lead", "faq"]);
+    for (const id of PAGE_IDS) {
+      for (const section of getPageContent(id)!.sections) {
+        if (interpolatedKinds.has(section.kind)) continue;
+        const json = JSON.stringify(section);
+        expect(json.includes("{market"), `${id} · section kind "${section.kind}"`).toBe(false);
+      }
+    }
+  });
+
   it("returns null for unknown ids and builds safe breadcrumbs", () => {
     expect(getPageContent("visas/nonexistent")).toBeNull();
     for (const id of PAGE_IDS) {

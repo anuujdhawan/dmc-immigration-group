@@ -21,14 +21,21 @@ function getWhatsAppNumbers(): Record<Market, string> {
   return numbers;
 }
 
-export function MarketFloatingWidgets({ market }: { market: Market }) {
+export function MarketFloatingWidgets({
+  market,
+  showChat = true,
+}: {
+  market: Market;
+  /** Landing pages render the WhatsApp bubble only (no guided chat). */
+  showChat?: boolean;
+}) {
   const numbers = getWhatsAppNumbers();
   const prefilledMessage = env.WHATSAPP_PREFILLED_MESSAGE;
 
   return (
     <>
-      <WhatsAppLauncher market={market} prefilledMessage={prefilledMessage} numbers={numbers} />
-      {env.GUIDED_CHAT_ENABLED && <DmcGuidedChat market={market} />}
+      <WhatsAppLauncher market={market} number={numbers[market]} prefilledMessage={prefilledMessage} />
+      {showChat && env.GUIDED_CHAT_ENABLED && <DmcGuidedChat market={market} />}
     </>
   );
 }

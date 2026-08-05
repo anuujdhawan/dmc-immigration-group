@@ -161,7 +161,7 @@ export const SITE_PAGES: PageContent[] = [
         heading: "Get in touch with the right office",
         paragraphs: [
           "The old site positioned contact as a local office choice first: call or email the office nearest you and the team would route the case to the correct market context.",
-          "That same structure is now shown explicitly here, with one card for each market and a clear directions link on every card.",
+          "That same structure is now shown explicitly here, with one card for each market and a clear directions link on every card. Visitors {marketIn} can start directly from the {market} office card below.",
         ],
       },
       {

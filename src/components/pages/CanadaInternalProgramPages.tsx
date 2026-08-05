@@ -2,6 +2,7 @@ import { MARKET_LABELS, type Market } from "@/config/markets";
 import { getPageContent } from "@/content/pages";
 import type { PageContent } from "@/content/pages/types";
 import { marketHref } from "@/lib/routing/routes";
+import { paragraphsForMarket } from "@/lib/i18n/market-copy";
 import { pageMedia } from "@/config/page-media";
 import { Hero } from "@/components/home/Hero";
 import {
@@ -227,7 +228,7 @@ export function ProvincialNomineeProgramsPage({
             }
             copy="Provincial programs are driven by regional needs, not one national points grid. A successful nomination can support, but does not replace, the federal permanent-residence decision."
           />
-          <RichCopy paragraphs={overview.paragraphs} />
+          <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
         </div>
       </InternalSection>
 
@@ -282,9 +283,10 @@ export function ProvincialNomineeProgramsPage({
           q: item.question,
           a: item.answer,
         }))}
+      market={market}
       />
 
-      <MediaGallerySection pageId="visas/canada/provincial-nominee-programs" tone="soft" />
+      <MediaGallerySection pageId="visas/canada/provincial-nominee-programs" tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -430,7 +432,7 @@ export function AtlanticImmigrationProgramPage({
             }
             copy="The Atlantic program works differently from points-ranked systems because the designated employer and the province are central to the process before IRCC receives the permanent-residence application."
           />
-          <RichCopy paragraphs={overview.paragraphs} />
+          <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
         </div>
       </InternalSection>
 
@@ -498,9 +500,10 @@ export function AtlanticImmigrationProgramPage({
           q: item.question,
           a: item.answer,
         }))}
+      market={market}
       />
 
-      <MediaGallerySection pageId="visas/canada/atlantic-immigration-program" tone="soft" />
+      <MediaGallerySection pageId="visas/canada/atlantic-immigration-program" tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -616,7 +619,7 @@ export function RuralAndNorthernImmigrationPilotPage({
           </>
         }
       >
-        <RichCopy paragraphs={overview.paragraphs} />
+        <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
       </SplitContentSection>
 
       <InternalSection id="successor" tone="soft">
@@ -645,9 +648,10 @@ export function RuralAndNorthernImmigrationPilotPage({
           q: item.question,
           a: item.answer,
         }))}
+      market={market}
       />
 
-      <MediaGallerySection pageId="visas/canada/rural-and-northern-immigration-pilot" tone="soft" />
+      <MediaGallerySection pageId="visas/canada/rural-and-northern-immigration-pilot" tone="soft" market={market} />
 
       <DisclaimerBand>
         <strong>Important:</strong> The Rural and Northern Immigration Pilot has concluded. The Rural Community Immigration Pilot (RCIP) is the current successor. Immigration decisions are made by the relevant government authority.
@@ -766,7 +770,7 @@ export function StudyPermitsPage({
           </>
         }
       >
-        <RichCopy paragraphs={overview.paragraphs} />
+        <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
       </SplitContentSection>
 
       {requirementsSection && requirementsSection.kind === "requirements" ? (
@@ -799,9 +803,10 @@ export function StudyPermitsPage({
           q: item.question,
           a: item.answer,
         }))}
+      market={market}
       />
 
-      <MediaGallerySection pageId="visas/canada/study-permits" tone="soft" />
+      <MediaGallerySection pageId="visas/canada/study-permits" tone="soft" market={market} />
 
       <DisclaimerBand>
         <strong>Important:</strong> The Student Direct Stream (SDS) has been terminated. Study-permit applications are now processed under the regular stream. Immigration decisions are made by IRCC.
@@ -910,7 +915,7 @@ export function FamilySponsorshipPage({
           </>
         }
       >
-        <RichCopy paragraphs={overview.paragraphs} />
+        <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
       </SplitContentSection>
 
       {requirementsSection && requirementsSection.kind === "requirements" ? (
@@ -968,9 +973,10 @@ export function FamilySponsorshipPage({
           q: item.question,
           a: item.answer,
         }))}
+      market={market}
       />
 
-      <MediaGallerySection pageId="visas/canada/family-sponsorship-parent-grandparent-program" tone="soft" />
+      <MediaGallerySection pageId="visas/canada/family-sponsorship-parent-grandparent-program" tone="soft" market={market} />
 
       <DisclaimerBand>
         <strong>Important:</strong> The PGP uses an interest-to-sponsor lottery. Selection is not guaranteed. The Super Visa is an alternative. Immigration decisions are made by IRCC.

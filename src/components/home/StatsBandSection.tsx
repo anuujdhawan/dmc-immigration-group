@@ -1,3 +1,5 @@
+import { MARKET_LABELS, type Market } from "@/config/markets";
+
 const STATS = [
   { value: "15+", label: "Years of consulting experience" },
   { value: "20+", label: "Countries represented" },
@@ -5,7 +7,8 @@ const STATS = [
   { value: "3", label: "Regulated practices" },
 ];
 
-export function StatsBandSection() {
+export function StatsBandSection({ market }: { market: Market }) {
+  const marketLabel = market === "dubai" || market === "abu-dhabi" ? "the UAE" : MARKET_LABELS[market];
   return (
     <section
       aria-label="DMC Immigration at a glance"
@@ -27,6 +30,9 @@ export function StatsBandSection() {
           </div>
         ))}
       </div>
+      <p className="relative mx-auto mt-8 max-w-[1280px] px-6 text-center text-xs text-slate-500">
+        The same regulated practice, serving clients {marketLabel === "the UAE" ? "across the UAE" : `in ${marketLabel}`} — from our {MARKET_LABELS[market]} office.
+      </p>
     </section>
   );
 }

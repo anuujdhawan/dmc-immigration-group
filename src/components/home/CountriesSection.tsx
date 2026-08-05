@@ -1,5 +1,8 @@
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
+import type { Market } from "@/config/markets";
+import { marketAudience } from "@/lib/i18n/market-copy";
+
 interface PathwayCard {
   flag: string;
   country: string;
@@ -157,15 +160,15 @@ const PATHWAYS: PathwayCard[] = [
   },
 ];
 
-export function CountriesSection() {
+export function CountriesSection({ market }: { market: Market }) {
   return (
     <section id="countries" className="bg-slate-50 py-20 lg:py-24">
       <div className="mx-auto max-w-[1280px] px-6">
         <SectionHeading
           align="left"
-          eyebrow="Where we practice"
+          eyebrow={`${market === "dubai" || market === "abu-dhabi" ? "UAE" : "Global"} · Where we practice`}
           title="Opportunity looks different in every country"
-          lede="Illustrative journeys — real pathways, timelines and steps for each destination we practice in."
+          lede={`Illustrative journeys — real pathways, timelines and steps for each destination we practice in, prepared for ${marketAudience(market)}.`}
         />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {PATHWAYS.map((card) => {

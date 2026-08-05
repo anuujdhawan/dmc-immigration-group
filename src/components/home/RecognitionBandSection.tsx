@@ -1,5 +1,7 @@
 import { BadgeCheck } from "lucide-react";
 
+import { MARKET_LABELS, type Market } from "@/config/markets";
+
 const BADGES = [
   { label: "RCIC", tone: "brand" },
   { label: "CICC", tone: "blue" },
@@ -14,13 +16,14 @@ const toneClasses: Record<(typeof BADGES)[number]["tone"], { border: string; ico
   slate: { border: "border-slate-200 hover:border-slate-400", icon: "bg-slate-100 text-slate-700" },
 };
 
-export function RecognitionBandSection() {
+export function RecognitionBandSection({ market }: { market: Market }) {
   return (
     <section className="relative overflow-hidden border-y border-brand-100 bg-gradient-to-r from-brand-50 via-white to-brand-50">
-      <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-center gap-4 px-6 py-8">
-        <span className="mr-2 text-[11px] font-bold uppercase tracking-widest text-brand-700">
-          Regulated &amp; Recognised By
+      <div className="mx-auto flex max-w-[1280px] flex-col items-center gap-4 px-6 py-8">
+        <span className="text-[11px] font-bold uppercase tracking-widest text-brand-700">
+          DMC {MARKET_LABELS[market]} · Regulated &amp; Recognised By
         </span>
+        <div className="flex flex-wrap items-center justify-center gap-4">
         {BADGES.map((badge) => {
           const classes = toneClasses[badge.tone];
           return (
@@ -37,6 +40,10 @@ export function RecognitionBandSection() {
             </span>
           );
         })}
+        </div>
+        <p className="text-center text-xs text-slate-500">
+          Serving residents {market === "dubai" || market === "abu-dhabi" ? "across the UAE" : `in ${MARKET_LABELS[market]}`} — the same regulated practice, closer to home.
+        </p>
       </div>
     </section>
   );

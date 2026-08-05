@@ -3,7 +3,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { env } from "@/config/env";
 import { NAV_FOOTER, NAV_LEGAL, marketHrefForNav } from "@/config/navigation";
 import { getOffice } from "@/config/offices";
-import type { Market } from "@/config/markets";
+import { MARKET_LABELS, type Market } from "@/config/markets";
 import { BrandLogo } from "@/components/layout/BrandLogo";
 import { Container } from "@/components/ui/Container";
 import { SocialIcon } from "@/components/ui/SocialIcon";
@@ -22,7 +22,7 @@ export function SiteFooter({ market }: { market: Market }) {
             <p className="max-w-sm text-sm leading-relaxed text-slate-500">
               RCIC-licensed, MARA-registered and CICC-regulated immigration guidance for
               professionals, families, students, investors and employers across international
-              destinations.
+              destinations — serving clients in the {MARKET_LABELS[market]} market and beyond.
             </p>
             <div className="mt-5 space-y-2 text-sm">
               <a

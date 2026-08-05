@@ -69,31 +69,26 @@ export function buildFlow(market: string): Flow {
       message:
         "Great choice! Let's see if you qualify for Canada PR. 🇨🇦\n\nWhat is your highest level of education?",
       options: ["High School", "Diploma", "Bachelor's", "Master's", "Doctorate"],
-      function: record("canada_edu"),
       path: "canada_age",
     },
     canada_age: {
       message: "Which age range are you in?",
       options: ["18-25", "26-35", "36-45", "46+"],
-      function: record("canada_age"),
       path: "canada_english",
     },
     canada_english: {
       message: "Have you taken an English test (IELTS / CELPIP / PTE)?",
       options: ["Have a score", "Booked, awaiting result", "Not yet"],
-      function: record("canada_english"),
       path: "canada_work",
     },
     canada_work: {
       message: "How many years of skilled work experience do you have?",
       options: ["0-1", "2-4", "5-9", "10+ years"],
-      function: record("canada_work"),
       path: "canada_location",
     },
     canada_location: {
       message: "Where are you currently based?",
       options: LOCATION_OPTIONS,
-      function: record("canada_location"),
       path: "ask_name",
     },
 
@@ -104,30 +99,34 @@ export function buildFlow(market: string): Flow {
       message:
         "Excellent! Let's check your Australia PR eligibility. 🇦🇺\n\nWhat is your highest level of education?",
       options: ["Diploma", "Bachelor's", "Master's", "Doctorate"],
-      function: record("aus_edu"),
       path: "aus_occupation",
     },
     aus_occupation: {
       message: "What is your current occupation / field of work?",
-      function: record("aus_occupation"),
+      options: [
+        "IT / Software",
+        "Engineering",
+        "Healthcare / Nursing",
+        "Finance / Accounting",
+        "Education",
+        "Trades / Construction",
+        "Other",
+      ],
       path: "aus_age",
     },
     aus_age: {
       message: "Which age range are you in?",
       options: ["18-25", "26-32", "33-40", "41-45", "46+"],
-      function: record("aus_age"),
       path: "aus_english",
     },
     aus_english: {
       message: "Have you taken an English test (IELTS / PTE)?",
       options: ["Have a score", "Booked, awaiting result", "Not yet"],
-      function: record("aus_english"),
       path: "aus_location",
     },
     aus_location: {
       message: "Where are you currently based?",
       options: LOCATION_OPTIONS,
-      function: record("aus_location"),
       path: "ask_name",
     },
 
@@ -137,25 +136,21 @@ export function buildFlow(market: string): Flow {
     visit_dest: {
       message: "Where would you like to visit? ✈️\n\nWe assist with visit visas worldwide.",
       options: ["Canada", "Australia", "UK", "USA", "New Zealand", "Schengen", "Other"],
-      function: record("visit_dest"),
       path: "visit_purpose",
     },
     visit_purpose: {
       message: "What is the purpose of your trip?",
       options: ["Tourism", "Business", "Family & Friends Visit"],
-      function: record("visit_purpose"),
       path: "visit_timing",
     },
     visit_timing: {
       message: "When are you planning to travel?",
       options: ["Within 1 month", "1-3 months", "3-6 months", "Not sure yet"],
-      function: record("visit_timing"),
       path: "visit_location",
     },
     visit_location: {
       message: "Where are you currently based?",
       options: LOCATION_OPTIONS,
-      function: record("visit_location"),
       path: "ask_name",
     },
 
@@ -164,31 +159,36 @@ export function buildFlow(market: string): Flow {
        ════════════════════════════════════════════════════════════ */
     resume_prof: {
       message: "Let's get your career moving! 📋\n\nWhat is your current profession / field?",
-      function: record("resume_prof"),
+      options: [
+        "IT / Software",
+        "Engineering",
+        "Healthcare",
+        "Finance / Accounting",
+        "Education",
+        "Sales / Marketing",
+        "Hospitality",
+        "Other",
+      ],
       path: "resume_exp",
     },
     resume_exp: {
       message: "How many years of experience do you have?",
       options: ["0-2", "3-5", "6-10", "10+ years"],
-      function: record("resume_exp"),
       path: "resume_employed",
     },
     resume_employed: {
       message: "Are you currently employed?",
       options: ["Yes", "No"],
-      function: record("resume_employed"),
       path: "resume_target",
     },
     resume_target: {
       message: "Which job market are you targeting?",
       options: ["UAE/GCC", "Canada", "Australia", "Europe", "Open to anywhere"],
-      function: record("resume_target"),
       path: "resume_location",
     },
     resume_location: {
       message: "Where are you currently based?",
       options: LOCATION_OPTIONS,
-      function: record("resume_location"),
       path: "ask_name",
     },
 

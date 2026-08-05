@@ -1,7 +1,7 @@
 import { BadgeCheck, ExternalLink } from "lucide-react";
 
 import { CONSULTANT_CREDENTIALS, CREDENTIALS } from "@/config/credentials";
-import type { Market } from "@/config/markets";
+import { MARKET_LABELS, type Market } from "@/config/markets";
 import { marketHref } from "@/lib/routing/routes";
 
 export function CredentialsSection({ market }: { market: Market }) {
@@ -25,7 +25,7 @@ export function CredentialsSection({ market }: { market: Market }) {
           </h2>
           <p className="relative mt-6 max-w-md leading-relaxed text-white/75">
             Every credential links directly to an official register where applicable. No badges
-            without an official source. Trust should be checkable.
+            without an official source. Trust should be checkable — and our {MARKET_LABELS[market]} team stands behind it.
           </p>
 
           <div className="credential-proof-stack relative" aria-label="Our credential verification standard">

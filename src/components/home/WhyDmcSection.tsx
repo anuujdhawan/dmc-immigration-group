@@ -1,6 +1,8 @@
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 import type { Market } from "@/config/markets";
+import { MARKET_LABELS } from "@/config/markets";
+import { marketOffice } from "@/lib/i18n/market-copy";
 import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { marketHref } from "@/lib/routing/routes";
@@ -22,6 +24,10 @@ const PILLARS = [
     title: "Clear, considered communication",
     text: "Practical language, no unrealistic promises or pressure.",
   },
+  {
+    title: "Local, market-aware teams",
+    text: "Dedicated Dubai, Abu Dhabi, Qatar, Kuwait and India offices serving their own residents.",
+  },
 ];
 
 const STATS = [
@@ -40,7 +46,7 @@ export function WhyDmcSection({ market }: { market: Market }) {
             align="left"
             eyebrow="Why DMC"
             title="One consultancy, three regulated practices"
-            lede="Most consultancies specialise in one country. DMC brings regulated Canadian counsel, Australian migration expertise and a multi-country advisory network together — so your case is handled by people who actually practice in your destination, not a generalist working from a template."
+            lede={`Most consultancies specialise in one country. DMC brings regulated Canadian counsel, Australian migration expertise and a multi-country advisory network together — so your case is handled by people who actually practice in your destination, not a generalist working from a template. For clients in the ${MARKET_LABELS[market]} market, ${marketOffice(market)} is your first point of contact.`}
           />
           <div className="space-y-4">
             {PILLARS.map((pillar) => (

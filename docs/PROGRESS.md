@@ -6,6 +6,23 @@ Last updated: 2026-08-05
 
 ## Completed
 
+## 2026-08-05 — Market-aware copy across the whole site (market name from the URL)
+
+- New `src/lib/i18n/market-copy.ts`: natural market phrases (`marketIn`, `marketFrom`, `marketFor`, `marketAudience`, `marketOffice`) plus `interpolateMarket()` (replaces `{market}` / `{marketIn}` / `{marketFrom}` / `{marketFor}` / `{marketAudience}` / `{marketOffice}` tokens) and `marketContextSentence()` / `paragraphsForMarket()` (weave a market line into page copy).
+- Homepage now visibly serves the market from the URL: hero reads exactly "Your journey towards a better future from Dubai begins here." (new `titleSuffix`/`titlePrefix` via `HomeSections`), and every home section takes `market` — Recognition band ("DMC Dubai · Regulated & Recognised By" + serving line), Services, Countries, Why DMC (new local-teams pillar), Credentials, Visit Visas, Tools, Process, Stats band (market caption), Stories, Video Stories, Resources, FAQ (new "Can I meet the team in Dubai?" question), Contact CTA, and the footer ("serving clients in the Dubai market and beyond").
+- Content pages (`ProgramPage` renderer) deep-interpolate every content string and prepend "Prepared for clients in the {market} market and supported by our {market} office." to the first overview/lead paragraph; hero already states "This page is written for the {market} market." and breadcrumbs already show the market.
+- Bespoke Canada/Australia/UK internal pages: overview sections now run through `paragraphsForMarket`, and `LeadFormSection`, `FinalCta`, `ConsultationBand`, `FaqSection`, and `MediaGallerySection` interpolate market tokens (market prop threaded at ~20 call sites).
+- Content registries: tokenised flagship copy — Canada Express Entry FAQ questions/answers ("Can residents apply for Canada PR from Qatar?"), Australia 189 FAQ ("Can I apply for the 189 from Kuwait?"), UK Skilled Worker FAQ, and the Contact page overview. `ToolPage` hero/lede/lead-form copy is market-aware.
+- Verified live on `/dubai`, `/kuwait/visas/australia/skilled-independent-189`, `/india/visit-visas/canada-usa-australia`, `/abu-dhabi/visas/canada/provincial-nominee-programs` (13/11/9/11 market mentions per page respectively).
+- Hardening from review: the market context sentence is woven exactly once per content page (first overview-or-lead section only), `ProgramPage` reuses the shared `paragraphsForMarket` helper (no duplicated logic), and new tests cover the token engine — `src/lib/i18n/market-copy.test.ts` (longest-token-first matching, unknown tokens preserved, prepend/skip branches) plus a content-registry guard asserting no `{market}` token can leak through non-interpolated render paths.
+- Validation: typecheck ✓, lint ✓ (0 errors, 12 known `<img>` warnings), unit **66/66** ✓, e2e **68/68** ✓ (homepage, content-pages, landing-dropdown, routing), `npm run build` ✓ (421 static pages).
+
+## 2026-08-05 — Hero top-offset fix on content pages
+
+- ProgramPage wrapped every content page in `pt-[calc(var(--header-offset)+1rem)]` (134px desktop / 104px mobile), pushing the entire hero section down on every content-driven page while the homepage and bespoke Canada/Australia/UK pages started at `top: 0`. Since the hero's own padding-top (158px desktop / 91px mobile) already clears the fixed header, the wrapper padding was redundant — removed it so content pages now match the homepage exactly.
+- Measured with a Playwright probe across 12 representative URLs (homepage, ProgramPage content/hub pages, bespoke EE/Canada/Australia pages, landing pages, tool hubs, contact, about) at 1440px and 390px: every page now starts its hero at `top: 0` with the h1 at 252px (desktop) / 181px (mobile) — consistent across the whole site. Screenshot-verified the India visit-visas hub on mobile: pill + heading + intro sit directly under the fixed header, no white gap.
+- `npm run typecheck` ✓, e2e homepage + content-pages ✓ (18/18). Note: `[market]/tools/<tool>` routes still 404 — the tool-route files were left uncreated when the 16-tool batch was interrupted (registry + components + resolver exist in `src/config/tools.ts` / `src/components/pages/tool-resolver.tsx`); the homepage Tools cards link to two of them today.
+
 ## 2026-08-05 — Campaign landing pages (Dubai + Abu Dhabi PR)
 
 - Built 4 conversion landing pages from the client's docx briefs (`dmc _ <market> - <destination> PR.docx`):
@@ -314,6 +331,15 @@ Last updated: 2026-08-05
 - Reported: the skyline band copy ("From Perth's Swan River to Sydney Harbour…" / "Toronto's glittering skyline…") was hard to read — it used `--color-aurora-muted` (#9aab96, muted sage-gray) over the skyline photograph.
 - Fixed in the shared `DestinationSkylineSection` (`LandingPage.tsx`, covers all 4 landing pages): copy is now near-white `text-aurora-text` (#f5fff2) at `font-medium` (500) with `md:text-lg`, plus a subtle dark text shadow; the dark gradient overlay behind it was strengthened (`from-brand-950/95 via-brand-950/60 to-brand-950/25`, was 90/40/20) so the text zone over the bright skyline (Perth/Toronto at dusk) stays legible at every width.
 - Verified live on the Canada and Australia Dubai pages (computed color `rgb(245,255,242)`, weight 500, shadow applied) and visually in the preview; the section now reads as bright white text on the darkened skyline. typecheck ✓, lint 0 errors ✓, landing e2e ✓ 14/14.
+
+## 2026-08-05 — Market WhatsApp numbers (env) + WhatsApp bubble on landing pages
+
+- Client provided WhatsApp numbers — Dubai `+971543219003`, Abu Dhabi `+971544410905`, Qatar `+97431113692`, India `+919036554740` (all four match the legacy-site numbers previously noted as `TODO(client)` in `.env`). Set `DMC_<MARKET>_WHATSAPP_E164` for each in `.env` + `.env.example` (documentation only). Kuwait left empty — set `DMC_KUWAIT_WHATSAPP_E164` when the client supplies it; a market with no number simply hides the WhatsApp bubble.
+- The WhatsApp bubble now redirects DIRECTLY to the market's number — no office picker. `WhatsAppLauncher` takes just `{ market, number, prefilledMessage }` and, on click, opens `wa.me/<number>?text=<prefilled>` for the market in the URL (`[market]` segment); if the market has no configured number the bubble is not rendered at all. `MarketFloatingWidgets` passes the current market's number from the env map.
+- Landing pages get the floating WhatsApp bubble: `MarketFloatingWidgets` gained a `showChat` prop (default `true`); the landing chrome in `[market]/layout.tsx` renders `<MarketFloatingWidgets market={market} showChat={false} />` so the 4 landing pages (`/dubai|abu-dhabi/visas/{australia,canada}/pr-services`) show the WhatsApp bubble only (no guided chat). The 4 `/thank-you` routes already used the standard chrome and therefore already render both bubbles (WhatsApp bottom-right + guided chat bottom-left).
+- Fixed pre-existing WIP type error that was blocking `typecheck`/`build`: `tool-route.tsx` spread `{...page}` after `market`, overwriting the validated route market — reordered to `<ToolPage {...page} market={market} />`.
+- Also fixed the footer/wide brand logo: `public/media/brand/dmc-logo-wide.webp` + `dmc-logo-wide-640.webp` had a baked-in white rounded box (visible against the dark footer). Removed it via a flood-fill from the transparent corners (only the background box → alpha 0; pixel-compare confirmed 0 logo-art pixels damaged; white wordmark/emblem intact).
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 12 pre-existing warnings), `npm test` ✓ 53/53, `npm run build` ✓ 421/421 (all 4 landing + 4 thank-you routes prerendered). Live dev-server probes: single click on the bubble opens `wa.me` for the right number per market (Dubai `971543219003`, Abu Dhabi `971544410905`, Qatar `97431113692`, India `919036554740`; Kuwait — bubble absent); landing pages show WhatsApp only, thank-you pages show both bubbles.
 
 ## Next work
 

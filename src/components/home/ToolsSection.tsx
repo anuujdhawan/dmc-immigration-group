@@ -1,6 +1,7 @@
 import { ArrowRight, Calculator, ListChecks, Search } from "lucide-react";
 
 import type { Market } from "@/config/markets";
+import { MARKET_LABELS } from "@/config/markets";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { marketHref } from "@/lib/routing/routes";
 
@@ -36,7 +37,7 @@ export function ToolsSection({ market }: { market: Market }) {
           align="left"
           eyebrow="Free assessment"
           title="See how your profile fits, before you commit"
-          lede="No obligation, no filing fees — just a clearer sense of what to research or book next."
+          lede={`No obligation, no filing fees — just a clearer sense of what to research or book next, wherever you are ${market === "dubai" || market === "abu-dhabi" ? "in the UAE" : `in ${MARKET_LABELS[market]}`}.`}
         />
         <div className="grid gap-5 sm:grid-cols-3">
           {TOOLS.map((tool, index) => {

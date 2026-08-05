@@ -2,6 +2,7 @@ import { MARKET_LABELS, type Market } from "@/config/markets";
 import { getPageContent } from "@/content/pages";
 import type { PageContent } from "@/content/pages/types";
 import { marketHref } from "@/lib/routing/routes";
+import { paragraphsForMarket } from "@/lib/i18n/market-copy";
 import { pageMedia } from "@/config/page-media";
 import { Hero } from "@/components/home/Hero";
 import {
@@ -180,7 +181,7 @@ export function SkilledWorkerPage({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -260,10 +261,11 @@ export function SkilledWorkerPage({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -400,7 +402,7 @@ export function SkilledWorkerDependentPage({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -479,10 +481,11 @@ export function SkilledWorkerDependentPage({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 

@@ -34,6 +34,7 @@ export default async function MarketLayout({
             <LandingHeader market={market} />
             <main className="flex grow flex-col">{children}</main>
             <LandingFooter />
+            <MarketFloatingWidgets market={market} showChat={false} />
           </>
         }
       />

@@ -1,10 +1,13 @@
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
+import type { Market } from "@/config/markets";
+import { marketOffice } from "@/lib/i18n/market-copy";
+
 const STEPS = [
   {
     number: "01",
     title: "Private consultation",
-    text: "We understand your profile, priorities and preferred destinations.",
+    text: "We understand your profile, priorities and preferred destinations in your local market.",
   },
   {
     number: "02",
@@ -28,7 +31,7 @@ const STEPS = [
   },
 ];
 
-export function ProcessSection() {
+export function ProcessSection({ market }: { market: Market }) {
   return (
     <section id="process" className="bg-slate-50 py-20 lg:py-24">
       <div className="mx-auto max-w-[1280px] px-6">
@@ -36,7 +39,7 @@ export function ProcessSection() {
           align="left"
           eyebrow="The immigration process"
           title="From uncertainty to a clear direction"
-          lede="Each stage is reviewed before the next begins, giving you visibility over strategy, responsibilities and progress."
+          lede={`Each stage is reviewed before the next begins, giving you visibility over strategy, responsibilities and progress — with ${marketOffice(market)} guiding you end to end.`}
         />
         <div className="relative grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
           <div

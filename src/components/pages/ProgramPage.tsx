@@ -1,4 +1,5 @@
 import { MARKET_LABELS, type Market } from "@/config/markets";
+import { interpolateMarket, paragraphsForMarket } from "@/lib/i18n/market-copy";
 import {
   type CardItem,
   type DisclaimerSection,
@@ -20,6 +21,23 @@ import { Button } from "@/components/ui/Button";
 import { AccordionItem } from "@/components/ui/AccordionItem";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { SectionNav } from "@/components/pages/SectionNav";
+
+/**
+ * Recursively interpolate `{market}` tokens through every string field of a
+ * content section so market names resolve dynamically from the URL route.
+ */
+function deepInterpolate(value: unknown, market: Market): unknown {
+  if (typeof value === "string") return interpolateMarket(value, market);
+  if (Array.isArray(value)) return value.map((v) => deepInterpolate(v, market));
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [key, child] of Object.entries(value)) {
+      out[key] = deepInterpolate(child, market);
+    }
+    return out;
+  }
+  return value;
+}
 
 function slugify(text: string): string {
   return text
@@ -659,14 +677,29 @@ function Breadcrumbs({ page, market }: { page: PageContent; market: Market }) {
 }
 
 export function ProgramPage({ page, market }: { page: PageContent; market: Market }) {
-  const contentSections = page.sections.filter((section) => section.kind !== "status" && section.kind !== "facts");
+  const rawContentSections = page.sections.filter((section) => section.kind !== "status" && section.kind !== "facts");
   const statusSections = page.sections.filter((section) => section.kind === "status");
   const { first, rest } = splitTitle(page.heroTitle ?? page.title);
   const marketLabel = MARKET_LABELS[market];
   const heroSectionId = `hero-${page.id.replace(/[^a-z0-9]+/gi, "-")}`;
   const media = pageMedia(page.id);
-  const hasSplitContent = contentSections.some((section) => section.kind === "split");
+  const hasSplitContent = rawContentSections.some((section) => section.kind === "split");
   const leadImage = media.split && !hasSplitContent ? media.split : undefined;
+
+  // Resolve market tokens through every content string, and add a single
+  // market context line to the FIRST overview or lead section only — so the
+  // market is named in the page copy without repeating the same sentence.
+  const firstContextIndex = rawContentSections.findIndex(
+    (section) => section.kind === "overview" || section.kind === "lead",
+  );
+  const contentSections: ExtendedPageSection[] = rawContentSections.map((section, index) => {
+    const resolved = deepInterpolate(section, market) as ExtendedPageSection;
+    if (index === firstContextIndex && (resolved.kind === "overview" || resolved.kind === "lead")) {
+      resolved.paragraphs = paragraphsForMarket(resolved.paragraphs, market);
+    }
+    return resolved;
+  });
+
   const firstContentSection = contentSections[0];
   const scrollTarget = firstContentSection ? `#${sectionId(firstContentSection, 0)}` : undefined;
   const secondaryActionHref = page.relatedPages?.[0]
@@ -679,18 +712,22 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
       .filter((section) => section.kind !== "lead" && section.kind !== "disclaimer")
       .map((section, index) => ({
         anchor: sectionId(section, index),
-        label: "eyebrow" in section && section.eyebrow ? section.eyebrow : section.heading,
+        label: "eyebrow" in section && section.eyebrow
+          ? section.eyebrow
+          : "heading" in section
+            ? section.heading
+            : section.kind,
       }));
 
   return (
-    <div className="pt-[calc(var(--header-offset-mobile)+1rem)] md:pt-[calc(var(--header-offset)+1rem)]">
+    <div>
       <Hero
         market={market}
         sectionId={heroSectionId}
         eyebrow={`${page.eyebrow} · ${marketLabel} market`}
         titlePrefix={first}
         titleAccent={rest ?? ""}
-        subtitle={page.heroSubtitle ?? `${page.lede} This page is written for the ${marketLabel} market.`}
+        subtitle={page.heroSubtitle ? interpolateMarket(page.heroSubtitle, market) : `${page.lede} This page is written for the ${marketLabel} market.`}
         primaryAction={{ label: "Book Consultation", href: marketHref(market, "/#contact") }}
         secondaryAction={{ label: secondaryActionLabel, href: secondaryActionHref }}
         scrollTarget={scrollTarget}
@@ -700,7 +737,7 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
         <StatusBanner key={index} section={section} />
       ))}
       <Breadcrumbs page={page} market={market} />
-      {page.facts ? <FactsStrip section={{ kind: "facts", items: page.facts }} /> : null}
+      {page.facts ? <FactsStrip section={{ kind: "facts", items: deepInterpolate(page.facts, market) as NonNullable<PageContent["facts"]> }} /> : null}
       <SectionNav items={sectionNavItems} />
 
       {leadImage ? (
@@ -740,7 +777,7 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
         );
       })}
 
-      {!page.id.startsWith("legal/") ? <MediaGallerySection pageId={page.id} tone="soft" /> : null}
+      {!page.id.startsWith("legal/") ? <MediaGallerySection pageId={page.id} tone="soft" market={market} /> : null}
 
       {page.officialSources.length > 0 ? (
         <section className="bg-aurora-bg py-14 text-aurora-text md:py-20">

@@ -1,9 +1,11 @@
 import { Quote } from "lucide-react";
 
 import { approvedTestimonials } from "@/config/testimonials";
+import { MARKET_LABELS, type Market } from "@/config/markets";
+import { marketAudience } from "@/lib/i18n/market-copy";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
-export function StoriesSection() {
+export function StoriesSection({ market }: { market: Market }) {
   const testimonials = approvedTestimonials(3);
 
   return (
@@ -13,7 +15,7 @@ export function StoriesSection() {
           align="left"
           eyebrow="Client perspective"
           title="Trust is created in the small details"
-          lede="Clients remember whether expectations were clear and every stage felt organised."
+          lede={`Clients remember whether expectations were clear and every stage felt organised — stories from ${marketAudience(market)} and across the network.`}
         />
         {testimonials.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-3">
@@ -37,9 +39,9 @@ export function StoriesSection() {
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-3">
-            {["Canada", "Australia", "Canada"].map((market, index) => (
+            {["Canada", "Australia", "Canada"].map((destination, index) => (
               <figure
-                key={`${market}-${index}`}
+                key={`${destination}-${index}`}
                 className="flex flex-col rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 p-7"
               >
                 <Quote aria-hidden="true" className="mb-4 size-7 text-slate-300" />
@@ -47,8 +49,8 @@ export function StoriesSection() {
                   Client story — being verified with the client before publication.
                 </blockquote>
                 <figcaption className="mt-6 border-t border-slate-200 pt-4">
-                  <p className="font-display font-bold text-slate-400">Client · {market}</p>
-                  <p className="text-sm text-slate-400">Skilled pathway</p>
+                  <p className="font-display font-bold text-slate-400">Client · {destination}</p>
+                  <p className="text-sm text-slate-400">Served from {MARKET_LABELS[market]}</p>
                 </figcaption>
               </figure>
             ))}

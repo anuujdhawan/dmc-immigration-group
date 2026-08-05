@@ -60,7 +60,7 @@ export const CANADA_PAGES: PageContent[] = [
         heading: "Canada Express Entry consultants in Dubai.",
         paragraphs: [
           "Express Entry is the online system IRCC uses to invite eligible candidates and manage permanent-residence applications under selected economic immigration programs.",
-          "Applicants may need support to assess program fit, create an accurate profile, understand CRS ranking and coordinate their evidence. DMC supports prospective applicants in Dubai, Abu Dhabi and Sharjah through these preparation stages without guaranteeing an invitation or approval.",
+          "Applicants may need support to assess program fit, create an accurate profile, understand CRS ranking and coordinate their evidence. DMC supports prospective applicants {marketIn} and across the wider region through these preparation stages without guaranteeing an invitation or approval.",
         ],
         fields: [
           { label: "Full name", placeholder: "Full name" },
@@ -325,19 +325,19 @@ export const CANADA_PAGES: PageContent[] = [
         heading: "Express Entry, explained clearly",
         items: [
           {
-            question: "Which country is best to migrate to from Dubai?",
-            answer: "There is no single best destination for every applicant. Canada can be attractive to UAE residents seeking a structured skilled-immigration pathway, but the right country depends on occupation, age, language, education, family goals, finances and long-term plans.",
+            question: "Which country is best to migrate to {marketFrom}?",
+            answer: "There is no single best destination for every applicant. Canada can be attractive to residents seeking a structured skilled-immigration pathway, but the right country depends on occupation, age, language, education, family goals, finances and long-term plans.",
           },
           {
-            question: "Can UAE residents apply for Canada PR from Dubai?",
-            answer: "Yes. Eligible UAE residents can prepare the required language, education and employment evidence from Dubai and create an online Express Entry profile. Residence in the UAE does not itself guarantee eligibility or selection.",
+            question: "Can residents apply for Canada PR {marketFrom}?",
+            answer: "Yes. Eligible residents can prepare the required language, education and employment evidence {marketIn} and create an online Express Entry profile. Your place of residence does not itself guarantee eligibility or selection.",
           },
           {
             question: "What is the fastest way to get Canadian permanent residence?",
             answer: "There is no universally fastest route. Express Entry may be suitable for qualifying skilled workers, while entrepreneurs or applicants with provincial opportunities may need different programs. Timelines include preparation, time awaiting an invitation and processing after submission.",
           },
           {
-            question: "How long does it take to get Canada PR from Dubai?",
+            question: "How long does it take to get Canada PR {marketFrom}?",
             answer: "The overall journey varies. Time is needed to prepare prerequisites, enter the pool and receive an invitation, if selected. IRCC’s processing estimate applies only after a complete permanent-residence application is submitted and can change by case and current workload.",
           },
           {
@@ -349,7 +349,7 @@ export const CANADA_PAGES: PageContent[] = [
             answer: "IRCC converts approved language-test results into Canadian Language Benchmark levels for each ability. The required level depends on the program, and stronger results can materially improve CRS ranking. An overall IELTS band alone does not determine eligibility.",
           },
           {
-            question: "How much does Canada PR cost from Dubai?",
+            question: "How much does Canada PR cost {marketFrom}?",
             answer: "Applicants should budget for current government fees plus language testing, an ECA where required, biometrics, medical examinations, police certificates, translations and case-specific costs. Settlement funds are separate from fees. All amounts should be checked against the current official requirements.",
           },
           {

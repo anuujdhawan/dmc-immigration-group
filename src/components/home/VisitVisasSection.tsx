@@ -1,6 +1,7 @@
 import { ArrowRight, Globe2 } from "lucide-react";
 
 import type { Market } from "@/config/markets";
+import { MARKET_LABELS } from "@/config/markets";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { marketHref } from "@/lib/routing/routes";
 
@@ -45,7 +46,7 @@ export function VisitVisasSection({ market }: { market: Market }) {
           align="left"
           eyebrow="Global Visit Visas"
           title="One team, five countries of visit-visa expertise"
-          lede="Tourist, business-visitor and Super Visa applications — handled by specialists in each destination's own requirements, not a generic template."
+          lede={`Tourist, business-visitor and Super Visa applications — handled by specialists in each destination's own requirements, with a dedicated team for ${MARKET_LABELS[market]} residents.`}
         />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
           {VISIT_COUNTRIES.map((country) => {

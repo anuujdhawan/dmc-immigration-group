@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import type { Market } from "@/config/markets";
+import { MARKET_LABELS } from "@/config/markets";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { marketHref } from "@/lib/routing/routes";
 
@@ -195,7 +196,7 @@ export function ServicesSection({ market }: { market: Market }) {
           align="left"
           eyebrow="Immigration expertise"
           title="A pathway for every ambition"
-          lede="Every case starts with a different professional history, family structure and objective. Here is what the journey typically looks like for each."
+          lede={`Every case starts with a different professional history, family structure and objective. Here is what the journey typically looks like for each — supported end to end by our ${MARKET_LABELS[market]} office.`}
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((service) => {

@@ -2,6 +2,7 @@ import { MARKET_LABELS, type Market } from "@/config/markets";
 import { getPageContent } from "@/content/pages";
 import type { PageContent } from "@/content/pages/types";
 import { marketHref } from "@/lib/routing/routes";
+import { paragraphsForMarket } from "@/lib/i18n/market-copy";
 import { pageMedia } from "@/config/page-media";
 import { Hero } from "@/components/home/Hero";
 import {
@@ -181,7 +182,7 @@ export function SkilledIndependent189Page({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -237,10 +238,11 @@ export function SkilledIndependent189Page({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -376,7 +378,7 @@ export function SkilledNominated190Page({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -432,10 +434,11 @@ export function SkilledNominated190Page({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -571,7 +574,7 @@ export function SkilledWorkRegional491Page({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -627,10 +630,11 @@ export function SkilledWorkRegional491Page({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -764,7 +768,7 @@ export function PermanentResidence191Page({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -798,10 +802,11 @@ export function PermanentResidence191Page({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -937,7 +942,7 @@ export function EmployerSponsored482Page({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -993,10 +998,11 @@ export function EmployerSponsored482Page({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -1132,7 +1138,7 @@ export function EmployerNomination186Page({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -1188,10 +1194,11 @@ export function EmployerNomination186Page({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -1325,7 +1332,7 @@ export function NationalInnovationVisa858Page({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -1359,10 +1366,11 @@ export function NationalInnovationVisa858Page({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -1496,7 +1504,7 @@ export function StateTerritoryNominationsPage({
                 </>
               }
             />
-            <RichCopy paragraphs={overview.paragraphs} />
+            <RichCopy paragraphs={paragraphsForMarket(overview.paragraphs, market)} />
           </div>
         </InternalSection>
       ) : null}
@@ -1530,10 +1538,11 @@ export function StateTerritoryNominationsPage({
             q: item.question,
             a: item.answer,
           }))}
+        market={market}
         />
       ) : null}
 
-      <MediaGallerySection pageId={page.id} tone="soft" />
+      <MediaGallerySection pageId={page.id} tone="soft" market={market} />
 
       <OfficialSourcesSection sources={page.officialSources} />
 

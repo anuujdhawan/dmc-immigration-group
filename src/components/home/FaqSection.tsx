@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AccordionItem } from "@/components/ui/AccordionItem";
 import { marketHref } from "@/lib/routing/routes";
-import type { Market } from "@/config/markets";
+import { MARKET_LABELS, type Market } from "@/config/markets";
+import { marketOffice } from "@/lib/i18n/market-copy";
 
 const FAQS = [
   {
@@ -32,6 +33,13 @@ const FAQS = [
   },
 ];
 
+function marketFaq(market: Market) {
+  return {
+    question: `Can I meet the team in ${MARKET_LABELS[market]}?`,
+    answer: `Yes. ${MARKET_LABELS[market].charAt(0).toUpperCase() + MARKET_LABELS[market].slice(1)} is one of our five DMC market offices. Book a consultation and ${marketOffice(market)} will arrange a face-to-face or video meeting.`,
+  };
+}
+
 export function FaqSection({ market }: { market: Market }) {
   return (
     <section id="faq" className="bg-slate-50 py-20 lg:py-24">
@@ -41,14 +49,14 @@ export function FaqSection({ market }: { market: Market }) {
             align="left"
             eyebrow="Common questions"
             title="Clarity before commitment"
-            lede="Start with the questions that shape the feasibility, timing and direction of your immigration plan."
+            lede={`Start with the questions that shape the feasibility, timing and direction of your immigration plan — answered for ${MARKET_LABELS[market]} residents.`}
           />
           <Button href={marketHref(market, "/contact")} size="lg" className="rounded-xl">
             Ask a Consultant
           </Button>
         </div>
         <div className="fade-up space-y-3">
-          {FAQS.map((faq, index) => (
+          {[marketFaq(market), ...FAQS].map((faq, index) => (
             <AccordionItem
               key={faq.question}
               question={faq.question}

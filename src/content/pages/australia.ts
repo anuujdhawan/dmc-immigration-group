@@ -74,6 +74,10 @@ export const AUSTRALIA_PAGES: PageContent[] = [
             question: "What happens after my EOI expires?",
             answer: "EOIs remain in SkillSelect for up to two years. If no invitation arrives, you can update or resubmit your EOI as long as you remain eligible.",
           },
+          {
+            question: "Can I apply for the 189 {marketFrom}?",
+            answer: "Yes. The 189 is open to applicants wherever they live — eligibility depends on your occupation, points score and English ability, not your place of residence. {market} residents often qualify if their occupation is on the relevant list.",
+          },
         ],
       },
     ],

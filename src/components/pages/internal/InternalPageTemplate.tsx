@@ -6,6 +6,7 @@ import { useCallback, useRef, useState, type FormEvent, type ReactNode } from "r
 import { MARKET_LABELS, MARKET_LIST, type Market } from "@/config/markets";
 import { marketHref } from "@/lib/routing/routes";
 import { galleryFor } from "@/config/page-gallery";
+import { interpolateMarket, marketAudience } from "@/lib/i18n/market-copy";
 import { MediaCard, MediaCardGrid, type MediaCardItem } from "@/components/ui/MediaCard";
 
 type TextBlock = string | ReactNode;
@@ -359,13 +360,13 @@ export function LeadFormSection({
     <section className="ee-section ee-section-alt" aria-labelledby="ee-hero-form-title">
       <div className="ee-shell ee-hero-form-wrap">
         <div className="ee-hero-form-intro">
-          <span className="ee-kicker">{kicker}</span>
+          <span className="ee-kicker">{interpolateMarket(kicker, market)}</span>
           <h2 className="ee-heading" id="ee-hero-form-title">
-            {title}
+            {interpolateMarket(title, market)}
           </h2>
           {copy.map((paragraph) => (
             <p className="ee-copy" key={paragraph}>
-              {paragraph}
+              {interpolateMarket(paragraph, market)}
             </p>
           ))}
           <div className="ee-hero-form-contact">
@@ -551,8 +552,8 @@ export function ConsultationBand({
       <div className="ee-shell ee-consult-grid">
         <header>
           <span className="ee-kicker">Schedule a free consultation</span>
-          <h2 id="ee-free-consult-title">{title}</h2>
-          <p>{copy}</p>
+          <h2 id="ee-free-consult-title">{interpolateMarket(title, market)}</h2>
+          <p>{interpolateMarket(copy, market)}</p>
         </header>
         <ConsultationForm market={market} phone={phone} />
       </div>
@@ -638,8 +639,17 @@ export function RoadmapGrid({ items }: { items: RoadmapItem[] }) {
   );
 }
 
-export function FaqSection({ id, items }: { id: string; items: FaqItem[] }) {
+export function FaqSection({
+  id,
+  items,
+  market,
+}: {
+  id: string;
+  items: FaqItem[];
+  market?: Market;
+}) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const resolvedItems = market ? items.map((item) => ({ q: interpolateMarket(item.q, market), a: interpolateMarket(item.a, market) })) : items;
 
   return (
     <InternalSection id={id} tone="soft">
@@ -651,11 +661,11 @@ export function FaqSection({ id, items }: { id: string; items: FaqItem[] }) {
           </h2>
           <p className="ee-copy">
             Straightforward answers to the questions applicants most often raise about eligibility, ranking,
-            documentation, costs and timelines.
+            documentation, costs and timelines{market ? ` — prepared for ${marketAudience(market)}.` : "."}
           </p>
         </header>
         <div>
-          {items.map((item, index) => (
+          {resolvedItems.map((item, index) => (
             <article key={item.q} className={`ee-faq-item${openFaq === index ? " open" : ""}`}>
               <button
                 className="ee-faq-question"
@@ -754,7 +764,8 @@ export function MediaGallerySection({
       Life through <span>the lens.</span>
     </>
   ),
-  copy = "A visual tour of the destinations, documents and support that shape a DMC-guided application.",
+  copy,
+  market,
 }: {
   pageId: string;
   id?: string;
@@ -762,14 +773,21 @@ export function MediaGallerySection({
   kicker?: string;
   title?: ReactNode;
   copy?: string;
+  market?: Market;
 }) {
   const items = galleryFor(pageId);
   if (items.length === 0) return null;
 
+  const resolvedCopy =
+    copy ??
+    (market
+      ? `A visual tour of the destinations, documents and support that shape a DMC-guided application for ${marketAudience(market)}.`
+      : "A visual tour of the destinations, documents and support that shape a DMC-guided application.");
+
   return (
     <InternalSection id={id} tone={tone}>
       <div className="ee-shell">
-        <SectionHeader kicker={kicker} title={title} copy={copy} />
+        <SectionHeader kicker={kicker} title={title} copy={resolvedCopy} />
         <div className="mt-10">
           <MediaCardGrid items={items} />
         </div>
@@ -801,7 +819,7 @@ export function FinalCta({
       Could Express Entry be the right <span>route for you?</span>
     </>
   ),
-  copy = "Speak with the DMC team about program fit, documentation priorities, CRS factors and a realistic next step for your profile.",
+  copy = `Speak with the DMC team in ${MARKET_LABELS[market]} about program fit, documentation priorities, CRS factors and a realistic next step for your profile.`,
 }: {
   market: Market;
   phoneHref: string;
@@ -810,13 +828,16 @@ export function FinalCta({
   title?: ReactNode;
   copy?: string;
 }) {
+  const resolvedTitle = typeof title === "string" ? interpolateMarket(title, market) : title;
+  const resolvedCopy = copy ? interpolateMarket(copy, market) : copy;
+
   return (
     <section className="ee-cta" id="contact">
       <div className="ee-shell ee-cta-grid">
         <header>
-          <span className="ee-kicker">{kicker}</span>
-          <h2 className="ee-heading">{title}</h2>
-          <p className="ee-copy">{copy}</p>
+          <span className="ee-kicker">{interpolateMarket(kicker, market)}</span>
+          <h2 className="ee-heading">{resolvedTitle}</h2>
+          <p className="ee-copy">{resolvedCopy}</p>
         </header>
         <div className="ee-cta-actions">
           <a className="ee-button ee-button-light" href={marketHref(market, "/#contact")}>

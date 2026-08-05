@@ -1,4 +1,5 @@
 import type { Market } from "@/config/markets";
+import { MARKET_LABELS } from "@/config/markets";
 import { marketHref } from "@/lib/routing/routes";
 
 const RESOURCES = [
@@ -20,7 +21,7 @@ export function ResourcesSection({ market }: { market: Market }) {
           <span className="text-xs font-bold uppercase tracking-wider text-brand-600">Resources</span>
           <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight text-ink sm:text-4xl">Everything you need, in one place</h2>
           <p className="mt-3 max-w-2xl leading-relaxed text-slate-600">
-            Guides, checklists, real outcomes and the latest immigration news - free to browse before you book anything.
+            Guides, checklists, real outcomes and the latest immigration news - free to browse before you book anything, curated for {MARKET_LABELS[market]} residents.
           </p>
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

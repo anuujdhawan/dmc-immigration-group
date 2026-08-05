@@ -1,8 +1,10 @@
 import { PlayCircle } from "lucide-react";
 
+import type { Market } from "@/config/markets";
+import { marketAudience } from "@/lib/i18n/market-copy";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
-export function VideoStoriesSection() {
+export function VideoStoriesSection({ market }: { market: Market }) {
   return (
     <section id="video-stories" className="bg-slate-50 py-20 lg:py-24">
       <div className="mx-auto max-w-[1280px] px-6">
@@ -10,7 +12,7 @@ export function VideoStoriesSection() {
           align="left"
           eyebrow="Watch & hear it from them"
           title="Success stories, in their own words"
-          lede="Short clips from clients on what the process actually felt like — before, during and after approval."
+          lede={`Short clips from clients on what the process actually felt like — before, during and after approval — including voices from ${marketAudience(market)}.`}
         />
         <div className="grid gap-6 md:grid-cols-3">
           {[

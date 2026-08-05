@@ -1,5 +1,6 @@
 import type { Market } from "@/config/markets";
 import { MARKET_LABELS } from "@/config/markets";
+import { marketFrom } from "@/lib/i18n/market-copy";
 import { RecognitionBandSection } from "@/components/home/RecognitionBandSection";
 import { ContactCtaSection } from "@/components/home/ContactCtaSection";
 import { CountriesSection } from "@/components/home/CountriesSection";
@@ -22,19 +23,21 @@ export function HomeSections({ market }: { market: Market }) {
       <Hero
         market={market}
         eyebrow={`${MARKET_LABELS[market]} market · Global opportunity network`}
+        titlePrefix="Your journey towards a "
+        titleSuffix={` ${marketFrom(market)} begins here.`}
         subtitle={`Premium, structured immigration support for professionals, families, students, employers and investors in the ${MARKET_LABELS[market]} market and across Canada, Australia, the United Kingdom and a complete international destination network.`}
       />
-      <RecognitionBandSection />
+      <RecognitionBandSection market={market} />
       <ServicesSection market={market} />
-      <CountriesSection />
+      <CountriesSection market={market} />
       <WhyDmcSection market={market} />
       <CredentialsSection market={market} />
       <VisitVisasSection market={market} />
       <ToolsSection market={market} />
-      <ProcessSection />
-      <StatsBandSection />
-      <StoriesSection />
-      <VideoStoriesSection />
+      <ProcessSection market={market} />
+      <StatsBandSection market={market} />
+      <StoriesSection market={market} />
+      <VideoStoriesSection market={market} />
       <ResourcesSection market={market} />
       <FaqSection market={market} />
       <ContactCtaSection market={market} />
