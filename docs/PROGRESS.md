@@ -2,7 +2,37 @@
 
 Living checklist. Update after every meaningful batch. Never delete completed history.
 
-Last updated: 2026-08-05
+Last updated: 2026-08-06
+
+## 2026-08-06 — Thank-you card spacing + cube chat bubble
+
+- Reported: the thank-you main card touched the navbar (measured 0px gap at 390px, -6px at 1440px — the card was tucked under the fixed header), and the guided-chat bubble should be cube-shaped with the icon not cropped.
+- `ThankYouPage.tsx` section padding changed from `py-24 md:py-36` to `pb-24 pt-40 md:pb-36 md:pt-48` — the card now sits 64px (mobile) / 94px (tablet) / 42px (desktop) below the fixed header bottom (was 0 / 46 / -6).
+- `DmcGuidedChat.tsx` chat button: `border-radius: 12px` (cube instead of the library's `border-radius: 50%` circle) on both `.rcb-toggle-button` and `.rcb-toggle-icon`, and the icon now uses `background-size: contain` + `no-repeat` + `center` (the library default was `cover`, which cropped the speech-bubble icon inside the 56px button).
+- New regression assertions in `tests/e2e/chat-options-probe.spec.ts`: bubble width/height 56px, `border-radius 12px`, icon `background-size contain` + `no-repeat`, and the thank-you card clearing the header by >16px.
+- Validation: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 12 pre-existing warnings), chat e2e 4/4 ✓.
+
+## 2026-08-06 — Thank-you pages use the market WhatsApp number from .env
+
+- Reported: the thank-you page contact number must be that market's WhatsApp line from `.env`, not the office landline. Both thank-you routes (`/[market]/visas/australia/pr-services/thank-you` and `/[market]/visas/canada/pr-services/thank-you`) now render `office.whatsappDisplay` with a `https://wa.me/<digits>` link when `DMC_<MARKET>_WHATSAPP_E164` is configured, falling back to the office phone (`tel:`) when empty (Kuwait currently has a `TODO(client)` empty value).
+- Added `MARKET_DIALING_CODES` to `src/config/markets.ts` (971/971/974/965/91) and made `formatE164Display` in `src/config/offices.ts` country-code aware — it keeps the known dialing prefix together instead of guessing splits (10-digit nationals use 3-3-4 grouping, others group in 3s from the right). `whatsappDisplay` on each `MarketOffice` is now built from the env E.164 + the market's dialing code.
+- New `src/config/offices.test.ts` (7 tests): UAE mobile, 3-3-4 grouping, Qatar/Kuwait splits, already-spaced input, dialing-less fallback, empty and non-E.164 passthrough.
+- Verified live on all four real routes (landing pages are Dubai/Abu Dhabi only; Qatar/Kuwait/India thank-you routes correctly 404): Canada + Australia thank-you pages render `wa.me/971543219003` (Dubai) and `wa.me/971544410905` (Abu Dhabi) with formatted displays `+971 543 219 003` / `+971 544 410 905`.
+- Validation: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 12 pre-existing warnings), `npm test` ✓ 73/73, `npm run build` ✓ 421/421 static pages.
+
+## 2026-08-06 — Guided chat: client bubble icon + tooltip hover-only + input hidden until contact questions
+
+- The guided-chat floating bubble now uses the client-approved icon (`public/media/brand/chat-bubble-icon.webp` — two green speech bubbles, transparent background, converted from the supplied PNG via sharp at 256px). `GuidedChatApp.tsx` sets `chatButton.icon` and strips the library's default green gradient (`chatButtonStyle`/`chatButtonHoveredStyle` transparent) so the icon renders cleanly at 56px; the existing CSS keeps sizing and hover shadow.
+
+## 2026-08-06 — Guided chat: tooltip hover-only + input hidden until contact questions
+
+- The "Need help? Chat with us! 💬" tooltip near the chat bubble is now hidden by default and appears only while hovering the bubble (`tooltip.mode` switched CLOSE→NEVER in `GuidedChatApp.tsx`; `DmcGuidedChat.tsx` adds `opacity/visibility/pointer-events` defaults + a `.rcb-chatbot-global:has(.rcb-toggle-button:hover) .rcb-chat-tooltip` reveal rule with a 0.25s fade). Verified by probe (default 0 → hover 1 → leave 0) and locked in with e2e assertions in `chat-options-probe.spec.ts`.
+
+## 2026-08-06 — Guided chat: manual input hidden until contact questions
+
+- The chat now hides the manual answer field for every option-button question and reveals it only when the name/email/phone steps arrive. `src/components/chat/GuidedChatApp.tsx` (new) wraps react-chatbotify's `ChatBot` in `ChatBotProvider` with an `InputRowGate` sibling that uses the library's `usePaths`/`useMessages`/`useSettings` hooks: it sets `general.showInputRow=true` only when the current flow block is `ask_name`/`ask_email`/`ask_phone` AND that block's question message has actually been delivered (fragment match against the bot message), so there is no input flash during the typing transition after the final option click. The gate is driven by `CONTACT_QUESTION_FRAGMENTS` exported from `src/config/guided-chat.flow.ts` so copy lives in one place.
+- `DmcGuidedChat.tsx` now dynamically loads the app wrapper (still `ssr:false`, keeping the heavy library client-only) and keeps all global CSS overrides; the toggle button is explicitly sized to 56px (library default was 75px) and the tooltip nudged to hug it.
+- `tests/e2e/chat-options-probe.spec.ts` walks the full Canada PR flow on desktop + 390px: no textarea during every option step, textarea appears for name/email/phone, and disappears after the end message; test waits for each question text before typing to avoid racing the bot's 1s typing delay (the old rapid fills dropped sends). 4/4 chat e2e pass; full suite green (66 unit, 25 console/homepage/content, 36 routing, 14 landing).
 
 ## Completed
 

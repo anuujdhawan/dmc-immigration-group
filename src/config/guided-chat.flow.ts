@@ -32,6 +32,17 @@ const LOCATION_OPTIONS = [
   "Other",
 ];
 
+/**
+ * The contact-collection questions. The chat UI's input-row gate uses these
+ * exact strings to detect when a free-text question has been delivered, so
+ * keep the copy here as the single source of truth.
+ */
+export const CONTACT_QUESTION_FRAGMENTS: Record<string, string> = {
+  ask_name: "What is your full name?",
+  ask_email: "What is your email address?",
+  ask_phone: "phone number",
+};
+
 export function buildFlow(market: string): Flow {
   // Collected answers, shared across blocks via closure.
   const answers: Record<string, string> = {};

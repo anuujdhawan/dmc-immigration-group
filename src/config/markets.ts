@@ -45,6 +45,15 @@ export const MARKET_COUNTRY_CODES: Record<Market, string> = {
   india: "IN",
 };
 
+/** ITU-T dialing prefixes for each market's country. */
+export const MARKET_DIALING_CODES: Record<Market, string> = {
+  dubai: "971",
+  "abu-dhabi": "971",
+  qatar: "974",
+  kuwait: "965",
+  india: "91",
+};
+
 export const MARKET_LEGACY_HOSTS: Record<Market, string> = {
   dubai: "https://dm-consultant.ae",
   "abu-dhabi": "https://dm-consultantabudhabi.com",

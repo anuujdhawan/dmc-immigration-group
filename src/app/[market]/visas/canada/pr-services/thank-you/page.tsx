@@ -23,11 +23,18 @@ export default async function CanadaPrThankYouRoute({
   const { market } = await params;
   if (!isLandingMarket(market)) notFound();
   const office = getOffice(market);
+  // The listed number is the market's WhatsApp line from .env, falling back
+  // to the office phone if no WhatsApp number is configured yet.
+  const hasWhatsApp = office.whatsappE164.trim().length > 0;
   return (
     <ThankYouPage
       programLabel={landingDestinationLabel("canada")}
-      phoneDisplay={office.phoneDisplay}
-      phoneHref={`tel:${office.phoneE164}`}
+      phoneDisplay={hasWhatsApp ? office.whatsappDisplay : office.phoneDisplay}
+      phoneHref={
+        hasWhatsApp
+          ? `https://wa.me/${office.whatsappE164.replace(/[^0-9]/g, "")}`
+          : `tel:${office.phoneE164}`
+      }
     />
   );
 }

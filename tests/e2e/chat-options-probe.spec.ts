@@ -18,6 +18,25 @@ test.describe("guided chat options-only behavior", () => {
     await expect(toggle).toHaveCSS("width", "56px");
     await expect(toggle).toHaveCSS("height", "56px");
 
+    // Cube-shaped bubble: square button (12px radius), icon not cropped.
+    await expect(toggle).toHaveCSS("border-radius", "12px");
+    await expect(page.locator(".rcb-toggle-icon")).toHaveCSS("background-size", "contain");
+    await expect(page.locator(".rcb-toggle-icon")).toHaveCSS("background-repeat", "no-repeat");
+
+    // Thank-you card clears the fixed header (no navbar overlap).
+    const card = page.locator("section.bg-slate-50 .max-w-2xl");
+    const cardBox = await card.boundingBox();
+    const headerBox = await page.locator("header").first().boundingBox();
+    expect(cardBox && headerBox ? cardBox.y - (headerBox.y + headerBox.height) : -1).toBeGreaterThan(16);
+
+    // The "Need help?" tooltip is hidden by default, shown on bubble hover only.
+    const tooltip = page.locator(".rcb-chat-tooltip");
+    await expect(tooltip).toHaveCSS("opacity", "0");
+    await toggle.hover();
+    await expect(tooltip).toHaveCSS("opacity", "1");
+    await page.mouse.move(400, 400);
+    await expect(tooltip).toHaveCSS("opacity", "0");
+
     await toggle.click();
     await page.waitForSelector(".rcb-chat-window", { timeout: 15000 });
 
@@ -41,18 +60,21 @@ test.describe("guided chat options-only behavior", () => {
     await page.locator(".rcb-chat-input-textarea").fill("John Doe");
     await page.locator(".rcb-send-button").click();
 
-    // ask_email: textarea visible.
+    // Wait for the next question to render before typing again, otherwise
+    // the fill races the bot's typing delay and the send is dropped.
+    await expect(page.getByText("What is your email address?")).toBeVisible();
     await expect(page.locator(".rcb-chat-input-textarea")).toBeVisible();
     await page.locator(".rcb-chat-input-textarea").fill("john@example.com");
     await page.locator(".rcb-send-button").click();
 
     // ask_phone: textarea visible.
+    await expect(page.getByText(/Last one/)).toBeVisible();
     await expect(page.locator(".rcb-chat-input-textarea")).toBeVisible();
     await page.locator(".rcb-chat-input-textarea").fill("+971500000000");
     await page.locator(".rcb-send-button").click();
 
-    // End step: chat disabled, input hidden.
-    await expect(page.getByText(/Thank you/)).toBeVisible();
+    // End step: chat bubble thanks the visitor, input hidden again.
+    await expect(page.locator(".rcb-bot-message").getByText(/Thank you/)).toBeVisible();
     await expect(page.locator(".rcb-chat-input-textarea")).toHaveCount(0);
   });
 

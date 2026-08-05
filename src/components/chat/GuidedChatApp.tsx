@@ -3,22 +3,18 @@
 import { useEffect, useMemo } from "react";
 import ChatBot, { ChatBotProvider, useMessages, usePaths, useSettings } from "react-chatbotify";
 import type { Market } from "@/config/markets";
-import { buildFlow } from "@/config/guided-chat.flow";
+import { buildFlow, CONTACT_QUESTION_FRAGMENTS } from "@/config/guided-chat.flow";
 
 /**
  * The only flow blocks that collect free text. Every other block uses
  * option buttons, so the manual input row must stay hidden for those.
  *
- * Map each free-text block to a distinctive fragment of its question
- * message so the gate can confirm the question has actually been rendered
- * before showing the input row (avoids an input flash during the typing
- * transition after the final option click).
+ * The gate confirms the question has actually been rendered (fragment match
+ * on the delivered bot message) before showing the input row, which avoids
+ * an input flash during the typing transition after the final option click.
+ * Copy lives in CONTACT_QUESTION_FRAGMENTS next to the flow definition.
  */
-const FREE_TEXT_BLOCKS: Record<string, string> = {
-  ask_name: "What is your full name?",
-  ask_email: "What is your email address?",
-  ask_phone: "phone number",
-};
+const FREE_TEXT_BLOCKS = CONTACT_QUESTION_FRAGMENTS;
 
 function InputRowGate() {
   const { paths } = usePaths();
@@ -58,7 +54,9 @@ const CHAT_SETTINGS = {
     showInputRow: false,
   },
   tooltip: {
-    mode: "CLOSE",
+    // NEVER keeps the bubble label hidden by default; the CSS in
+    // DmcGuidedChat reveals it only while the chat bubble is hovered.
+    mode: "NEVER",
     text: "Need help? Chat with us! 💬",
   },
   chatWindow: {
@@ -66,6 +64,10 @@ const CHAT_SETTINGS = {
     showTypingIndicator: true,
     autoJumpToBottom: true,
     defaultOpen: false,
+  },
+  chatButton: {
+    // Client-approved bubble icon (transparent-background WebP).
+    icon: "/media/brand/chat-bubble-icon.webp",
   },
   header: {
     showAvatar: false,
@@ -136,6 +138,13 @@ const CHAT_SETTINGS = {
     desktopEnabled: true,
     mobileEnabled: true,
   },
+};
+
+// The bubble icon carries its own green bubbles on a transparent background,
+// so strip the library's default gradient and let the icon be the button.
+const CHAT_BUTTON_STYLE = {
+  background: "transparent",
+  backgroundImage: "none",
 };
 
 const CHAT_STYLES = {
@@ -241,7 +250,11 @@ export default function GuidedChatApp({ market }: { market: Market }) {
         id="dmc-guided-chat"
         flow={flow}
         settings={CHAT_SETTINGS}
-        styles={CHAT_STYLES}
+        styles={{
+          ...CHAT_STYLES,
+          chatButtonStyle: CHAT_BUTTON_STYLE,
+          chatButtonHoveredStyle: CHAT_BUTTON_STYLE,
+        }}
       />
     </ChatBotProvider>
   );

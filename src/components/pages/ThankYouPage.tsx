@@ -14,7 +14,7 @@ interface ThankYouPageProps {
  */
 export function ThankYouPage({ programLabel, phoneDisplay, phoneHref }: ThankYouPageProps) {
   return (
-    <section className="bg-slate-50 py-24 md:py-36">
+    <section className="bg-slate-50 pb-24 pt-40 md:pb-36 md:pt-48">
       <Container>
         <div className="mx-auto max-w-2xl rounded-[32px] border border-brand-600/10 bg-white p-8 text-center shadow-[0_24px_70px_rgba(16,41,10,.1)] md:p-14">
           <span className="mx-auto grid size-20 place-items-center rounded-full bg-brand-100 text-brand-700">

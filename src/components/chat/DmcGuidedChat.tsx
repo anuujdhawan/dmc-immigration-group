@@ -21,6 +21,8 @@ export function DmcGuidedChat({ market }: { market: Market }) {
           bottom: 24px !important;
           width: 56px !important;
           height: 56px !important;
+          /* Cube shape: square button with a small corner radius. */
+          border-radius: 12px !important;
           box-shadow:
             0 8px 24px rgba(53, 142, 26, 0.38),
             0 0 0 1px rgba(53, 142, 26, 0.2) !important;
@@ -29,11 +31,18 @@ export function DmcGuidedChat({ market }: { market: Market }) {
         .rcb-toggle-icon {
           width: 56px !important;
           height: 56px !important;
+          /* Keep the full icon visible — never crop it inside the cube. */
+          background-size: contain !important;
+          background-repeat: no-repeat !important;
+          background-position: center !important;
+          border-radius: 12px !important;
         }
 
-        /* Move the "Need help?" tooltip to sit beside the left bubble */
+        /* Move the "Need help?" tooltip to sit beside the left bubble.
+           Hidden by default (tooltip.mode = NEVER) and revealed only while
+           the chat bubble is hovered. */
         .rcb-chat-tooltip {
-          left: 96px !important;
+          left: 84px !important;
           right: auto !important;
           bottom: 36px !important;
           background: #1d241b !important;
@@ -44,6 +53,16 @@ export function DmcGuidedChat({ market }: { market: Market }) {
           font-weight: 600 !important;
           font-family: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif !important;
           box-shadow: 0 6px 20px rgba(7, 29, 4, 0.25) !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+          transition: opacity 0.25s ease, visibility 0.25s ease !important;
+        }
+
+        .rcb-chatbot-global:has(.rcb-toggle-button:hover) .rcb-chat-tooltip {
+          opacity: 1 !important;
+          visibility: visible !important;
+          pointer-events: auto !important;
         }
 
         .rcb-chat-tooltip-tail {
