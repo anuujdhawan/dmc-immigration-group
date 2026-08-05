@@ -250,3 +250,39 @@ Record architectural and content decisions, deviations from templates, renamed/c
 - Market context remains mandatory even on reused template pages. Phone labels, consultation copy, breadcrumbs, and route-level metadata should continue to resolve through the market/office registries rather than hardcoded Dubai-only copy.
 - The internal-page stack under the shared fixed header now follows this sequence intentionally: breadcrumb bar, facts bar, anchor nav, then the first content section. Spacing tweaks should preserve that order rather than pushing the whole page downward with arbitrary top margin.
 - The extracted template layer still uses centralized remote `<img>` tags for parity speed. This is accepted temporary debt while the reusable system is stabilizing; a later image pass should migrate them to `next/image` or approved optimized local assets once the required CSS selectors and sizing behavior are preserved.
+
+## 2026-08-05 — Resend enabled + UTM/gclid campaign tracking
+
+- Client asked to configure Resend with the lead form using a dummy email for now. `RESEND_ENABLED=true` and all five `DMC_*_LEAD_TO_EMAIL` recipients set to `leads@example.com` (RFC 2606 reserved, guaranteed dummy) in the active `.env`. Accepted temporary state: with the placeholder API key and `example.invalid` sending domain, live sends fail and the form surfaces the error rather than pretending success — the intended behaviour until the client supplies real values. Values still needed from client: `RESEND_API_KEY`, verified `RESEND_SENDING_DOMAIN`, and the real per-market recipient inboxes.
+- Campaign attribution: `submitLead` now carries `utm_source`/`utm_medium`/`utm_campaign`/`gclid` (added `gclid` to the schema + email + CRM). The forms read them from the URL query string at submit time (`src/lib/utils/url-tracking.ts`), preferring any pre-filled form values over the URL. Hash-anchor CTAs on the landing page never change `location.search`, so the params survive scrolling between the hero, mid-page CTAs and the form.
+
+## 2026-08-05 — Campaign landing pages (Dubai + Abu Dhabi PR)
+
+- Landing pages live under their market and process (`/[market]/visas/<destination>/pr-services`) so campaign URLs stay in harmony with the canonical route inventory; only `dubai` and `abu-dhabi` get them (`dynamicParams = false`, other markets 404). The `thank-you` route nests under the landing (`.../pr-services/thank-you`), mirroring the reference `cwmigrationgroup.ae/australia-pr-services/thank-you`.
+- Landing chrome is a separate no-link header/footer (`LandingHeader`/`LandingFooter`) with legal labels as plain text — the reference campaign page renders them as non-links too. The standard site chrome stays on the thank-you route. Implementation: `ChromeSwitcher` (client `usePathname`) in the market layout receives both pre-rendered chrome trees as props — the server layout keeps `generateStaticParams`, no page files were moved.
+- Landing content is client copy from the four docx briefs (kept verbatim, including the client's "2,000+ reviews / 10+ years / MARA & RCIC" claims), but review/testimonial cards remain the site's truthful "being verified with the client" placeholder rather than invented quotes; facts (65 points, CRS +600 PNP, Express Entry programs) reuse values already verified in the content registry.
+- The shared `Hero` gained an optional `titleSuffix` prop (default `" begins here."`) so the landing headline ends on the city name instead of the editorial suffix.
+- react-hook-form 7.84 checkbox behavior: registered checkboxes without a `value` attribute store a **boolean**, so `consent` (schema expects string `"on"`) failed validation on every site form. Fix applied to both `LeadForm` and `LandingLeadForm`: `value="on"` on the input plus a normalization guard in `onSubmit`. Do not revert `value="on"` when restyling the consent checkbox.
+
+## 2026-08-05 — Tailwind v4 responsive-variant ordering landmine
+
+- The compiled CSS (Turbopack dev) can place base utility rules (`w-full`, `.hidden`) AFTER responsive variant rules (`sm\:w-auto`, `lg\:flex`) inside the utilities layer. Equal specificity then resolves to the LATER rule, so `w-full sm:w-auto` renders full-width at every size (measured: button 1176px at 1440px; `.w-full` emitted after `.sm\:w-auto` in the chunk). `hidden lg:flex` still works because the app's header uses site CSS layers that outrank the ordering issue — but do not rely on base-then-variant width toggles in Tailwind utilities for new components. Fix pattern: drive such widths from an unlayered `!important` rule in `globals.css` (e.g. `.landing-header-cta`), which beats layered utilities regardless of generation order.
+
+## 2026-08-05 — Custom form dropdowns
+
+- Form selects are custom listboxes (`src/components/ui/FormSelect.tsx`) rather than native `<select>` elements because native pickers are OS-controlled on mobile/tablet and never open under the field. The dropdown is absolutely positioned under the trigger on every viewport, closes on outside tap/Escape, and supports arrow-key navigation. This applies to both the landing lead form and the shared site-wide `LeadForm`.
+
+## 2026-08-05 — WebP + gallery system + country-representative imagery
+
+- All page media converted to WebP via `scripts/convert-images.mjs` (sharp, q80, max 1600px, alpha preserved; `npm run images:convert`; originals removed). No raster `.jpg`/`.png` remains under `public/media/pages`; `next/image` migration of the shared template `<img>` tags is now straightforward since every source is local WebP.
+- `MediaCard` / `MediaCardGrid` (`src/components/ui/MediaCard.tsx`) are the reusable image-card components: template-matching rounded 26px cards with an overlaid uppercase label pill, brand-tinted title/body copy, and hover lift/zoom interactions.
+- `src/config/page-gallery.ts` is the single gallery registry (`galleryFor(pageId)`): family sets + travel galleries + exact overrides; every card carries page- and brand-justifying copy.
+- `MediaGallerySection` (internal template layer) renders the gallery on every internal page — Express Entry, Canada/Australia/UK route families, and all content-driven pages via `ProgramPage`.
+- Imagery rule going forward: destination-representative only — flags, passports, globes/world maps, and famous landmarks; generic scenery is banned because it does not communicate the destination. Fixed this batch: AIP (Atlantic lighthouse/maple leaf), RNIP (Canadian small town), Cyprus (Larnaca seafront, was Greece), Vanuatu (South Pacific island, was New Zealand), St Kitts & Nevis (Caribbean beach).
+- `MediaCard` and the shared template `<img>` tags still emit `@next/next/no-img-element` lint warnings — accepted debt (0 errors); all sources are now local WebP so the cleanup is mechanical.
+
+## 2026-08-05 — Guided chat lead delivery + `DMC_CHATBOT_LEAD_TO_EMAIL`
+
+- Completing the guided chat now emails the lead via the existing Resend pipeline (`submitChatLead` in `src/features/leads/actions.ts`). Recipient resolution order: `DMC_CHATBOT_LEAD_TO_EMAIL` → `DMC_<MARKET>_LEAD_TO_EMAIL` → `RESEND_REPLY_TO_EMAIL`. The dedicated chat var (documented in `.env` with a comment that this Resend email ID is for the chatbot lead) is the single editable knob for redirecting chat leads; no code change needed to repoint them.
+- Chat leads are Resend-only (no CRM push) — the collected answers don't map to `LeadFormData`, and the CRM path was intentionally left out of scope for the chat. Revisit if the client wants chat leads in the CRM.
+- `buildFlow(market)` is now parameterized (market threaded from `MarketFloatingWidgets` → `DmcGuidedChat` → flow closure), records every answer via a `record()` helper, and fires `submitChatLead` in the `ask_phone` block — fire-and-forget with try/catch so the thank-you always renders even if the send fails. When `RESEND_ENABLED=false` the action is a silent no-op, matching the form behaviour.

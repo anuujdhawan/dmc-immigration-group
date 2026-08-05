@@ -9,6 +9,7 @@ export const leadSchema = z.object({
   destination: z.string().min(1, "Please select a destination or program"),
   ageRange: z.string().optional().default(""),
   education: z.string().optional().default(""),
+  workExperience: z.string().optional().default(""),
   enquiryType: z.string().optional().default("consultation"),
   preferredMarket: z.enum(MARKETS),
   message: z.string().max(2000).optional().default(""),
@@ -18,6 +19,7 @@ export const leadSchema = z.object({
   utmSource: z.string().optional().default(""),
   utmMedium: z.string().optional().default(""),
   utmCampaign: z.string().optional().default(""),
+  gclid: z.string().optional().default(""),
   consent: z.string(),
   honeypot: z.string().optional().default(""),
 }).refine((data) => data.consent === "on", {

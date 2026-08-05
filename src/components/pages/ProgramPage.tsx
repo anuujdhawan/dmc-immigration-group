@@ -12,6 +12,7 @@ import { breadcrumbsFor, getPageContent } from "@/content/pages";
 import { marketHref } from "@/lib/routing/routes";
 import { pageMedia } from "@/config/page-media";
 import { cn } from "@/lib/utils/cn";
+import { MediaGallerySection } from "@/components/pages/internal/InternalPageTemplate";
 
 import { Hero } from "@/components/home/Hero";
 import { Container } from "@/components/ui/Container";
@@ -738,6 +739,8 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
           </section>
         );
       })}
+
+      {!page.id.startsWith("legal/") ? <MediaGallerySection pageId={page.id} tone="soft" /> : null}
 
       {page.officialSources.length > 0 ? (
         <section className="bg-aurora-bg py-14 text-aurora-text md:py-20">

@@ -22,6 +22,7 @@ import {
   InternalFactsBar,
   InternalSection,
   LeadFormSection,
+  MediaGallerySection,
   MediaFrame,
   PartnerLogoStrip,
   ProcessSection,
@@ -486,6 +487,8 @@ export function ExpressEntryPage({
         ]}
         items={GUIDANCE_ITEMS}
       />
+
+      <MediaGallerySection pageId="visas/canada/express-entry" id="gallery" tone="soft" />
 
       <InternalSection labelledBy="ee-evidence-title">
         <div className="ee-shell">

@@ -1,6 +1,7 @@
 import { env } from "@/config/env/server";
 import { MARKET_LIST, type Market } from "@/config/markets";
 import { WhatsAppLauncher } from "@/components/ui/WhatsAppLauncher";
+import { DmcGuidedChat } from "@/components/chat/DmcGuidedChat";
 
 function getWhatsAppNumbers(): Record<Market, string> {
   const numbers = {} as Record<Market, string>;
@@ -24,5 +25,10 @@ export function MarketFloatingWidgets({ market }: { market: Market }) {
   const numbers = getWhatsAppNumbers();
   const prefilledMessage = env.WHATSAPP_PREFILLED_MESSAGE;
 
-  return <WhatsAppLauncher market={market} prefilledMessage={prefilledMessage} numbers={numbers} />;
+  return (
+    <>
+      <WhatsAppLauncher market={market} prefilledMessage={prefilledMessage} numbers={numbers} />
+      {env.GUIDED_CHAT_ENABLED && <DmcGuidedChat market={market} />}
+    </>
+  );
 }

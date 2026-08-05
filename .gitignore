@@ -17,6 +17,12 @@
 /.next/
 /out/
 
+# freebuff
+/.freebuff/
+
+# qodo
+/.qodo/
+
 # production
 /build
 

@@ -2,9 +2,24 @@
 
 Living checklist. Update after every meaningful batch. Never delete completed history.
 
-Last updated: 2026-08-04
+Last updated: 2026-08-05
 
 ## Completed
+
+## 2026-08-05 — Campaign landing pages (Dubai + Abu Dhabi PR)
+
+- Built 4 conversion landing pages from the client's docx briefs (`dmc _ <market> - <destination> PR.docx`):
+  - `/dubai/visas/australia/pr-services` and `/dubai/visas/canada/pr-services`
+  - `/abu-dhabi/visas/australia/pr-services` and `/abu-dhabi/visas/canada/pr-services`
+  - plus a `/thank-you` child route under each. URLs stay in harmony with the canonical route families (`/[market]/visas/<destination>/pr-services`).
+- Registry `src/config/landing-pages.ts` (ids, `LANDING_MARKETS` = dubai/abu-dhabi, path helpers); content `src/content/landing.ts` (typed per-destination/per-market copy from the briefs; localises city, office bullets, FAQ geography, phone, and the Dubai-Canada Express Entry + PNP sections vs Abu Dhabi-Canada combined Pathways section).
+- Distraction-free chrome: `LandingHeader` (logo + trust chips + in-page CTA + phone — zero outbound links) and `LandingFooter` (logo, tagline, disclaimer, non-link legal labels). `ChromeSwitcher` (client, `usePathname`) in `[market]/layout.tsx` renders landing chrome ONLY on the exact landing paths; the thank-you routes use the normal `SiteHeader`/`SiteFooter`/floating widgets.
+- Landing page uses the shared `Hero` component (new optional `titleSuffix` prop, default unchanged) + `LandingPage` renderer (form band, social proof strip, why/eligibility/benefits/pathways/points/occupations/process/why-DMC/testimonials/FAQ/final-CTA sections). Testimonials stay as the site's truthful "being verified" placeholders.
+- `LandingLeadForm` implements the brief's exact fields (name/phone/email, age 18–45/45+, qualification 12th→PhD, work experience 0–2/3–5/5+ yrs, preferred office) and redirects to the thank-you page on success. `workExperience` added to `leadSchema` + Resend email + CRM payload.
+- Fixed a latent lead-form bug: react-hook-form v7 stores checkbox values as booleans, so `consent` arrived as `true`/`false` and failed `z.string()` (`"on"`) validation on every site form. Added `value="on"` + a normalization guard in both `LeadForm` and `LandingLeadForm`.
+- Thank-you pages are noindex, render the normal site chrome, and have no hero. Landing pages are indexed and added to `sitemap.ts`.
+- Follow-up: the landing form's Preferred Office dropdown now lists all five DMC markets (Dubai, Abu Dhabi, Qatar, Kuwait, India) instead of only the two UAE offices — landing market listed first via `preferredOfficesFor()` in `landing.ts`; unit test updated to assert 5 options.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 pre-existing warnings), `npm test` ✓ 51/51, `npm run build` ✓ 421/421 static pages. Live dev-server checks: landing chrome on landing pages, normal chrome on thank-you; form submit → thank-you redirect works (Resend/CRM disabled return success); zero console errors; only in-page `#free-assessment`/`#points` anchors + one `tel:` link on the landing page.
 
 - Read the full `DMC_MASTER_PROMPT.md` (1374 lines) — permanent project specification.
 - Inspected both supplied HTML templates:
@@ -192,12 +207,120 @@ Last updated: 2026-08-04
 - Updated `canada.ts` content split media to local paths, and wired `ProgramPage` to render a lead-image band from `pageMedia(page.id)` for every content-driven page (visit-visas, business-investment, study-abroad, services, resources, site pages) that lacks an inline split image.
 - Verified in the live dev server (`localhost:3000`): no `dm-consultant.ae/wp-content/uploads/2023/12` images remain on any checked page; each page serves its own local image; `npm run typecheck` ✓, `npm run lint` ✓ (0 errors), `npm run build` ✓ (413 static pages), `npm test` ✓ 41/41.
 
+## 2026-08-05 — WebP conversion + reusable gallery system + country-representative imagery
+
+- Converted ALL website raster media to WebP with the `sharp` pipeline — `scripts/convert-images.mjs` + `npm run images:convert` (q80, max 1600px, alpha preserved, originals removed). `public/media/pages` now holds only `.webp` files (78 total); zero `.jpg`/`.png` remain in the page media tree, ~45–55% average size reduction.
+- Added reusable image-card components `MediaCard` + `MediaCardGrid` (`src/components/ui/MediaCard.tsx`) matching the template design language: rounded 26px cards, image top with overlaid mono uppercase label pill, brand-tinted title/body copy, hover lift + image zoom, optional link.
+- Added `src/config/page-gallery.ts` (`galleryFor(pageId)`) — every internal page resolves a six-card DMC-branded gallery: family sets (Canada/Australia/UK/business/study/visit/services/site), destination-specific travel galleries for visit-visa pages, and exact overrides (Express Entry, Study Permits, Family Sponsorship, Canada visit visa). Every card pairs a local WebP image with copy that justifies both the page topic and the DMC service model.
+- Added `MediaGallerySection` to the internal template layer and wired it into Express Entry, all 5 Canada pages, all 8 Australia pages, both UK pages, and `ProgramPage` (every content-driven page) — every navbar dropdown page now displays six themed image cards plus its existing hero/split/process imagery (8+ images per page).
+- Corrected country mismatches flagged by the user: AIP split Niagara→Atlantic lighthouse, AIP process→maple leaf; RNIP forest→Canadian small-town main street; Cyprus (was a Greece photo)→Larnaca seafront; Vanuatu (was a New Zealand photo)→South Pacific island; St Kitts (generic)→Caribbean beach. Imagery rule now enforced across the registry: flags, passports, globes/world maps, and famous landmark locations per destination — no generic scenery.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 known `<img>` warnings in the shared template), `npm test` ✓ 41/41, `npm run build` ✓ 413/413 static pages; live preview spot-checked the AIP lighthouse split and the Australia 189 six-card gallery (SYDNEY / MELBOURNE / HARBOUR LIFE / ICONIC LANDMARKS / WILDLIFE & OUTDOORS / REGIONAL AUSTRALIA), no console errors, all images served 200.
+
+## 2026-08-05 — Resend enabled + UTM/gclid campaign tracking
+
+- `RESEND_ENABLED=true` in the active `.env` with placeholder values (dummy API key `re_replace_with_real_key`, sending domain `example.invalid`, all five `DMC_*_LEAD_TO_EMAIL` recipients set to the dummy `leads@example.com`). The Resend library (`resend`) and per-market recipient resolution were already wired in `submitLead`; this enables the pipeline. Until real values replace the placeholders, form submissions attempt the send and fail with an honest error (verified live: server log shows `[Resend API Error]` from the placeholder key).
+- Added `gclid` to `leadSchema` and to the Resend email builder (HTML + text) and CRM payload, alongside the existing `utmSource`/`utmMedium`/`utmCampaign`.
+- New `src/lib/utils/url-tracking.ts`: `readUrlTrackingParams()` parses `utm_source`, `utm_medium`, `utm_campaign`, `gclid` from the URL query string; `mergeUrlTracking()` merges them into the submitted lead. Wired into both `LandingLeadForm` and the shared `LeadForm` at submit time (form values win over URL). Unit-tested (3 new tests).
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 pre-existing warnings), `npm test` ✓ 53/53, `npm run build` ✓ 421/421 static pages; browser submit with `?utm_source=google&utm_medium=cpc&utm_campaign=au_pr_launch&gclid=…` in the URL passed validation and reached the live Resend send (rejected on the placeholder key, error surfaced correctly).
+
+## 2026-08-05 — Custom form dropdowns (mobile/tablet open under field)
+
+- Native `<select>` popups are rendered by the OS on mobile/tablet (iOS wheel, Android dialog), which never opens beneath the field. Added a reusable `src/components/ui/FormSelect.tsx` — a custom dropdown (react-hook-form `useController`) that renders an `absolute left-0 right-0 top-full` listbox directly under its trigger on every viewport: chevron state, outside-pointerdown + Escape dismiss, arrow/Home/End + Enter keyboard nav, hover highlight, max-h scroll, error ring, optional clearable placeholder row, `aria-haspopup`/`expanded`/`controls` + `role=listbox/option`.
+- Swapped all selects in both forms: `LandingLeadForm` (age range, highest qualification, work experience, preferred office) and shared `LeadForm` (destination, age range, education, preferred office). `required`/`aria-required` deliberately dropped (invalid on a button; the `*` labels convey requiredness).
+- New e2e regression spec `tests/e2e/landing-dropdown.spec.ts` — at 390px and 768px viewports, asserts the listbox renders 0–24px below its trigger with aligned left edges, that picking an option updates the trigger and closes the list, and that the office dropdown lists all five markets.
+- Review hardening: wrapper closes on `focusout` when focus leaves the component (no stray listboxes on Tab/keyboard-open), options `preventDefault()` on `pointerdown` so focus never leaves the trigger before the click selects (touch-safe), and the keyboard highlight scrolls into view inside the `max-h-60` listbox.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 pre-existing warnings), `npm test` ✓ 53/53, `npm run test:e2e` ✓ 62/62 (incl. 4 new dropdown tests across desktop-chromium + mobile-390). Live preview screenshot confirms both listboxes render beneath their fields.
+
+## 2026-08-05 — Country skyline bands on landing pages
+
+- Client-supplied skylines converted to optimized WebP via sharp (q80, original dims kept — both under 1600px cap): `public/media/pages/australia/australia-skyline.webp` (Perth skyline at twilight across the Swan River, EXIF-verified) and `public/media/pages/canada/canada-skyline.webp` (Toronto skyline at dusk with CN Tower, EXIF-verified). ~50% smaller than the source JPEGs.
+- Added a `skyline` block to `LandingContent` (`landing.ts`) with per-destination image/alt/kicker/title/copy/CTA, and a full-width `DestinationSkylineSection` in `LandingPage.tsx` rendered right after the lead-capture form (form stays above the fold): `next/image` `fill` + `object-cover`, dark gradient overlay, and a CTA that anchors back to `#free-assessment` — the no-outbound-links rule is preserved (verified: only in-page anchors + `tel:` on all 4 pages).
+- Australia pages (Dubai + Abu Dhabi) serve the Perth skyline; Canada pages serve the Toronto skyline (verified per-route).
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 pre-existing warnings — no new ones; `next/image` used), `npm test` ✓ 53/53, dropdown e2e spec ✓ 4/4, live DOM checks confirm the band (heading/kicker/CTA/alt) and image load on both destinations.
+
+## 2026-08-05 — Hero proof-stats overlap fix (landing + homepage)
+
+- Reported: the hero proof stats ("2,000+ · 5-star reviews" etc.) overlapped on the landing pages. Root cause: the recovered template CSS switches the proof row to an inline baseline flex layout at ≥768px, and inside the hero's narrow copy column (~768–1280px) each stat slot is only ~49px wide while "2,000+" needs ~62px — text overflows its slot and collides with the label.
+- Fixed in `src/app/globals.css` with a scoped override: `#landing-hero .botanical-proof-row` (and `#home .botanical-proof-row`, which had the identical latent bug — 61px overlap at 1024/1280) now always use the stacked 3-column grid: value over label, centered, divider lines, soft panel background, `strong` at `clamp(1.05rem, 4vw, 1.35rem)` bold with `white-space: nowrap` so the number never wraps or shrinks, `small` wraps gracefully below.
+- Verified with a Playwright probe at widths 320/390/414/768/1024/1280/1440 on both the landing page and homepage: zero horizontal and zero vertical overlap, spans `flex-direction: column` at every width (pre-fix: 60–63px vertical overlap at 768–1280px).
+- Added a permanent e2e regression test in `tests/e2e/landing-dropdown.spec.ts` ("landing hero proof stats never overlap at tablet and desktop widths") that asserts zero overlap at 768/1024/1280/1440.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 pre-existing warnings), `npm test` ✓ 53/53, `npm run test:e2e` ✓ 64/64.
+
+## 2026-08-05 — Landing header responsive fix
+
+- Reported: the "Check My Eligibility — Free" CTA in the landing header overflowed its bar (and the viewport) at ≤360px — measured button right edge 343px vs bar right edge 288px at 320px viewport. The full label cannot fit beside the logo on one row below ~358px.
+- Fixed `src/components/layout/LandingHeader.tsx`: the bar now wraps (`flex-wrap`), and below `sm` the CTA becomes a full-width second row under the logo (big, clean tap target) instead of overflowing; from `sm` (640px) up it returns to the inline pill beside the logo. Trust chips/phone unchanged. `LandingPage.tsx` offset raised to `pt-32` at <sm and the lead-capture section's `scroll-mt` bumped to `scroll-mt-32` so the taller two-row header never covers the hero or the anchor target (section anchors already use `--header-offset` = 118px ≈ the 122px two-row header).
+- Discovered a Tailwind v4/Turbopack landmine during the fix: in the compiled CSS the base utilities layer can order base rules (`.w-full`) AFTER responsive variant rules (`.sm\:w-auto`), so `w-full sm:w-auto` silently resolves to full-width at all sizes (verified: button computed 1176px at 1440px; `.w-full` at byte 110738 comes after `.sm\:w-auto` at 101058). Width for the landing CTA is therefore driven from an unlayered `!important` block in `globals.css` (`.landing-header-actions` / `.landing-header-cta`: 100% below 640px, auto from 640px), which beats the layered utilities regardless of order. See DECISIONS.
+- Added a permanent e2e regression test (landing-dropdown.spec.ts) asserting the CTA stays inside the bar and viewport and the hero content clears the header at 320/360/390/640/1024/1440.
+- Verification: probe at 9 widths — mobile two-row header (bottom 122px) vs single-row at sm+ (76px), zero overflow at all widths, hero pill clears header everywhere; `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 pre-existing warnings), `npm test` ✓ 53/53, `npm run test:e2e` ✓ 65/65 (run with `--workers=1` for the landing spec — the dev server times out `page.goto` under full parallel load during recompiles).
+
+## 2026-08-05 — Landing hero top-space fix
+
+- Reported: the landing hero had too much top margin/padding. Cause was double top spacing: the wrapper's `pt-32 sm:pt-20 md:pt-24` (added for the two-row mobile header) stacked on top of the template hero's own `padding-top` (155px desktop / 104px mobile — sized for the taller site header). Measured gap from header bottom to hero license pill: 116px at mobile, 178px at desktop.
+- Fixed: removed the wrapper top padding entirely (hero aurora background now starts at the very top of the page, flowing under the fixed landing header) and scoped a slim `#landing-hero` `padding-top` in `globals.css` — `calc(124px + env(safe-area-inset-top, 0px))` below `sm` (clears the two-row header incl. notched phones) and `100px` from `sm` up.
+- Result (measured at 7 widths): hero section top = 0 at every width; gap from header bottom to license pill is now 21px (mobile) / 24px (desktop) / 43–56px (tablet) — previously 116–178px. Content always clears the header.
+- The landing-header e2e regression test now also asserts the hero starts at the top of the page and the pill sits within 80px of the header bottom.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 pre-existing warnings), `npm test` ✓ 53/53, `npm run test:e2e` ✓ 65/65.
+
+## 2026-08-05 — Landing benefits cards redesigned to template card language
+
+- Reported: the landing-page benefits grid ("Why Skilled Professionals Choose to Live & Work in Australia/Canada" — Strong Economy, Free Education, Healthcare, Family, Live Anywhere, Citizenship) should use the card design from the approved templates. Matched the Express Entry template's `ee-feature-item` card anatomy exactly: horizontal icon-left cards (44px icon column + text), organic asymmetric corner radii (`20px 48px 20px 20px`, flipped `48px 20px 20px 20px` on even cards), gradient icon tile (white→brand-100) with inset ring + soft drop shadow (`inset 0 0 0 1px rgba(53,142,26,.12), 0 10px 24px rgba(16,41,10,.08)`), 1px brand border, `rgba(255,255,255,.85)` surface, and the template's hover lift (`translateY(-6px)`, deeper `0 30px 72px` shadow, border darkens).
+- Restored the benefits section header (kicker + title), which was previously not rendered at all — only the bare card grid appeared (verified in the DOM pre-fix). Grid is `gap-5 sm:grid-cols-2` (horizontal cards stay wide enough to read; single column on mobile).
+- New `BenefitsGrid` component in `src/components/pages/LandingPage.tsx` renders the header + cards; the generic `CardGrid` is untouched for the occupations grid. Uses the existing `BENEFIT_ICONS` (briefcase/graduation/health/family/location/flag).
+- New permanent e2e regression test in `tests/e2e/landing-dropdown.spec.ts` ("landing benefits cards match template style and never overflow") asserting at 375/768/1280px: header renders, exactly 6 cards, no horizontal overflow, icon tile sits left of the title.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 13 pre-existing warnings), `npm test` ✓ 53/53, `npm run test:e2e` ✓ 65/65 (full suite at `--workers=2` after a timeout at default parallelism — dev-server compile load; see prior note). Live preview: header + 6 horizontal icon-left cards with alternating organic corners on both the Australia and Canada pages.
+
+## 2026-08-05 — Unified reusable image cards (template organic-corner theme)
+
+- `src/components/ui/MediaCard.tsx` is now the **single reusable image-card component** for every image surface on the site, upgraded to the template card language used by the benefits cards: organic asymmetric corners (`25px 72px 25px 25px`, mirrored `68px 25px 25px 25px` on alternating cards via index), soft brand border (`rgba(53,142,26,.1)`), surface `rgba(255,255,255,.85)`, deep green lift shadow (`0 20px 52px` → hover `0 30px 72px rgba(16,41,10,.11)`), `translateY(-6px)` hover, and slow image zoom (`scale(1.035)`) — matching the template's shared `.ee-*-card` hover rule.
+- Three variants, driven by a `variant` prop (index-based corner flip handled inside `MediaCardGrid`):
+  - `gallery` (default) — image-top (`aspect 1.36/1`) with overlaid label pill + title/body, whole card links when `href` set (used by `MediaGallerySection` on every internal page)
+  - `blog` — image-top link, uppercase brand meta line, title/body + "Read article →" (used by `BlogGrid` on the Express Entry page; external links open `_blank`)
+  - `story` — portrait `410/440` `object-contain` image on white with a bottom "Client success · 01/08" caption bar (used by `StoryCarousel`)
+- Refactored the only other image-card surfaces onto the component: `BlogGrid` now maps `BlogPostItem[]` → `MediaCardGrid variant="blog"`, and `StoryCarousel` renders each track card via `MediaCard variant="story"` (carousel scroll/controls unchanged). The old inline `ee-blog-card`/`ee-story-card` markup is gone; the recovered `ee-*` CSS rules are now unused for those cards. Homepage `ResourcesSection` (icon tiles) and `Stories`/`VideoStories` (media-pending placeholders, no real images) are intentionally untouched — they adopt this component when real media lands.
+- New e2e regression test in `tests/e2e/content-pages.spec.ts`: on the Express Entry page asserts 3 blog cards + 8 story cards + 6 gallery cards, organic corners (`72px` on first / `68px` on second card), blog meta lines + external links, story captions `01/08`…`08/08` + portrait aspect, and gallery label pills.
+- Review hardening: story track changed from `<div>` to `<ul>` (MediaCard returns `<li>`, so the old div produced invalid HTML; grid layout unchanged) with the ref type bumped to `HTMLUListElement`; the story image wrapper's background is now conditional (`bg-white` for story, `bg-slate-100` otherwise) instead of emitting both conflicting utilities (the compiled-CSS ordering landmine).
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, **11** warnings — down from 13 because the two inline `<img>` surfaces moved into the disable-annotated component), `npm test` ✓ 53/53, `npm run test:e2e` ✓ **70/70** (full suite at `--workers=2`; content-pages spec re-verified green after the review fixes). Live DOM/computed-style checks on `/dubai/visas/canada/express-entry` confirm organic radii, template shadow (`0 20px 52px rgba(16,41,10,.055)`), border/bg, story aspect `410 / 440` + `object-fit: contain`, valid `ul > li` story track, and gallery pills across all three surfaces.
+
+## 2026-08-05 — Landing eligibility CTAs anchor to the lead form
+
+- Reported: on mobile, every "Check My Eligibility" button scrolled to the top of the assessment section (`#free-assessment`) — which on mobile (intro column stacks above the form) left the actual form fields below the fold. Desktop was fine because intro and form sit side by side.
+- Fix: the form card in `LeadCaptureSection` (`src/components/pages/LandingPage.tsx`) is now its own anchor target — `id="lead-form"` with `scroll-mt-32 sm:scroll-mt-24` — and ALL six eligibility CTAs now point at `#lead-form` instead of the section top: `CtaLink` (used by checklist/points/occupations/process/pathways sections), the skyline CTA, the final CTA, the hero `primaryAction`, the hero `scrollTarget`, and the landing-header "Check My Eligibility — Free" CTA (`LandingHeader.tsx`). The section keeps its `free-assessment` id (harmless, unused by links now).
+- Verified with a Playwright probe + new permanent e2e regression test in `landing-dropdown.spec.ts` ("eligibility CTAs land on the lead form at every width"): clicking the header CTA at 390/768/1280px lands the form card in the top band — form top ≈ 232px vs header bottom 122px on mobile (just under the sticky header, never at the section top). The 232px = the global `scroll-padding-top: 104px` (recovered template CSS on the document) + the form's `scroll-mt-32` (128px); confirmed via computed styles, so the landing spot is deterministic, not drift.
+- Review hardening: dropped the ineffective `sm:scroll-mt-24` on the form (under the documented compiled-CSS landmine the base `scroll-mt-32` wins at every width anyway); the e2e test now also asserts ≥4 `a[href="#lead-form"]` links and zero `a[href="#free-assessment"]` links per width, plus a pre-click check that the form starts below the top band so the arrival is attributable to the click.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 11 pre-existing warnings), `npm test` ✓ 53/53, landing e2e spec ✓ 12/12 (incl. the new test across both projects; intermittent `page.goto` timeouts from the known dev-server recompile stall, clean on re-run).
+
+## 2026-08-05 — Real success-story videos in landing testimonial sections
+
+- Fetched the client's own success-story videos from `dm-consultant.ae/success-stories/` (a 260-item grid whose Elementor lightbox links base64-encode YouTube embed URLs — decoded all 115 unique video IDs and pulled titles via YouTube oEmbed). All chosen videos are authored by "DM Immigration Consultants" (their YouTube channel).
+- Destination-appropriate selection, 3 per destination (matching the skyline pattern): Australia PR pages show `45RJO__WJfg` (Mr. Nicholas & family PR story), `6OEwi47thXI` (Australia Permanent Residency), `RT9O2JwzP54` (Australia PR!); Canada PR pages show `HotxB851tq8` (Canada PR in 6 months), `pU9tj1j5FGE` (Ms. Akosua Duodua, 9 months), `o9d1fobgRNg` (Canada PR success story).
+- Downloaded the client's own 980×980 poster thumbnails and converted them to WebP (sharp q80) into `public/media/pages/common/` (`success-video-{canada|australia}-pr-*.webp`, 39–96KB each) — local posters, zero remote image requests.
+- New reusable client component `src/components/ui/VideoEmbedCard.tsx`: poster-first click-to-play card in the template card language (organic corners 25px/72px mirrored by index, brand border, hover lift), square poster + gradient play button; clicking mounts the privacy-enhanced `youtube-nocookie.com/embed/<id>?autoplay=1&rel=0&modestbranding=1` iframe only then (no external requests/cookies until user intent).
+- `landing.ts`: new `LandingVideo` type + `testimonials.videos` (per-destination) on `LandingContent`; `TestimonialsSection` in `LandingPage.tsx` now renders the video grid (3-col) instead of the placeholder "being verified" cards (their `Star`/`MARKET_LABELS` deps removed). Kept the honest footer note that videos play only on press.
+- Review hardening: the iframe `allow` list dropped the unrecognized `web-share` feature (Chromium console warning on every landing page — now gone); the card swaps focus into the iframe after play so keyboard/screen-reader users aren't dropped to `document.body` when the play button unmounts; and the organic-corner card shell is now a single shared `cardShellClass(index, { fill })` exported from `MediaCard.tsx` and reused by `VideoEmbedCard` (no more duplicated shell classes to drift).
+- New permanent e2e test (landing-dropdown.spec.ts): asserts 3 cards with posters + play buttons on the Australia and Canada pages, correct per-destination video id in the iframe after click, and only one iframe mounted (no eager embeds).
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 11 pre-existing warnings), `npm test` ✓ 53/53, landing e2e spec ✓ 14/14, `npm run build` ✓ (all 4 landing routes + thank-you pages prerendered static). Live preview: posters load, play swaps to the correct embed on the Australia page; Canada page shows its 3 videos; console clean of the `web-share` warning.
+
+## 2026-08-05 — Guided chat now delivers leads via Resend
+
+- Before this change the chat collected name/email/phone but only showed a thank-you — nothing was emailed anywhere. Now completing the chat emails the lead to a dedicated recipient.
+- New env var `DMC_CHATBOT_LEAD_TO_EMAIL` (with an inline comment in `.env`/`.env.example` stating this Resend email ID is for the chatbot lead) — change it in `.env` to redirect chat leads. Resolution order: `DMC_CHATBOT_LEAD_TO_EMAIL` → market `DMC_<MARKET>_LEAD_TO_EMAIL` → `RESEND_REPLY_TO_EMAIL`. No email needs changing when `RESEND_ENABLED=false` (graceful no-op, same as forms).
+- New server action `submitChatLead` in `src/features/leads/actions.ts`: builds an HTML + text email from the flow id/label, all recorded answers (friendly labels), name/email/phone, preferred market, and source page; sends via Resend only (no CRM push — chat answers don't map cleanly to `LeadFormData`).
+- `buildFlow(market)` now takes the market and records every answer (`record()` helper on each block) plus the chosen `flowId`/`flowLabel` in `route`; the `ask_phone` block calls `submitChatLead` (fire-and-forget, try/catch, thank-you still shows on any send failure). `DmcGuidedChat` receives `market` from `MarketFloatingWidgets` and builds the flow per market.
+- Verification: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors, 11 pre-existing warnings), `npm test` ✓ 53/53 (schema.test still green with the new defaulted var), `npm run build` ✓.
+
+## 2026-08-05 — Landing skyline copy readability
+
+- Reported: the skyline band copy ("From Perth's Swan River to Sydney Harbour…" / "Toronto's glittering skyline…") was hard to read — it used `--color-aurora-muted` (#9aab96, muted sage-gray) over the skyline photograph.
+- Fixed in the shared `DestinationSkylineSection` (`LandingPage.tsx`, covers all 4 landing pages): copy is now near-white `text-aurora-text` (#f5fff2) at `font-medium` (500) with `md:text-lg`, plus a subtle dark text shadow; the dark gradient overlay behind it was strengthened (`from-brand-950/95 via-brand-950/60 to-brand-950/25`, was 90/40/20) so the text zone over the bright skyline (Perth/Toronto at dusk) stays legible at every width.
+- Verified live on the Canada and Australia Dubai pages (computed color `rgb(245,255,242)`, weight 500, shadow applied) and visually in the preview; the section now reads as bright white text on the darkened skyline. typecheck ✓, lint 0 errors ✓, landing e2e ✓ 14/14.
+
 ## Next work
 
 1. Continue applying the extracted internal-page component system to the remaining Canada, Australia, and UK internal pages.
 2. Replace the centralized template `<img>` tags with `next/image` or approved optimized local assets.
 3. Phase 6: blog MDX migration from crawl inventory (91 posts).
-4. Phase 8: React ChatBotify v2 `DmcGuidedChat` + eligibility checker.
+4. Phase 8: guided chat wired to Resend lead delivery (chatbot done; eligibility checker still pending).
 5. Phase 9: Consent-gated GTM/GA4/Meta adapters (analytics IDs still needed from client).
 6. Phase 10: Remaining 13 calculators/tools (CRS is built into EE page; CLB, FSW-67, and Australia points now built).
 7. Phase 11: Authentic resource migration + credentials verification.

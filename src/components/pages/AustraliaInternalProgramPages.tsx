@@ -15,6 +15,7 @@ import {
   InternalFactsBar,
   InternalSection,
   LeadFormSection,
+  MediaGallerySection,
   ProcessSection,
   ProgramCards,
   RichCopy,
@@ -239,6 +240,8 @@ export function SkilledIndependent189Page({
         />
       ) : null}
 
+      <MediaGallerySection pageId={page.id} tone="soft" />
+
       <OfficialSourcesSection sources={page.officialSources} />
 
       <DisclaimerBand>
@@ -431,6 +434,8 @@ export function SkilledNominated190Page({
           }))}
         />
       ) : null}
+
+      <MediaGallerySection pageId={page.id} tone="soft" />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -625,6 +630,8 @@ export function SkilledWorkRegional491Page({
         />
       ) : null}
 
+      <MediaGallerySection pageId={page.id} tone="soft" />
+
       <OfficialSourcesSection sources={page.officialSources} />
 
       <DisclaimerBand>
@@ -793,6 +800,8 @@ export function PermanentResidence191Page({
           }))}
         />
       ) : null}
+
+      <MediaGallerySection pageId={page.id} tone="soft" />
 
       <OfficialSourcesSection sources={page.officialSources} />
 
@@ -987,6 +996,8 @@ export function EmployerSponsored482Page({
         />
       ) : null}
 
+      <MediaGallerySection pageId={page.id} tone="soft" />
+
       <OfficialSourcesSection sources={page.officialSources} />
 
       <DisclaimerBand>
@@ -1180,6 +1191,8 @@ export function EmployerNomination186Page({
         />
       ) : null}
 
+      <MediaGallerySection pageId={page.id} tone="soft" />
+
       <OfficialSourcesSection sources={page.officialSources} />
 
       <DisclaimerBand>
@@ -1349,6 +1362,8 @@ export function NationalInnovationVisa858Page({
         />
       ) : null}
 
+      <MediaGallerySection pageId={page.id} tone="soft" />
+
       <OfficialSourcesSection sources={page.officialSources} />
 
       <DisclaimerBand>
@@ -1517,6 +1532,8 @@ export function StateTerritoryNominationsPage({
           }))}
         />
       ) : null}
+
+      <MediaGallerySection pageId={page.id} tone="soft" />
 
       <OfficialSourcesSection sources={page.officialSources} />
 

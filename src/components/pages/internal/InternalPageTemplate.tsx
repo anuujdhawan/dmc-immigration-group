@@ -5,6 +5,8 @@ import { useCallback, useRef, useState, type FormEvent, type ReactNode } from "r
 
 import { MARKET_LABELS, MARKET_LIST, type Market } from "@/config/markets";
 import { marketHref } from "@/lib/routing/routes";
+import { galleryFor } from "@/config/page-gallery";
+import { MediaCard, MediaCardGrid, type MediaCardItem } from "@/components/ui/MediaCard";
 
 type TextBlock = string | ReactNode;
 
@@ -675,29 +677,21 @@ export function FaqSection({ id, items }: { id: string; items: FaqItem[] }) {
 }
 
 export function BlogGrid({ posts }: { posts: BlogPostItem[] }) {
-  return (
-    <div className="ee-blog-grid">
-      {posts.map((post) => (
-        <article key={post.title} className="ee-blog-card">
-          <a className="ee-blog-image" href={post.href}>
-            <img alt={post.alt} loading="lazy" src={post.img} />
-          </a>
-          <div className="ee-blog-body">
-            <span className="ee-blog-meta">{post.meta}</span>
-            <h3>{post.title}</h3>
-            <p>{post.body}</p>
-            <a className="ee-blog-link" href={post.href}>
-              Read article →
-            </a>
-          </div>
-        </article>
-      ))}
-    </div>
-  );
+  const items: MediaCardItem[] = posts.map((post) => ({
+    src: post.img,
+    alt: post.alt,
+    title: post.title,
+    body: post.body,
+    meta: post.meta,
+    href: post.href,
+    external: true,
+    cta: "Read article →",
+  }));
+  return <MediaCardGrid items={items} variant="blog" />;
 }
 
 export function StoryCarousel({ stories }: { stories: string[] }) {
-  const storyTrackRef = useRef<HTMLDivElement>(null);
+  const storyTrackRef = useRef<HTMLUListElement>(null);
 
   const moveStories = useCallback((direction: number) => {
     if (!storyTrackRef.current) return;
@@ -717,19 +711,21 @@ export function StoryCarousel({ stories }: { stories: string[] }) {
           →
         </button>
       </div>
-      <div className="ee-story-track" ref={storyTrackRef} tabIndex={0}>
+      <ul className="ee-story-track" ref={storyTrackRef} tabIndex={0}>
         {stories.map((src, index) => (
-          <figure key={src} className="ee-story-card">
-            <img alt={`DMC client success story ${index + 1}`} loading="lazy" src={src} />
-            <figcaption className="ee-story-caption">
-              <b>Client success</b>
-              <span>
-                {String(index + 1).padStart(2, "0")} / {String(stories.length).padStart(2, "0")}
-              </span>
-            </figcaption>
-          </figure>
+          <MediaCard
+            key={src}
+            variant="story"
+            index={index}
+            item={{
+              src,
+              alt: `DMC client success story ${index + 1}`,
+              title: "Client success",
+              count: `${String(index + 1).padStart(2, "0")} / ${String(stories.length).padStart(2, "0")}`,
+            }}
+          />
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
@@ -745,6 +741,40 @@ export function PartnerLogoStrip({ logos }: { logos: PartnerLogoItem[] }) {
         </div>
       </div>
     </section>
+  );
+}
+
+export function MediaGallerySection({
+  pageId,
+  id = "gallery",
+  tone = "white",
+  kicker = "Explore the journey",
+  title = (
+    <>
+      Life through <span>the lens.</span>
+    </>
+  ),
+  copy = "A visual tour of the destinations, documents and support that shape a DMC-guided application.",
+}: {
+  pageId: string;
+  id?: string;
+  tone?: "white" | "soft";
+  kicker?: string;
+  title?: ReactNode;
+  copy?: string;
+}) {
+  const items = galleryFor(pageId);
+  if (items.length === 0) return null;
+
+  return (
+    <InternalSection id={id} tone={tone}>
+      <div className="ee-shell">
+        <SectionHeader kicker={kicker} title={title} copy={copy} />
+        <div className="mt-10">
+          <MediaCardGrid items={items} />
+        </div>
+      </div>
+    </InternalSection>
   );
 }
 

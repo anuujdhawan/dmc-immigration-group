@@ -52,6 +52,64 @@ test("unknown content path returns 404", async ({ page }) => {
   expect(response?.status()).toBe(404);
 });
 
+test("image cards share one reusable component with template organic corners", async ({ page }) => {
+  // Every image-card surface (gallery, blog grid, story carousel) must render through
+  // the shared MediaCard component: organic asymmetric corners (25px/72px, mirrored on
+  // alternating cards) and the expected per-variant structure.
+  await page.goto("/dubai/visas/canada/express-entry");
+  await page.waitForLoadState("networkidle");
+  await page.evaluate(() => document.fonts.ready);
+
+  // Blog grid: 3 cards, meta lines, external article links.
+  const blog = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll("#resources li")];
+    const external = [...document.querySelectorAll('#resources a[target="_blank"]')];
+    return {
+      count: cards.length,
+      organic: getComputedStyle(cards[0]!).borderRadius.includes("72px") &&
+        getComputedStyle(cards[1]!).borderRadius.includes("68px"),
+      meta: Boolean(cards[0]!.querySelector("span.text-brand-600")),
+      externalLinks: external.length,
+    };
+  });
+  expect(blog.count).toBe(3);
+  expect(blog.organic).toBe(true);
+  expect(blog.meta).toBe(true);
+  expect(blog.externalLinks).toBeGreaterThanOrEqual(6); // image + body link per card
+
+  // Story carousel: 8 cards with numbered captions.
+  const stories = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll("#stories li")];
+    return {
+      count: cards.length,
+      organic: getComputedStyle(cards[0]!).borderRadius.includes("72px") &&
+        getComputedStyle(cards[1]!).borderRadius.includes("68px"),
+      firstCount: cards[0]!.textContent?.includes("01 / 08") ?? false,
+      lastCount: cards[7]!.textContent?.includes("08 / 08") ?? false,
+      portrait: getComputedStyle(cards[0]!.querySelector("img")!.parentElement!).aspectRatio === "410 / 440",
+    };
+  });
+  expect(stories.count).toBe(8);
+  expect(stories.organic).toBe(true);
+  expect(stories.firstCount).toBe(true);
+  expect(stories.lastCount).toBe(true);
+  expect(stories.portrait).toBe(true);
+
+  // Gallery: 6 cards with label pills and organic corners.
+  const gallery = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll("#gallery li")];
+    return {
+      count: cards.length,
+      organic: getComputedStyle(cards[0]!).borderRadius.includes("72px") &&
+        getComputedStyle(cards[1]!).borderRadius.includes("68px"),
+      pill: Boolean(cards[0]!.querySelector("span.absolute")),
+    };
+  });
+  expect(gallery.count).toBe(6);
+  expect(gallery.organic).toBe(true);
+  expect(gallery.pill).toBe(true);
+});
+
 test("noindex pages carry a robots meta tag", async ({ page }) => {
   await page.goto("/dubai/study-abroad/ielts-coaching");
   const robots = await page.locator('meta[name="robots"]').getAttribute("content");

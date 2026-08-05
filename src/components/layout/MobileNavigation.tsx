@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { marketSectionHref } from "@/lib/routing/routes";
 import { NAV_PRIMARY, marketHrefForNav } from "@/config/navigation";
 import type { Market } from "@/config/markets";
+import { MarketSwitcher } from "@/components/layout/MarketSwitcher";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils/cn";
 
@@ -80,12 +81,19 @@ export function MobileNavigation({ market }: MobileNavigationProps) {
             </details>
           ))}
 
+          <div className="mt-3 border-t border-slate-200 pt-3">
+            <p className="mb-2 px-[0.85rem] text-[0.61rem] uppercase tracking-[0.13em] text-slate-400">
+              Select Office
+            </p>
+            <MarketSwitcher market={market} />
+          </div>
+
           <Button
             href={marketSectionHref(market, "contact")}
             onClick={() => setOpen(false)}
             variant="primary"
             size="md"
-            className="mt-2 w-full shadow-[0_12px_34px_rgba(69,179,24,.28)]"
+            className="mt-3 w-full shadow-[0_12px_34px_rgba(69,179,24,.28)]"
           >
             Book Free Consultation
           </Button>

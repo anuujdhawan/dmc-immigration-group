@@ -17,6 +17,7 @@ import {
   InternalSection,
   LeadFormSection,
   MediaFrame,
+  MediaGallerySection,
   ProcessSection,
   ProgramCards,
   RichCopy,
@@ -283,6 +284,8 @@ export function ProvincialNomineeProgramsPage({
         }))}
       />
 
+      <MediaGallerySection pageId="visas/canada/provincial-nominee-programs" tone="soft" />
+
       <OfficialSourcesSection sources={page.officialSources} />
 
       <FinalCta
@@ -497,6 +500,8 @@ export function AtlanticImmigrationProgramPage({
         }))}
       />
 
+      <MediaGallerySection pageId="visas/canada/atlantic-immigration-program" tone="soft" />
+
       <OfficialSourcesSection sources={page.officialSources} />
 
       <FinalCta
@@ -641,6 +646,8 @@ export function RuralAndNorthernImmigrationPilotPage({
           a: item.answer,
         }))}
       />
+
+      <MediaGallerySection pageId="visas/canada/rural-and-northern-immigration-pilot" tone="soft" />
 
       <DisclaimerBand>
         <strong>Important:</strong> The Rural and Northern Immigration Pilot has concluded. The Rural Community Immigration Pilot (RCIP) is the current successor. Immigration decisions are made by the relevant government authority.
@@ -793,6 +800,8 @@ export function StudyPermitsPage({
           a: item.answer,
         }))}
       />
+
+      <MediaGallerySection pageId="visas/canada/study-permits" tone="soft" />
 
       <DisclaimerBand>
         <strong>Important:</strong> The Student Direct Stream (SDS) has been terminated. Study-permit applications are now processed under the regular stream. Immigration decisions are made by IRCC.
@@ -960,6 +969,8 @@ export function FamilySponsorshipPage({
           a: item.answer,
         }))}
       />
+
+      <MediaGallerySection pageId="visas/canada/family-sponsorship-parent-grandparent-program" tone="soft" />
 
       <DisclaimerBand>
         <strong>Important:</strong> The PGP uses an interest-to-sponsor lottery. Selection is not guaranteed. The Super Visa is an alternative. Immigration decisions are made by IRCC.

@@ -81,6 +81,7 @@ export interface HeroProps {
   eyebrow?: string;
   titlePrefix?: string;
   titleAccent?: string;
+  titleSuffix?: string;
   subtitle?: string;
   primaryAction?: HeroAction;
   secondaryAction?: HeroAction;
@@ -112,6 +113,7 @@ export function Hero({
   eyebrow = "Global opportunity network",
   titlePrefix = "Your journey towards a",
   titleAccent = "better future",
+  titleSuffix = " begins here.",
   subtitle = "Premium, structured immigration support for professionals, families, students, employers and investors across Canada, Australia, the United Kingdom and a complete international destination network.",
   primaryAction,
   secondaryAction,
@@ -279,7 +281,8 @@ export function Hero({
           <p className="botanical-overline">{eyebrow}</p>
           <h1 className="botanical-hero-title">
             {titlePrefix}
-            {titleAccent ? <span>{titleAccent}</span> : null} begins here.
+            {titleAccent ? <span>{titleAccent}</span> : null}
+            {titleSuffix}
           </h1>
           <p className="botanical-hero-subtitle">{subtitle}</p>
           <div className="botanical-hero-actions">

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { MARKET_LIST } from "@/config/markets";
 import { PAGE_IDS } from "@/content/pages";
+import { LANDING_MARKETS, LANDING_PAGE_IDS } from "@/config/landing-pages";
 import { env } from "@/config/env/server";
 
 const SITE_URL = env.SITE_URL;
@@ -27,6 +28,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: now,
         changeFrequency: "monthly",
         priority: 0.7,
+      });
+    }
+  }
+
+  // Landing pages (Dubai + Abu Dhabi only)
+  for (const market of LANDING_MARKETS) {
+    for (const pageId of LANDING_PAGE_IDS) {
+      entries.push({
+        url: `${SITE_URL}/${market}/${pageId}`,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.8,
       });
     }
   }

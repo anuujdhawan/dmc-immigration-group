@@ -13867,3 +13867,93 @@ textarea {
     margin-top: 12px;
   }
 }
+
+/* ── Landing pages: hero proof stats — stack value over label, never overlap ──
+   The template's inline baseline row collapses inside the hero's narrow copy
+   column (~768–1280px), making the numbers collide with the labels. The landing
+   hero always uses the stacked 3-column grid instead. */
+#landing-hero .botanical-proof-row,
+#home .botanical-proof-row {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 30px !important;
+  padding: 17px 10px 11px !important;
+  border-top: 0 !important;
+  border-radius: 18px;
+  background: rgba(250, 249, 245, .55);
+}
+
+#landing-hero .botanical-proof-row > span,
+#home .botanical-proof-row > span {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  min-width: 0 !important;
+  padding: 0 10px !important;
+  text-align: center !important;
+  border-left: 1px solid rgba(23, 61, 13, .09) !important;
+}
+
+#landing-hero .botanical-proof-row > span:first-child,
+#home .botanical-proof-row > span:first-child {
+  padding-left: 0 !important;
+  border-left: 0 !important;
+}
+
+#landing-hero .botanical-proof-row > span:last-child,
+#home .botanical-proof-row > span:last-child {
+  padding-right: 0 !important;
+}
+
+#landing-hero .botanical-proof-row strong,
+#home .botanical-proof-row strong {
+  font-family: "Manrope", sans-serif !important;
+  font-size: clamp(1.05rem, 4vw, 1.35rem) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.15 !important;
+  white-space: nowrap !important;
+}
+
+#landing-hero .botanical-proof-row small,
+#home .botanical-proof-row small {
+  font-size: .68rem !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0 !important;
+}
+
+
+/* ── Landing header CTA — full-width second row on mobile, inline from sm ──
+   Width is driven from this unlayered block (with !important) because the
+   compiled Tailwind utilities layer can order base rules (e.g. .w-full)
+   AFTER responsive variant rules, which silently breaks w-full/sm:w-auto. */
+.landing-header-actions,
+.landing-header-cta {
+  width: 100% !important;
+}
+
+@media (min-width: 640px) {
+  .landing-header-actions,
+  .landing-header-cta {
+    width: auto !important;
+  }
+}
+
+/* ── Landing hero: start right under the slimmer landing header ──────────
+   The template's 155px/104px hero padding-top was sized for the site header;
+   the landing header is slimmer, so pull the hero content up. Safe-area is
+   added for notched phones (the landing header already accounts for it). */
+#landing-hero {
+  padding-top: calc(124px + env(safe-area-inset-top, 0px)) !important;
+}
+
+@media (min-width: 640px) {
+  #landing-hero {
+    padding-top: 100px !important;
+  }
+}

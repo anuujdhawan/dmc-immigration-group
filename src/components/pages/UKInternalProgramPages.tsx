@@ -14,6 +14,7 @@ import {
   InternalFactsBar,
   InternalSection,
   LeadFormSection,
+  MediaGallerySection,
   ProcessSection,
   RichCopy,
   SectionHeader,
@@ -262,6 +263,8 @@ export function SkilledWorkerPage({
         />
       ) : null}
 
+      <MediaGallerySection pageId={page.id} tone="soft" />
+
       <OfficialSourcesSection sources={page.officialSources} />
 
       <DisclaimerBand>
@@ -478,6 +481,8 @@ export function SkilledWorkerDependentPage({
           }))}
         />
       ) : null}
+
+      <MediaGallerySection pageId={page.id} tone="soft" />
 
       <OfficialSourcesSection sources={page.officialSources} />
 

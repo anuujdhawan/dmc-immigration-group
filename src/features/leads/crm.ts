@@ -22,6 +22,7 @@ export async function sendToCrm(data: LeadFormData): Promise<boolean> {
         destination: data.destination,
         ageRange: data.ageRange || null,
         education: data.education || null,
+        workExperience: data.workExperience || null,
         type: data.enquiryType,
         message: data.message || null,
       },
@@ -32,6 +33,7 @@ export async function sendToCrm(data: LeadFormData): Promise<boolean> {
         source: data.utmSource || null,
         medium: data.utmMedium || null,
         campaign: data.utmCampaign || null,
+        gclid: data.gclid || null,
       },
       consent: {
         agreed: true,

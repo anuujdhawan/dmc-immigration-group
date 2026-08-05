@@ -82,6 +82,9 @@ export const envSchema = z.object({
   UPSTASH_REDIS_REST_TOKEN: z.string().default(""),
 
   GUIDED_CHAT_ENABLED: boolTrue,
+  // Recipient for guided-chat leads (DmcGuidedChat). Falls back to the
+  // market's DMC_<MARKET>_LEAD_TO_EMAIL, then RESEND_REPLY_TO_EMAIL.
+  DMC_CHATBOT_LEAD_TO_EMAIL: emailOrEmpty.default(""),
   ELIGIBILITY_CHECKER_ENABLED: boolTrue,
 
   CONSENT_BANNER_ENABLED: boolFalse,

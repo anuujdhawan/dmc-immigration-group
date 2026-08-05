@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { leadSchema, type LeadFormData } from "@/features/leads/schema";
 import { submitLead } from "@/features/leads/actions";
 import { MARKET_LABELS, type Market } from "@/config/markets";
+import { FormSelect } from "@/components/ui/FormSelect";
+import { mergeUrlTracking } from "@/lib/utils/url-tracking";
 
 const DESTINATIONS = [
   "Canada Express Entry",
@@ -69,7 +71,7 @@ export function LeadForm({
     },
   });
 
-  const { register, handleSubmit, formState: { errors }, reset } = form;
+  const { register, control, handleSubmit, formState: { errors }, reset } = form;
 
   const onSubmit = useCallback(
     async (data: Record<string, unknown>) => {
@@ -78,11 +80,20 @@ export function LeadForm({
       setErrorMsg("");
 
       try {
-        const result = await submitLead({
-          ...formData,
-          sourcePage: typeof window !== "undefined" ? window.location.pathname : "",
-          currentMarket: market,
-        });
+        // react-hook-form stores a checkbox's checked state as a boolean, but
+        // leadSchema expects the string "on"; normalize before submitting.
+        const rawConsent = data.consent;
+        const consent = rawConsent === true || rawConsent === "on" ? "on" : "";
+        // Pull utm_source / utm_medium / utm_campaign / gclid from the URL and
+        // send them with the lead so every ad click is attributable.
+        const result = await submitLead(
+          mergeUrlTracking({
+            ...formData,
+            consent,
+            sourcePage: typeof window !== "undefined" ? window.location.pathname : "",
+            currentMarket: market,
+          }),
+        );
 
         if (result.success) {
           setStatus("success");
@@ -188,44 +199,61 @@ export function LeadForm({
 
         <div>
           <label htmlFor="destination" className={labelBase}>Destination / Program of Interest *</label>
-          <select id="destination" className={inputBase} {...register("destination")}>
-            <option value="">Select a program or destination</option>
-            {DESTINATIONS.map((d) => (
-              <option key={d} value={d}>{d}</option>
-            ))}
-          </select>
-          {errors.destination && <p className={errorBase}>{errors.destination.message}</p>}
+          <FormSelect
+            name="destination"
+            control={control}
+            id="destination"
+            label="Destination / Program of Interest"
+            placeholder="Select a program or destination"
+            options={DESTINATIONS.map((value) => ({ value, label: value }))}
+            error={errors.destination?.message}
+            className="border border-slate-200 focus:border-brand-500"
+          />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="ageRange" className={labelBase}>Age Range</label>
-            <select id="ageRange" className={inputBase} {...register("ageRange")}>
-              <option value="">Select age range</option>
-              {AGE_RANGES.map((a) => (
-                <option key={a} value={a}>{a}</option>
-              ))}
-            </select>
+            <FormSelect
+              name="ageRange"
+              control={control}
+              id="ageRange"
+              label="Age Range"
+              placeholder="Select age range"
+              options={AGE_RANGES.map((value) => ({ value, label: value }))}
+              className="border border-slate-200 focus:border-brand-500"
+            />
           </div>
           <div>
             <label htmlFor="education" className={labelBase}>Highest Education</label>
-            <select id="education" className={inputBase} {...register("education")}>
-              <option value="">Select education level</option>
-              {EDUCATION_LEVELS.map((e) => (
-                <option key={e} value={e}>{e}</option>
-              ))}
-            </select>
+            <FormSelect
+              name="education"
+              control={control}
+              id="education"
+              label="Highest Education"
+              placeholder="Select education level"
+              options={EDUCATION_LEVELS.map((value) => ({ value, label: value }))}
+              className="border border-slate-200 focus:border-brand-500"
+            />
           </div>
         </div>
 
         <div>
           <label htmlFor="preferredMarket" className={labelBase}>Preferred DMC Office *</label>
-          <select id="preferredMarket" className={inputBase} {...register("preferredMarket")}>
-            {(Object.entries(MARKET_LABELS) as [Market, string][]).map(([key, label]) => (
-              <option key={key} value={key}>{label}</option>
-            ))}
-          </select>
-          {errors.preferredMarket && <p className={errorBase}>{errors.preferredMarket.message}</p>}
+          <FormSelect
+            name="preferredMarket"
+            control={control}
+            id="preferredMarket"
+            label="Preferred DMC Office"
+            placeholder="Select office"
+            options={(Object.entries(MARKET_LABELS) as [Market, string][]).map(([key, label]) => ({
+              value: key,
+              label,
+            }))}
+            showPlaceholder={false}
+            error={errors.preferredMarket?.message}
+            className="border border-slate-200 focus:border-brand-500"
+          />
         </div>
 
         <div>
@@ -243,6 +271,7 @@ export function LeadForm({
           <input
             id="consent"
             type="checkbox"
+            value="on"
             className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
             {...register("consent")}
           />

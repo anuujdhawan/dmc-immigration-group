@@ -4,6 +4,7 @@ import type { Market } from "@/config/markets";
 import { getOffice } from "@/config/offices";
 import { marketSectionHref } from "@/lib/routing/routes";
 import { BrandLogo } from "@/components/layout/BrandLogo";
+import { MarketSwitcher } from "@/components/layout/MarketSwitcher";
 import { MegaNavigation } from "@/components/layout/MegaNavigation";
 import { MobileNavigation } from "@/components/layout/MobileNavigation";
 import { Button } from "@/components/ui/Button";
@@ -34,6 +35,7 @@ export function SiteHeader({ market }: { market: Market }) {
               <Shield aria-hidden="true" className="size-3.5 text-brand-400" />
               RCIC · MARA · ICCRC Regulated
             </span>
+            <MarketSwitcher market={market} compact />
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[0.64rem] font-semibold uppercase tracking-[0.18em] text-white/55">
               <span className="text-white/80">EN</span>
               <span aria-hidden="true" className="h-3 w-px bg-white/20" />
