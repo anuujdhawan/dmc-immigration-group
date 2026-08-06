@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${dmSans.variable} light-mode"}
+      className={`${manrope.variable} ${dmSans.variable} light-mode`}
       suppressHydrationWarning
     >
       <head>
