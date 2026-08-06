@@ -4,6 +4,33 @@ Living checklist. Update after every meaningful batch. Never delete completed hi
 
 Last updated: 2026-08-06
 
+## 2026-08-06 — AlternativeHero/AlternativeHero1: orbit animation removed on mobile
+
+- Reported: the hero section animation should not show on mobile screens in either AlternativeHero or AlternativeHero1.
+- Since both sections carry the `.alternative-hero` class, a single scoped rule inside the existing `@media (max-width: 1023px)` block in `src/app/globals.css` hides `.alternative-hero .botanical-network-stage` (`display: none !important`) on phones and tablets; desktop keeps the full orbit animation. No component changes needed.
+- Validation: `npm run typecheck` ✓; `npm test` ✓ 73/73. Playwright probe: stage `display:none` at 390×844 and 820×1180, `display:block` at 1440×900, zero console errors. Screenshot reviewed. `globals.css` re-synced to the main project folder (`diff` verified identical). Temp probe files removed.
+
+## 2026-08-06 — AlternativeHero1 checkbox-pattern variant (manual apply only)
+
+- Added `src/components/home/AlternativeHero1.tsx` — a copy of `AlternativeHero.tsx` (renamed component/props, extra `alternative-hero-1` class, plus a `<div className="alternative-hero-1-checker" />` overlay). On mobile it inherits the plain light-green band AND adds a checkerboard (checkbox) pattern over that background color.
+- Scoped CSS at the end of `globals.css`: on `max-width: 1023px`, the checker overlay spans from `--alt-hero-split` (74px phones / 150px tablets, matching the band) to the section bottom, `z-index: 0`, `pointer-events: none`, `repeating-conic-gradient` 26px cells (`--alt-hero-checker-color`/`--alt-hero-checker-size` vars for tuning); hidden on desktop. Decorative hero layers stay hidden on mobile per the existing `.alternative-hero` rules.
+- NOT wired anywhere — user applies manually. File comment warns it shares DOM ids with Hero/AlternativeHero and must swap, not stack (duplicate `getElementById`/SVG def ids would break the second hero).
+- Validation: `npm run typecheck` ✓; `npm test` ✓ 73/73. Temporarily swapped into `HomeSections` for a Playwright probe (390×844): checker `display:block`, geometry 74→1000 matching the band, `repeating-conic-gradient` computed, zero console errors; 1440×900: checker `display:none`, original gradient preserved. Probe wiring reverted afterwards. Screenshot reviewed in preview.
+
+## 2026-08-06 — AlternativeHero mobile plain-green variant (A/B check)
+
+- Added `src/components/home/AlternativeHero.tsx` — an exact copy of `Hero.tsx` (renamed component, `AlternativeHeroProps`, extra `alternative-hero` class on the `<section>` for CSS scoping). Desktop rendering is byte-for-byte identical to `Hero` (verified: same 3-layer gradient background, same relative orbit stage, same animations).
+- On mobile (`max-width: 1023px`), scoped CSS in `src/app/globals.css` gives the hero a plain light-green background (`#dff3da`, matching the botanical palette) starting at the top edge of the animation stage (`--alt-hero-split: 74px`, measured at 390px where the orbit stage begins under the text card) down to the section bottom; the busy decorative layers (`.botanical-hero-bg`, `.botanical-sun-rays`, `.botanical-map-grid`, `.botanical-hero::before`) are hidden on mobile so the band reads as plain.
+- `HomeSections.tsx` temporarily renders `AlternativeHero` instead of `Hero` so the change can be checked. Revert the import/usages and delete the component + CSS block once approved.
+- Validation: `npm run typecheck` ✓ clean; `npm test` ✓ 73/73. Playwright probe at 390×844: computed `background-image` = linear-gradient split at 74px, decorative layers `display:none`, zero console errors; 1440×900 probe: original gradient preserved, zero console errors. Screenshots reviewed in preview. Temp probe files removed.
+
+## 2026-08-06 — Mobile hamburger menu open jank fix
+
+- Reported: the mobile hamburger menu lagged when opening.
+- Root cause: the `.dmc-mobile-menu` panel carried `backdrop-filter: blur(22px)` (+ `-webkit-backdrop-filter`); toggling the full-width panel from `display:none` forces a large-area backdrop-blur recomposite on open, the classic mobile-jank trigger. The panel background is ~98% opaque (`rgba(250,249,245,.98)` final override), so the blur was visually negligible.
+- Removed both `backdrop-filter` declarations from the `.dmc-mobile-menu` base rule in `src/app/globals.css` and added a cheap GPU-composited entrance animation (`dmc-menu-in`, 0.16s ease-out, opacity + translateY) so the open feels deliberate without blocking. The `prefers-reduced-motion` global override already neutralises it for reduced-motion users; no `!important` override blocks re-add a blur or animation.
+- Validation: `npm test` ✓ 73/73 (typecheck carries 22 pre-existing `PageProps`/`LayoutProps` errors from the base commit — unrelated to this CSS-only change). Playwright probe at 390×844: menu `display:none` → `block`, computed `backdrop-filter: none`, entrance animation applied, 52 links rendered, zero console errors. Temp probe script removed; no stray dev-server processes left on :3100.
+
 ## 2026-08-06 — Thank-you card spacing + cube chat bubble
 
 - Reported: the thank-you main card touched the navbar (measured 0px gap at 390px, -6px at 1440px — the card was tucked under the fixed header), and the guided-chat bubble should be cube-shaped with the icon not cropped.

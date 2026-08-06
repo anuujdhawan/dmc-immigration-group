@@ -4561,12 +4561,23 @@ section[id] {
   padding: .8rem;
   background: rgba(255, 255, 255, .985);
   box-shadow: 0 26px 85px rgba(11, 36, 8, .22);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
+  animation: dmc-menu-in .16s ease-out;
 }
 
 .dmc-mobile-menu.hidden {
   display: none;
+}
+
+@keyframes dmc-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .mobile-simple-link,
@@ -13955,5 +13966,77 @@ textarea {
 @media (min-width: 640px) {
   #landing-hero {
     padding-top: 100px !important;
+  }
+}
+
+/* ── TEMPORARY AlternativeHero (A/B check on homepage) ─────────────────────
+   Mobile only: from the moment the orbit animation sits under the hero text,
+   the section gets a plain light-green background matching the botanical hero
+   palette. Desktop is untouched. Remove this block together with
+   AlternativeHero.tsx once the check is done. */
+@media (max-width: 1023px) {
+  .alternative-hero {
+    /* Split at the top edge of the animation stage. Tuned per breakpoint:
+       phones (<=640px) anchor the stage at ~74px, tablets (641-1023px) put
+       it clamp(52px, 7svh, 78px) below the shell, ~143-169px. */
+    --alt-hero-split: 74px;
+    background:
+      linear-gradient(
+        to bottom,
+        #fafaf5 0%,
+        #eff6ec calc(var(--alt-hero-split) - 14px),
+        #dff3da var(--alt-hero-split),
+        #dff3da 100%
+      ) !important;
+  }
+
+  /* Hide the decorative gradient layers so the band is truly plain. */
+  .alternative-hero .botanical-hero-bg,
+  .alternative-hero .botanical-sun-rays,
+  .alternative-hero .botanical-map-grid,
+  .alternative-hero.botanical-hero::before {
+    display: none !important;
+  }
+
+  /* Remove the orbit animation (stage + rings + nodes + plane) on mobile.
+     Applies to both AlternativeHero and AlternativeHero1 — the section always
+     carries `.alternative-hero`. Desktop keeps the full animation. */
+  .alternative-hero .botanical-network-stage {
+    display: none !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1023px) {
+  .alternative-hero {
+    --alt-hero-split: 150px;
+  }
+}
+
+/* ── TEMPORARY AlternativeHero1 (manual apply only, not wired anywhere) ─────
+   Same as AlternativeHero (plain light-green band on mobile) PLUS a checkbox
+   (checkerboard) pattern laid over that background color on mobile. Remove
+   together with AlternativeHero1.tsx once the check is done. */
+.alternative-hero-1-checker {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .alternative-hero-1 .alternative-hero-1-checker {
+    /* Checker cell color + size are tunable via these vars. */
+    --alt-hero-checker-color: rgba(53, 142, 26, 0.12);
+    --alt-hero-checker-size: 26px;
+    display: block;
+    position: absolute;
+    top: var(--alt-hero-split, 74px);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: repeating-conic-gradient(
+      var(--alt-hero-checker-color) 0% 25%,
+      rgba(255, 255, 255, 0.65) 0% 50%
+    );
+    background-size: var(--alt-hero-checker-size) var(--alt-hero-checker-size);
   }
 }
