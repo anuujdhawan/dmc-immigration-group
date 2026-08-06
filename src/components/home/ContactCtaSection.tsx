@@ -40,8 +40,6 @@ export function ContactCtaSection({
     copy = `Begin with a private conversation about your profile, priorities and possible destinations — in ${MARKET_LABELS[market]} or online. No rushed decisions. No unrealistic guarantees.`,
     primaryLabel = "Book Consultation",
     primaryHref = marketHref(market, "/contact"),
-    secondaryLabel = "Free Eligibility Assessment",
-    secondaryHref = marketHref(market, "/tools/eligibility-checker"),
     callLabel,
     callHref,
     urgency,
@@ -70,16 +68,7 @@ export function ContactCtaSection({
             {primaryLabel}
             <ArrowRight aria-hidden="true" className="size-4" />
           </Button>
-          {secondaryLabel && secondaryHref ? (
-            <Button
-              href={secondaryHref}
-              size="lg"
-              variant="outline"
-              className="rounded-xl"
-            >
-              {secondaryLabel}
-            </Button>
-          ) : null}
+          
         </div>
         {callLabel ? (
           <div className="mt-4 flex flex-col items-center gap-2">
