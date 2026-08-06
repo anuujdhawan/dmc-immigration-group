@@ -205,10 +205,10 @@ export function LandingLeadForm({
           id="consent"
           type="checkbox"
           value="on"
-          className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+          className="mt-1 h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
           {...register("consent")}
         />
-        <label htmlFor="consent" className="text-xs text-slate-500">
+        <label htmlFor="consent" className="text-sm text-slate-500">
           I agree to DMC contacting me about immigration services and I consent to my
           details being used to assess my eligibility. DMC does not share personal data
           with third parties for marketing.

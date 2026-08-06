@@ -272,10 +272,10 @@ export function LeadForm({
             id="consent"
             type="checkbox"
             value="on"
-            className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+            className="mt-1 h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
             {...register("consent")}
           />
-          <label htmlFor="consent" className="text-xs text-slate-500">
+          <label htmlFor="consent" className="text-sm text-slate-500">
             I agree to the{" "}
             <a href="/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="underline hover:text-brand-600">
               Privacy Policy

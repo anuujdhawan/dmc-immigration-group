@@ -23,9 +23,8 @@ export function DmcGuidedChat({ market }: { market: Market }) {
           height: 56px !important;
           /* Cube shape: square button with a small corner radius. */
           border-radius: 12px !important;
-          box-shadow:
-            0 8px 24px rgba(53, 142, 26, 0.38),
-            0 0 0 1px rgba(53, 142, 26, 0.2) !important;
+          box-shadow: none !important;
+          border: none !important;
         }
 
         .rcb-toggle-icon {
