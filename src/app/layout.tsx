@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} ${dmSans.variable}`}
+      className={`${manrope.variable} ${dmSans.variable} light-mode"}
       suppressHydrationWarning
     >
       <head>
@@ -52,6 +52,7 @@ export default function RootLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
           rel="stylesheet"
         />
+        <meta name="color-scheme" content="light" />
       </head>
       <body
         className="flex min-h-dvh flex-col antialiased"
