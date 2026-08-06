@@ -26,7 +26,6 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactCompiler: true,
   skipTrailingSlashRedirect: true,
-  darkMode: 'class',
   async headers() {
     return [
       {

@@ -147,7 +147,7 @@ function BenefitsGrid({ section }: { section: Extract<LandingSection, { kind: "b
                 flipped ? "rounded-[48px_20px_20px_20px]" : "rounded-[20px_48px_20px_20px]",
               )}
             >
-              <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-white to-brand-100 text-brand-700 shadow-[inset_0_0_0_1px_rgba(53,142,26,.12),0_10px_24px_rgba(16,41,10,.08)] transition-transform duration-300 group-hover:scale-105 md:size-14 md:rounded-2xl">
+              <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-linear-to-br from-white to-brand-100 text-brand-700 shadow-[inset_0_0_0_1px_rgba(53,142,26,.12),0_10px_24px_rgba(16,41,10,.08)] transition-transform duration-300 group-hover:scale-105 md:size-14 md:rounded-2xl">
                 <Icon aria-hidden="true" className="size-6" />
               </span>
               <div className="min-w-0">
@@ -169,9 +169,9 @@ function LeadCaptureSection({ content, market }: { content: LandingContent; mark
   return (
     <section
       id="free-assessment"
-      className="scroll-mt-32 bg-gradient-to-br from-brand-50 via-white to-white py-16 sm:scroll-mt-24 md:py-24"
+      className="scroll-mt-32 bg-linear-to-br from-brand-50 via-white to-white py-16 sm:scroll-mt-24 md:py-24"
     >
-      <Container className="grid gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+      <Container className="grid gap-12 lg:grid-cols-[.92fr_1.08fr] lg:items-start">
         <div className="space-y-5">
           <SectionKicker>Free assessment</SectionKicker>
           <SectionTitle>Check Your Free Eligibility</SectionTitle>
@@ -202,7 +202,7 @@ function LeadCaptureSection({ content, market }: { content: LandingContent; mark
             form just under the sticky landing header on every viewport. */}
         <div
           id="lead-form"
-          className="scroll-mt-32 rounded-[32px] border border-brand-600/10 bg-white p-6 shadow-[0_24px_70px_rgba(16,41,10,.12)] md:p-8"
+          className="scroll-mt-32 rounded-4xl border border-brand-600/10 bg-white p-6 shadow-[0_24px_70px_rgba(16,41,10,.12)] md:p-8"
         >
           <p className="mb-5 text-center font-display text-2xl font-bold text-charcoal">
             {content.form.title}
@@ -222,7 +222,7 @@ function LeadCaptureSection({ content, market }: { content: LandingContent; mark
 
 function DestinationSkylineSection({ skyline }: { skyline: LandingContent["skyline"] }) {
   return (
-    <section className="relative flex min-h-[420px] items-center overflow-hidden bg-brand-950 md:min-h-[540px]">
+    <section className="relative flex min-h-105 items-center overflow-hidden bg-brand-950 md:min-h-135">
       <Image
         src={skyline.image}
         alt={skyline.alt}
@@ -232,7 +232,7 @@ function DestinationSkylineSection({ skyline }: { skyline: LandingContent["skyli
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-brand-950/95 via-brand-950/60 to-brand-950/25"
+        className="absolute inset-0 bg-linear-to-t from-brand-950/95 via-brand-950/60 to-brand-950/25"
       />
       <Container className="relative py-20 text-center md:py-24">
         <SectionKicker dark>{skyline.kicker}</SectionKicker>
@@ -262,7 +262,7 @@ function SocialProofStrip({ items }: { items: string[] }) {
           {items.map((item) => (
             <li
               key={item}
-              className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-900/70"
+              className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-mega text-brand-900/70"
             >
               <ShieldCheck aria-hidden="true" className="size-4 shrink-0 text-brand-600" />
               <span>{item}</span>
@@ -329,7 +329,7 @@ function PathwayCards({ items }: { items: { title: string; copy: string }[] }) {
           key={item.title}
           className="flex h-full flex-col gap-3 rounded-[26px] border border-brand-600/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_44px_rgba(16,41,10,.09)]"
         >
-          <span className="block text-[11px] font-bold uppercase tracking-[0.16em] text-brand-600">
+          <span className="block text-[11px] font-bold uppercase tracking-mega-xl text-brand-600">
             {String(index + 1).padStart(2, "0")} · {item.title}
           </span>
           <p className="text-sm leading-relaxed text-muted">{item.copy}</p>
@@ -362,7 +362,7 @@ function ExpressEntrySection({ section }: { section: Extract<LandingSection, { k
           ))}
         </ol>
         <div className="rounded-[26px] border border-brand-600/10 bg-brand-50/60 p-6">
-          <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-700">
+          <p className="mb-4 text-[11px] font-bold uppercase tracking-mega-xl text-brand-700">
             Programs under Express Entry
           </p>
           <ul className="space-y-3">

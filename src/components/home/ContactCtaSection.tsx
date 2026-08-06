@@ -46,14 +46,14 @@ export function ContactCtaSection({
   } = content ?? {};
 
   return (
-    <section
-      id="contact"
-      className="relative overflow-hidden bg-gradient-to-br from-red-50 via-blue-50 to-brand-50 py-20 lg:py-24"
-    >
+      <section
+        id="contact"
+        className="relative overflow-hidden bg-linear-to-br from-red-50 via-blue-50 to-brand-50 py-20 lg:py-24"
+      >
       <div aria-hidden="true" className="absolute -top-16 -left-16 h-72 w-72 rounded-full bg-red-200/50 blur-3xl" />
       <div aria-hidden="true" className="absolute top-1/3 -right-20 h-80 w-80 rounded-full bg-blue-200/50 blur-3xl" />
       <div aria-hidden="true" className="absolute -bottom-20 left-1/3 h-72 w-72 rounded-full bg-brand-200/50 blur-3xl" />
-      <div className="relative mx-auto max-w-[760px] px-6 text-center">
+      <div className="relative mx-auto max-w-190 px-6 text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-brand-100 bg-white px-3.5 py-1.5 text-xs font-semibold text-brand-700 shadow-sm">
           {kicker}
         </span>
