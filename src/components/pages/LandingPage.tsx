@@ -28,6 +28,7 @@ import type { LandingContent, LandingSection } from "@/content/landing";
 import { cn } from "@/lib/utils/cn";
 
 import { Hero } from "@/components/home/Hero";
+import { ContactCtaSection } from "@/components/home/ContactCtaSection";
 import { Container } from "@/components/ui/Container";
 import { AccordionItem } from "@/components/ui/AccordionItem";
 import { VideoEmbedCard } from "@/components/ui/VideoEmbedCard";
@@ -539,30 +540,19 @@ function FinalCtaSection({ content, market }: { content: LandingContent; market:
   const { finalCta } = content;
   const office = getOffice(market);
   return (
-    <div className="mx-auto max-w-4xl space-y-6 text-center">
-      <SectionKicker dark>{finalCta.kicker}</SectionKicker>
-      <SectionTitle dark>{finalCta.title}</SectionTitle>
-      <p className="mx-auto max-w-2xl text-base leading-8 text-aurora-muted">{finalCta.copy}</p>
-      <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-        <a
-          href="#lead-form"
-          className="inline-flex items-center gap-2 rounded-xl bg-white px-7 py-4 text-sm font-bold text-brand-800 shadow-md transition hover:bg-brand-50"
-        >
-          {finalCta.primaryLabel}
-          <ArrowRight aria-hidden="true" className="size-4" />
-        </a>
-        <a
-          href={`tel:${finalCta.callPhoneE164}`}
-          className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-7 py-4 text-sm font-bold text-white transition hover:border-white/40 hover:bg-white/10"
-        >
-          <Phone aria-hidden="true" className="size-4" />
-          {finalCta.callLabel} — {office.phoneDisplay}
-        </a>
-      </div>
-      {finalCta.urgency ? (
-        <p className="mx-auto max-w-xl text-xs leading-6 text-aurora-muted/80">{finalCta.urgency}</p>
-      ) : null}
-    </div>
+    <ContactCtaSection
+      market={market}
+      content={{
+        kicker: finalCta.kicker,
+        title: finalCta.title,
+        copy: finalCta.copy,
+        primaryLabel: finalCta.primaryLabel,
+        primaryHref: "#lead-form",
+        callLabel: `${finalCta.callLabel} — ${office.phoneDisplay}`,
+        callHref: `tel:${finalCta.callPhoneE164}`,
+        urgency: finalCta.urgency,
+      }}
+    />
   );
 }
 
@@ -688,11 +678,7 @@ export function LandingPage({ content, market }: { content: LandingContent; mark
         </Container>
       </section>
 
-      <section className="bg-aurora-bg py-16 text-aurora-text md:py-24">
-        <Container>
-          <FinalCtaSection content={content} market={market} />
-        </Container>
-      </section>
+      <FinalCtaSection content={content} market={market} />
     </div>
   );
 }
