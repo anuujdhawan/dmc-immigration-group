@@ -33,6 +33,7 @@ import { Container } from "@/components/ui/Container";
 import { AccordionItem } from "@/components/ui/AccordionItem";
 import { VideoEmbedCard } from "@/components/ui/VideoEmbedCard";
 import { LandingLeadForm } from "@/components/forms/LandingLeadForm";
+import { AlternativeHero1 } from "../home/AlternativeHero1";
 
 const BENEFIT_ICONS = [Briefcase, GraduationCap, HeartPulse, Users, MapPin, Flag];
 const OCCUPATION_ICONS = [Laptop, Wrench, Stethoscope, HardHat, Calculator, Truck];
@@ -611,7 +612,7 @@ function renderSection(section: LandingSection) {
 export function LandingPage({ content, market }: { content: LandingContent; market: Market }) {
   return (
     <div className="scroll-smooth">
-      <Hero
+      <AlternativeHero1
         market={market}
         sectionId="landing-hero"
         eyebrow={content.hero.eyebrow}

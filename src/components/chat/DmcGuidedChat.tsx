@@ -37,6 +37,15 @@ export function DmcGuidedChat({ market }: { market: Market }) {
           border-radius: 12px !important;
         }
 
+        /* Keep the chat bubble's base aligned with the WhatsApp bubble
+           (WhatsAppLauncher uses Tailwind max-sm:bottom-4 = 16px below
+           640px — Tailwind's max-sm is 639.98px, so match it exactly). */
+        @media (max-width: 639.98px) {
+          .rcb-toggle-button {
+            bottom: 16px !important;
+          }
+        }
+
         /* Move the "Need help?" tooltip to sit beside the left bubble.
            Hidden by default (tooltip.mode = NEVER) and revealed only while
            the chat bubble is hovered. */
@@ -114,6 +123,10 @@ export function DmcGuidedChat({ market }: { market: Market }) {
           transition: border-color 0.15s ease !important;
           background: #fbfef9 !important;
           color: #1d241b !important;
+          /* Let the textarea shrink fully so the send button can never be
+             pushed outside the window's right edge on narrow screens. */
+          min-width: 0 !important;
+          box-sizing: border-box !important;
         }
 
         .rcb-chat-input-textarea:focus {
@@ -218,11 +231,21 @@ export function DmcGuidedChat({ market }: { market: Market }) {
         /* ── Mobile: full-screen chat ── */
         @media (max-width: 480px) {
           .rcb-chat-window {
+            /* Anchor at the top of the screen. The library's mobile inline
+               style already sets top:0, but being explicit here guards the
+               case where an inline width/height overrides it. */
+            top: 0 !important;
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
             width: 100% !important;
             height: 100% !important;
+            /* Dynamic viewport height: tracks the visible on-screen area as
+               the mobile browser's toolbar collapses/expands and as the
+               keyboard opens, so the input row (send button) never slides
+               behind the browser chrome. The 'height: 100%' above is the
+               fallback for browsers without dvh support. */
+            height: 100dvh !important;
             border-radius: 0 !important;
           }
 

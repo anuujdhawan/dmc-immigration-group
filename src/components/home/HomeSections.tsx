@@ -18,6 +18,7 @@ import { ToolsSection } from "@/components/home/ToolsSection";
 import { VideoStoriesSection } from "@/components/home/VideoStoriesSection";
 import { VisitVisasSection } from "@/components/home/VisitVisasSection";
 import { WhyDmcSection } from "@/components/home/WhyDmcSection";
+import { AlternativeHero1 } from "./AlternativeHero1";
 
 export function HomeSections({ market }: { market: Market }) {
   return (

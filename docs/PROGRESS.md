@@ -4,6 +4,46 @@ Living checklist. Update after every meaningful batch. Never delete completed hi
 
 Last updated: 2026-08-06
 
+## 2026-08-06 — AlternativeHero1: white glow around green hero text removed
+
+- Reported: in AlternativeHero1's mobile dark hero the green text ("better future" accent) has a white border/glow around it that looks bad.
+- Root cause: mobile-only base rules put a WHITE text-shadow on the hero copy — `.botanical-hero-title { text-shadow: 0 1px 0 rgba(255,255,255,.94), 0 0 20px rgba(250,249,245,.76) }` and the same white glow on `.botanical-hero-subtitle` / `.botanical-proof-row` / `.botanical-disclaimer` (globals.css ~11131 / ~10948). Invisible on the original light band, but on the dark green background it rendered as a white halo around the green text.
+- Fix: added `text-shadow: none !important` for `.alternative-hero-1 .botanical-hero-title`, `.botanical-hero-subtitle`, `.botanical-proof-row`, `.botanical-disclaimer` inside the existing dark-theme mobile block.
+- Validation: `npm run typecheck` ✓; `npm test` ✓ 73/73. Playwright probe (AlternativeHero1 temporarily wired, then reverted): computed text-shadow = none on all five elements, zero console errors. Pixel analysis of the fresh screenshot: the green accent band (y 572–640) has 0 white pixels nearby (was 14.3% in the user's screenshot). `globals.css` re-synced to the main project folder (`diff` verified identical). Temp files removed.
+
+## 2026-08-06 — AlternativeHero1: checker texture removed
+
+- Reported: remove the checker (checkerboard) texture from the mobile view of AlternativeHero1.
+- Removed the `.alternative-hero-1-checker` div from `src/components/home/AlternativeHero1.tsx` and all three checker CSS blocks from `src/app/globals.css` (the base `display:none` rule, the mobile show block with the `repeating-conic-gradient`, and the dark-theme white-grid restyle). Comments updated. The dark-green mobile theme itself is untouched.
+- Validation: `npm run typecheck` ✓; `npm test` ✓ 73/73; dev-server compile clean; `grep -c checker` = 0 in globals.css (the only remaining match in the component is the unrelated eligibility-checker tool link). `globals.css` + `AlternativeHero1.tsx` re-synced to the main project folder (`diff` verified identical).
+
+## 2026-08-06 — AlternativeHero1: dark-green hero theme on mobile only
+
+- Reported: apply a dark-green hero section (like the 'dark hero' reference image) to AlternativeHero1 in mobile view only; desktop stays as-is.
+- Implementation (all in a scoped `@media (max-width: 1023px)` block appended to `src/app/globals.css`, targeting `.alternative-hero-1` only):
+  - Section background becomes a dark forest-green gradient (`#142f0b → #1b4011 → #2a571b`) + subtle radial highlight, with `!important` so it beats the earlier `.alternative-hero` light-band rule (both are single-class + `!important`, later in file wins).
+  - Text flips to white/light: license pill, overline (`#9fd98a`), title (`#fbfef9`), accent span (`#7ed957`), subtitle, proof stats, disclaimer (`rgba(243,250,240,.62)`), scroll cue.
+  - Buttons: primary becomes bright green (`#7ed957 → #45b318`) with dark text; secondary becomes a light outline chip (no backdrop blur).
+  - The default translucent-WHITE text card (`.botanical-hero-copy::before`) was washing the dark background out (verified by pixel sampling — hero rendered mid-light green) — replaced with a dark translucent panel.
+  - The light-warm 125px bottom fade (`.botanical-hero::after`) is hidden on the dark theme.
+  - The checker overlay becomes a barely-there white grid texture.
+- Desktop (>1023px) and Hero/AlternativeHero are completely untouched (scoped to `.alternative-hero-1` only, which is still NOT wired anywhere — applied manually).
+- Validation: `npm run typecheck` ✓; `npm test` ✓ 73/73. Playwright probe at 390×844 (AlternativeHero1 temporarily wired in, then reverted): computed styles all dark/white, `::after` display none, checker block, stage hidden, zero console errors; pixel point-samples of the screenshot show deep greens `rgb(24-37,49-62,15-30)` with white title text; desktop 1440×900 shows the original light botanical gradient unchanged. `globals.css` + `AlternativeHero1.tsx` re-synced to the main project folder (`diff` verified identical). Temp probe files removed.
+
+## 2026-08-06 — Chat bubble vs WhatsApp bubble: base alignment on mobile
+
+- Reported: on mobile the chat bubble (bottom-left) and the WhatsApp bubble (bottom-right) sit at different heights; they should share the same base position.
+- Root cause: `WhatsAppLauncher` uses Tailwind `max-sm:bottom-4` (16px below 640px, 24px above), while the chat toggle `.rcb-toggle-button` was pinned at `bottom: 24px` at every width. Measured in the client screenshot: chat visible bottom 55px from screen bottom, WhatsApp 40px — a 15px gap.
+- Fix in `src/components/chat/DmcGuidedChat.tsx`: new `@media (max-width: 639.98px)` rule sets `.rcb-toggle-button { bottom: 16px !important }` (639.98px to match Tailwind's `max-sm` exactly, so the 640px edge case can't desync). Desktop unchanged (both bubbles at 24px, already aligned).
+- Validation: `npm run typecheck` ✓; `npm test` ✓ 73/73. Playwright probe at 390×844 / 600×900 / 1440×900 after the entrance animation settles: both buttons 56×56, bottoms identical at every width (828/884/876) — `aligned: true`, zero console errors. Pixel-sampled the phone screenshot: chat green bottom 1650 vs WhatsApp 1654 device px (≈same baseline). `DmcGuidedChat.tsx` re-synced to the main project folder (`diff` verified identical). Temp probe files removed.
+
+## 2026-08-06 — Mobile chat: send button pushed off-screen by browser chrome
+
+- Reported: on a client's mobile phone browser the chat bot window's send button "goes outside" (the input row is not visible — it sits behind the browser's bottom toolbar; same root cause hides it behind the on-screen keyboard).
+- Root cause: the chat window is `position: fixed` full-screen, but `height: 100%` resolves against the layout viewport, which on mobile browsers is the full screen INCLUDING the area behind the browser chrome. The window's bottom (input row + send button) therefore extends behind the toolbar/keyboard.
+- Fix in `src/components/chat/DmcGuidedChat.tsx` (mobile `@media (max-width: 480px)` block): the window is now anchored `top: 0 !important` and uses `height: 100dvh !important` (after the `height: 100% !important` fallback), so it tracks the dynamic viewport — the visible area as the toolbar collapses/expands and as the keyboard opens. Also added `min-width: 0 !important` + `box-sizing: border-box !important` to `.rcb-chat-input-textarea` so the flex textarea can shrink and can never push the send button out of the window's right edge on narrow screens.
+- Validation: `npm run typecheck` ✓; `npm test` ✓ 73/73. Playwright probe at 390×844 / 360×640 / 390×600: window = viewport (0..height), input row + send button fully inside and on-screen, `CSS.supports('height','100dvh')` true, zero console errors from the app. Pixel-sampled the screenshot: green send button rendered at its expected rect (336–374 × 791–829 CSS px at 390×844). `DmcGuidedChat.tsx` re-synced to the main project folder (`diff` verified identical). Note: headless can't emulate the toolbar/keyboard, so a real-device check of the keyboard-open case is recommended (dvh shrinks with the keyboard on modern Chrome/Safari). Temp probe files removed.
+
 ## 2026-08-06 — AlternativeHero/AlternativeHero1: orbit animation removed on mobile
 
 - Reported: the hero section animation should not show on mobile screens in either AlternativeHero or AlternativeHero1.

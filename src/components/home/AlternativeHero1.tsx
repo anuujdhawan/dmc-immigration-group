@@ -1,9 +1,10 @@
 "use client";
 
 // TEMPORARY variant of AlternativeHero — AlternativeHero1 for manual A/B checks.
-// Same as AlternativeHero (plain light-green band on mobile) PLUS a checkbox
-// (checkerboard) pattern over that background color on mobile, scoped via the
-// `alternative-hero-1` class in globals.css.
+// Same as AlternativeHero (plain light-green band on mobile) but with a
+// DARK-GREEN mobile theme (deep forest greens + white text, like the 'dark
+// hero' reference) scoped via the `alternative-hero-1` class in globals.css.
+// Desktop keeps the original botanical gradient.
 // NOT applied anywhere — apply manually when required.
 // IMPORTANT: this component shares the same DOM ids as Hero/AlternativeHero
 // (auroraActiveCountry, globalOrbitStage, SVG defs like #botanicalFlightPath).
@@ -271,7 +272,6 @@ export function AlternativeHero1({
       <div aria-hidden="true" className="botanical-hero-bg" />
       <div aria-hidden="true" className="botanical-sun-rays" />
       <div aria-hidden="true" className="botanical-map-grid" />
-      <div aria-hidden="true" className="alternative-hero-1-checker" />
       {LEAVES.map((leaf) => (
         <span
           key={leaf.className}
