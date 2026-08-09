@@ -2,6 +2,9 @@
 
 Record architectural and content decisions, deviations from templates, renamed/closed programs, canonical URL choices, dependency choices, and unresolved client verification items. Append, never rewrite history.
 
+## 2026-08-09 — Resend lead recipient = dmcimmigrationgroup@gmail.com (sandbox owner)
+- The Resend account is in sandbox mode, which only delivers to the account owner `dmcimmigrationgroup@gmail.com`. All form lead emails (`RESEND_REPLY_TO_EMAIL` + every `DMC_<MARKET>_LEAD_TO_EMAIL`) now target that inbox; the previous `dmcimmigrationglobal@gmail.com` was unverified and every send was rejected with Resend 403. `from` must remain `onboarding@resend.dev` until a sending domain is verified. Widening recipients is a `.env`-only change after domain verification.
+
 ## 2026-08-09 — Landing forms: skilled-migration eligibility gate (age 45+ / education 12th)
 - Client decision: every landing-page form (all four landing routes; one shared `LandingLeadForm` component) blocks submission when the applicant selects age `45+` OR education `12th`, showing “To qualify for Australia Skilled Migration, you need a minimum of a diploma or bachelor's degree and must be under 45 years of age.” below the fields. Client-supplied message kept verbatim; note it references Australia even on the Canada landing variants — revisit if a Canada-specific message is wanted.
 

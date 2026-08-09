@@ -4,6 +4,13 @@ Living checklist. Update after every meaningful batch. Never delete completed hi
 
 Last updated: 2026-08-09
 
+## 2026-08-09 — Lead form email fixed: Resend sandbox only delivers to dmcimmigrationgroup@gmail.com
+
+- Reported: submitting the landing-page lead form shows "Failed to send enquiry email. Please try again or contact us directly." on every page.
+- Root cause: the Resend API key is valid but the account is in **sandbox mode** — Resend only delivers to the account owner's verified inbox `dmcimmigrationgroup@gmail.com`. The lead forms were sending to `dmcimmigrationglobal@gmail.com` (all five `DMC_<MARKET>_LEAD_TO_EMAIL` + `RESEND_REPLY_TO_EMAIL`), which is unverified → Resend returns HTTP 403 `validation_error` → `sendViaResend` returns false → the form surfaces the generic failure message. Confirmed directly against the Resend API: send to `dmcimmigrationglobal@gmail.com` → 403; send to `dmcimmigrationgroup@gmail.com` → 200 (`id` returned).
+- Fix (env only, no code change): pointed `RESEND_REPLY_TO_EMAIL` and all five `DMC_<MARKET>_LEAD_TO_EMAIL` at `dmcimmigrationgroup@gmail.com` in the active root `.env`; mirrored the confirmed recipient + sandbox-mode note into the committed `.env.example` (the "Lead-recipient emails NOT confirmed" TODO comment is now resolved). `DMC_CHATBOT_LEAD_TO_EMAIL` already targeted `dmcimmigrationgroup@gmail.com`. `from` stays `DMC Website <onboarding@resend.dev>` (sandbox requires it).
+- Validation: `npm run typecheck` ✓; `npm test` ✓ 73/73. Live Playwright probe on `/dubai/visas/australia/pr-services` (real `submitLead` fired against the dev server): filled name/phone/email + dropdowns + consent → navigated to the thank-you page, zero console errors. Once a sending domain is verified in Resend, recipients can be widened by editing `.env` only.
+
 ## 2026-08-09 — Landing forms: skilled-migration eligibility gate (45+ / 12th)
 
 - Reported: on all landing-page forms, whoever selects age `45+` OR education `12th` in the dropdowns must NOT be allowed to submit — show the message “To qualify for Australia Skilled Migration, you need a minimum of a diploma or bachelor's degree and must be under 45 years of age.” below the form.
