@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { getOffice } from "@/config/offices";
 import { LeadFormSection } from "@/components/pages/internal/InternalPageTemplate";
 import { marketHref } from "@/lib/routing/routes";
+import { FloatingLeaves } from "@/components/ui/FloatingLeaves";
 import { MARKET_LABELS, type Market } from "@/config/markets";
 import { interpolateMarket, marketAudience } from "@/lib/i18n/market-copy";
 
@@ -33,14 +34,16 @@ export function ToolPage({
 
   return (
     <main className="bg-white">
-      {/* Hero band */}
-      <section className="bg-aurora-bg py-16 text-aurora-text md:py-20">
-        <div className="mx-auto max-w-[1280px] px-6">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-brand-300">{interpolateMarket(eyebrow, market)}</p>
-          <h1 className="max-w-3xl font-display text-3xl font-extrabold leading-tight md:text-5xl">
+      {/* Hero band — light-green botanical band with floating leaves (the
+          sitewide hero treatment; same palette as the homepage hero on mobile) */}
+      <section className="relative isolate overflow-hidden bg-[linear-gradient(to_bottom,#fafaf5_0%,#eff6ec_55%,#dff3da_100%)] py-16 md:py-20">
+        <FloatingLeaves />
+        <div className="relative mx-auto max-w-[1280px] px-6">
+          <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-brand-600">{interpolateMarket(eyebrow, market)}</p>
+          <h1 className="max-w-3xl font-display text-3xl font-extrabold leading-tight text-charcoal md:text-5xl">
             {interpolateMarket(title, market)}
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-aurora-muted md:text-lg">
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
             {interpolateMarket(lede, market)}
           </p>
         </div>

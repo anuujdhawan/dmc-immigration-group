@@ -10525,8 +10525,7 @@ footer.dmc-site-footer button:hover {
   letter-spacing: .02em;
 }
 
-#credentials>.grid>div:first-child .credential-trail-card,
-#credentials>.grid>div:first-child .credential-trust-card {
+#credentials>.grid>div:first-child .credential-trail-card {
   display: flex;
   min-height: 104px;
   flex-direction: column;
@@ -10535,19 +10534,15 @@ footer.dmc-site-footer button:hover {
 }
 
 #credentials>.grid>div:first-child .credential-trail-card p,
-#credentials>.grid>div:first-child .credential-trail-card span,
-#credentials>.grid>div:first-child .credential-trust-card p,
-#credentials>.grid>div:first-child .credential-trust-card span {
+#credentials>.grid>div:first-child .credential-trail-card span {
   color: #1f2f1a !important;
 }
 
-#credentials>.grid>div:first-child .credential-trail-card .credential-trail-label,
-#credentials>.grid>div:first-child .credential-trust-card .credential-trust-label {
+#credentials>.grid>div:first-child .credential-trail-card .credential-trail-label {
   color: #2d6a15 !important;
 }
 
-#credentials>.grid>div:first-child .credential-trail-card .credential-trail-copy,
-#credentials>.grid>div:first-child .credential-trust-card .credential-trust-copy {
+#credentials>.grid>div:first-child .credential-trail-card .credential-trail-copy {
   margin-top: 6px;
   color: #3e4e37 !important;
   line-height: 1.55;
@@ -13969,11 +13964,12 @@ textarea {
   }
 }
 
-/* ── TEMPORARY AlternativeHero (A/B check on homepage) ─────────────────────
-   Mobile only: from the moment the orbit animation sits under the hero text,
-   the section gets a plain light-green background matching the botanical hero
-   palette. Desktop is untouched. Remove this block together with
-   AlternativeHero.tsx once the check is done. */
+/* ── Sitewide hero mobile/tablet treatment ──────────────────────────────────
+   Every page hero carries `.alternative-hero` (base Hero component). On
+   mobile/tablet (<=1023px) the hero becomes a plain light-green band matching
+   the botanical palette, with ONLY the falling-leaves animation — the orbit
+   stage and decorative gradient layers are hidden so the band reads plain.
+   Desktop (>1023px) keeps the full botanical gradient + orbit animation. */
 @media (max-width: 1023px) {
   .alternative-hero {
     /* Split at the top edge of the animation stage. Tuned per breakpoint:
@@ -13999,8 +13995,7 @@ textarea {
   }
 
   /* Remove the orbit animation (stage + rings + nodes + plane) on mobile.
-     Applies to both AlternativeHero and AlternativeHero1 — the section always
-     carries `.alternative-hero`. Desktop keeps the full animation. */
+     Desktop keeps the full animation. */
   .alternative-hero .botanical-network-stage {
     display: none !important;
   }
@@ -14010,131 +14005,4 @@ textarea {
   .alternative-hero {
     --alt-hero-split: 150px;
   }
-}
-
-/* ── TEMPORARY AlternativeHero1 (manual apply only, not wired anywhere) ─────
-   Mobile-only dark-green theme defined below. Remove together with
-   AlternativeHero1.tsx once the check is done. */
-
-/* ── TEMPORARY AlternativeHero1 dark-green mobile theme (manual A/B) ─────────
-   Mobile only (<=1023px): the hero becomes a dark forest-green section like
-   the reference 'dark hero' image (deep greens + white text). Desktop keeps
-   the original botanical gradient untouched. Remove together with
-   AlternativeHero1.tsx once the check is done. */
-@media (max-width: 1023px) {
-  .alternative-hero-1 {
-    background:
-      radial-gradient(130% 85% at 50% -12%, rgba(126, 217, 87, 0.14) 0%, rgba(0, 0, 0, 0) 55%),
-      linear-gradient(to bottom, #142f0b 0%, #1b4011 46%, #2a571b 100%) !important;
-  }
-
-  /* Text: dark theme = white / light on the dark greens. */
-  .alternative-hero-1 .botanical-license-pill {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: rgba(255, 255, 255, 0.16) !important;
-    color: #e2f3d3 !important;
-    box-shadow: none !important;
-  }
-
-  .alternative-hero-1 .botanical-license-pill span {
-    background: #7ed957 !important;
-    box-shadow: 0 0 0 5px rgba(126, 217, 87, 0.18) !important;
-  }
-
-  .alternative-hero-1 .botanical-overline {
-    color: #9fd98a !important;
-  }
-
-  .alternative-hero-1 .botanical-hero-title {
-    color: #fbfef9 !important;
-  }
-
-  .alternative-hero-1 .botanical-hero-title span {
-    color: #7ed957 !important;
-  }
-
-  .alternative-hero-1 .botanical-hero-subtitle {
-    color: rgba(243, 250, 240, 0.88) !important;
-  }
-
-  /* The base mobile rules put a WHITE text-shadow glow on the title and
-     subtitle/proof/disclaimer (invisible on the light band, but on the dark
-     green it shows as an ugly white border around the green text). Remove it. */
-  .alternative-hero-1 .botanical-hero-title,
-  .alternative-hero-1 .botanical-hero-subtitle,
-  .alternative-hero-1 .botanical-proof-row,
-  .alternative-hero-1 .botanical-disclaimer {
-    text-shadow: none !important;
-  }
-
-  /* Buttons: primary flips to a bright green that pops on dark; secondary
-     becomes a light outline chip. */
-  .alternative-hero-1 .botanical-primary-btn {
-    background: linear-gradient(145deg, #7ed957, #45b318) !important;
-    color: #0d2406 !important;
-    box-shadow: 0 15px 38px rgba(0, 0, 0, 0.35) !important;
-  }
-
-  .alternative-hero-1 .botanical-secondary-btn {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-color: rgba(255, 255, 255, 0.24) !important;
-    color: #f3faec !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-  }
-
-  .alternative-hero-1 .botanical-secondary-btn:hover {
-    background: rgba(255, 255, 255, 0.14) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
-  }
-
-  /* Proof stats + disclaimer + scroll cue: light treatment. */
-  .alternative-hero-1 .botanical-proof-row {
-    border-top-color: rgba(255, 255, 255, 0.14) !important;
-  }
-
-  .alternative-hero-1 .botanical-proof-row span {
-    color: rgba(243, 250, 240, 0.72) !important;
-  }
-
-  .alternative-hero-1 .botanical-proof-row strong {
-    color: #ffffff !important;
-  }
-
-  .alternative-hero-1 .botanical-disclaimer {
-    color: rgba(243, 250, 240, 0.62) !important;
-  }
-
-  .alternative-hero-1 .botanical-scroll-cue span {
-    color: #cfe8bd !important;
-  }
-
-  .alternative-hero-1 .botanical-scroll-cue i {
-    border-color: rgba(255, 255, 255, 0.3) !important;
-  }
-
-  .alternative-hero-1 .botanical-scroll-cue i::after {
-    background: #7ed957 !important;
-  }
-
-  /* The default mobile text card is a translucent WHITE panel that would
-     wash out the dark theme — replace it with a barely-there dark panel so
-     the dark-green gradient reads clean, like the reference image. */
-  .alternative-hero-1 .botanical-hero-copy::before {
-    background: linear-gradient(
-      155deg,
-      rgba(7, 22, 4, 0.45),
-      rgba(7, 22, 4, 0.12)
-    ) !important;
-    border-color: rgba(255, 255, 255, 0.12) !important;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28) !important;
-  }
-
-  /* The base hero has a 125px light-warm bottom fade (::after) that would
-     paint a light strip at the hero's bottom edge — remove it on dark. */
-  .alternative-hero-1.botanical-hero::after {
-    display: none !important;
-  }
-
 }

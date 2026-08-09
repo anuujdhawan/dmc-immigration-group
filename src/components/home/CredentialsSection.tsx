@@ -67,7 +67,7 @@ export function CredentialsSection({ market }: { market: Market }) {
             </div>
           </div>
 
-          <div className="relative mt-10 rounded-[24px] border border-white/10 bg-white/6 p-5 shadow-[0_18px_42px_rgba(0,0,0,0.16)] backdrop-blur-xl">
+          <div className="relative mt-12 rounded-[24px] border border-white/10 bg-white/6 p-6 shadow-[0_18px_42px_rgba(0,0,0,0.16)] backdrop-blur-xl">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="credential-trail-kicker text-[10px] font-bold uppercase tracking-[0.2em] text-brand-100/80">
@@ -100,27 +100,6 @@ export function CredentialsSection({ market }: { market: Market }) {
                 </p>
                 <p className="credential-trail-copy mt-1 text-sm text-slate-700">Direct outbound link to the official register page.</p>
               </div>
-            </div>
-          </div>
-
-          <div className="relative mt-8 grid gap-4 sm:grid-cols-3">
-            <div className="credential-trust-card rounded-2xl border border-white/12 bg-white/88 px-4 py-3 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-              <p className="credential-trust-label text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/80">
-                Public record first
-              </p>
-              <p className="credential-trust-copy mt-1 text-sm text-slate-700">No badge appears without a live source.</p>
-            </div>
-            <div className="credential-trust-card rounded-2xl border border-white/12 bg-white/88 px-4 py-3 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-              <p className="credential-trust-label text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/80">
-                Country aware
-              </p>
-              <p className="credential-trust-copy mt-1 text-sm text-slate-700">Licensing is shown where it actually applies.</p>
-            </div>
-            <div className="credential-trust-card rounded-2xl border border-white/12 bg-white/88 px-4 py-3 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-              <p className="credential-trust-label text-[10px] font-bold uppercase tracking-[0.18em] text-brand-700/80">
-                No empty claims
-              </p>
-              <p className="credential-trust-copy mt-1 text-sm text-slate-700">We keep the language measurable and honest.</p>
             </div>
           </div>
 

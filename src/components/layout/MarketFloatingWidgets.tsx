@@ -26,7 +26,7 @@ export function MarketFloatingWidgets({
   showChat = true,
 }: {
   market: Market;
-  /** Landing pages render the WhatsApp bubble only (no guided chat). */
+  /** Suppress the guided-chat bubble where needed (default: chat on, alongside WhatsApp). */
   showChat?: boolean;
 }) {
   const numbers = getWhatsAppNumbers();

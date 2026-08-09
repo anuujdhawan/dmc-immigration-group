@@ -6,9 +6,7 @@ import { ContactCtaSection } from "@/components/home/ContactCtaSection";
 import { CountriesSection } from "@/components/home/CountriesSection";
 import { CredentialsSection } from "@/components/home/CredentialsSection";
 import { FaqSection } from "@/components/home/FaqSection";
-// TEMPORARY: AlternativeHero is swapped in for Hero so the plain light-green
-// mobile band can be checked. Revert to `import { Hero } from ...` when done.
-import { AlternativeHero } from "@/components/home/AlternativeHero";
+import { Hero } from "@/components/home/Hero";
 import { ProcessSection } from "@/components/home/ProcessSection";
 import { ResourcesSection } from "@/components/home/ResourcesSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
@@ -18,12 +16,11 @@ import { ToolsSection } from "@/components/home/ToolsSection";
 import { VideoStoriesSection } from "@/components/home/VideoStoriesSection";
 import { VisitVisasSection } from "@/components/home/VisitVisasSection";
 import { WhyDmcSection } from "@/components/home/WhyDmcSection";
-import { AlternativeHero1 } from "./AlternativeHero1";
 
 export function HomeSections({ market }: { market: Market }) {
   return (
     <>
-      <AlternativeHero
+      <Hero
         market={market}
         eyebrow={`${MARKET_LABELS[market]} market · Global opportunity network`}
         titlePrefix="Your journey towards a "

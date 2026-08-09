@@ -2,6 +2,9 @@
 
 Record architectural and content decisions, deviations from templates, renamed/closed programs, canonical URL choices, dependency choices, and unresolved client verification items. Append, never rewrite history.
 
+## 2026-08-09 — Landing forms: skilled-migration eligibility gate (age 45+ / education 12th)
+- Client decision: every landing-page form (all four landing routes; one shared `LandingLeadForm` component) blocks submission when the applicant selects age `45+` OR education `12th`, showing “To qualify for Australia Skilled Migration, you need a minimum of a diploma or bachelor's degree and must be under 45 years of age.” below the fields. Client-supplied message kept verbatim; note it references Australia even on the Canada landing variants — revisit if a Canada-specific message is wanted.
+
 ## 2026-08-02 — Initial session
 
 ### Stack
@@ -297,5 +300,5 @@ Record architectural and content decisions, deviations from templates, renamed/c
 
 - Per-market WhatsApp numbers live in `.env` as `DMC_<MARKET>_WHATSAPP_E164` (all five markets; the schema already defined these as `phoneE164OrEmpty`). Client confirmed Dubai `+971543219003`, Abu Dhabi `+971544410905`, Qatar `+97431113692`, India `+919036554740`; Kuwait empty until provided — updating any number is purely a `.env` edit.
 - The WhatsApp bubble opens the market's number DIRECTLY on click (`wa.me/<market number>?text=<prefilled>`), resolved from the `[market]` URL segment — there is deliberately no office picker, so a lead always lands on the WhatsApp of the office they are visiting. Markets with no configured number do not render the bubble at all (currently Kuwait).
-- The WhatsApp bubble and the guided-chat bubble are separately toggled: `MarketFloatingWidgets` takes `showChat` (default `true`). Landing pages (conversion-focused, zero outbound links) show the WhatsApp bubble ONLY — the chat widget is deliberately excluded there so the visitor completes the lead form; the thank-you routes keep both bubbles via the standard chrome.
+- The WhatsApp bubble and the guided-chat bubble are separately toggled: `MarketFloatingWidgets` takes `showChat` (default `true`). Landing pages show the guided chat alongside the WhatsApp bubble (both bubbles, matching the thank-you routes) — client decision 2026-08-09; `showChat={false}` remains available in `MarketFloatingWidgets` should chat ever need to be suppressed on a given chrome again.
 - Footer/wide logo: the baked-in white box in `dmc-logo-wide.webp`/`-640.webp` was removed via flood-fill from the transparent gutter (background white → alpha 0, stopping at the coloured art) rather than a global white-key so the logo's white wordmark is preserved.

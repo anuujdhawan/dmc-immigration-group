@@ -66,8 +66,8 @@ const CHAT_SETTINGS = {
     defaultOpen: false,
   },
   chatButton: {
-    // Client-approved bubble icon (transparent-background WebP).
-    icon: "/media/brand/chat-bubble-icon.webp",
+    // Client-approved bubble icon (transparent-background SVG).
+    icon: "/media/brand/green-chat.svg",
   },
   header: {
     showAvatar: false,

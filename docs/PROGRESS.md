@@ -2,7 +2,44 @@
 
 Living checklist. Update after every meaningful batch. Never delete completed history.
 
-Last updated: 2026-08-06
+Last updated: 2026-08-09
+
+## 2026-08-09 — Landing forms: skilled-migration eligibility gate (45+ / 12th)
+
+- Reported: on all landing-page forms, whoever selects age `45+` OR education `12th` in the dropdowns must NOT be allowed to submit — show the message “To qualify for Australia Skilled Migration, you need a minimum of a diploma or bachelor's degree and must be under 45 years of age.” below the form.
+- Implementation (single place — every landing page shares `LandingLeadForm`): added `ELIGIBILITY_GATE_MESSAGE` + `failsEligibilityGate()`; `onSubmit` now returns early (no `submitLead` call, no thank-you navigation) when `ageRange === "45+"` or `education === "12th"`, setting the existing `status === "error"` alert slot below the fields to that message. Covers all 4 landing routes (`/dubai|abu-dhabi/visas/{australia,canada}/pr-services`); the shared site `LeadForm` is untouched (its age options are 18-24…55+, not `45+`).
+- Validation: `npm run typecheck` ✓; `npm run lint` ✓; `npm test` ✓ 73/73. Playwright probe on the Australia + Canada Dubai landing pages: selecting `45+` (or `12th`) and submitting shows the exact message and never navigates; zero console errors. (Only blocked paths probed — the valid path would fire `submitLead`.)
+
+## 2026-08-09 — Guided chat enabled on the landing pages
+
+- Reported: add live chat to the DMC landing page as well — not just the thank-you page.
+- The landing chrome in `src/app/[market]/layout.tsx` previously rendered `<MarketFloatingWidgets market={market} showChat={false} />` (WhatsApp bubble only, guided chat deliberately excluded so the visitor completed the lead form). Removed the `showChat={false}` so all 4 landing pages (`/dubai|abu-dhabi/visas/{australia,canada}/pr-services`) now render the guided-chat bubble (bottom-left) alongside the WhatsApp bubble (bottom-right), matching the thank-you routes. `MarketFloatingWidgets` keeps its `showChat` toggle (default `true`) and `GUIDED_CHAT_ENABLED` still gates chat globally; prop doc comment updated.
+- Validation: `npm run typecheck` ✓; `npm run lint` ✓; `npm test` ✓; Playwright probe on `/dubai/visas/canada/pr-services` at 390px + 1440px: `.rcb-toggle-button` (guided chat) and the WhatsApp bubble both present, zero console errors.
+
+## 2026-08-09 — Sitewide: light-green hero + leaves treatment applied to every page
+
+- Reported: apply the homepage hero's mobile/tablet treatment — plain light-green background with ONLY the floating leaves animation — to the hero section of every page of the website.
+- Implementation: the `alternative-hero` class moved into the base `Hero` component (`src/components/home/Hero.tsx`), so every page using `Hero` (homepage, landing pages, ProgramPage, ExpressEntryPage, all Canada/Australia/UK internal program pages) now shows the light-green band + leaves on `<=1023px` and keeps the full botanical gradient + orbit animation on desktop — no component changes needed on those pages.
+- Cleanup of the A/B scaffolding: `HomeSections.tsx` reverted from `AlternativeHero` to `Hero`; `LandingPage.tsx` switched from `AlternativeHero1` to `Hero`; deleted `src/components/home/AlternativeHero.tsx` and `AlternativeHero1.tsx`; removed the dead `.alternative-hero-1` dark-green mobile block from `globals.css`; `.alternative-hero` CSS comments updated (no longer TEMPORARY — now the standard sitewide mobile/tablet treatment).
+- Tool pages: `ToolPage.tsx` hero band converted from the dark `bg-aurora-bg` band to the same light-green botanical gradient with floating leaves (`#fafaf5 → #eff6ec → #dff3da`, `overflow-hidden`, `isolate`), text colors flipped to the light palette (brand-600 eyebrow, charcoal title, muted lede).
+- Extracted the leaf field into a shared `src/components/ui/FloatingLeaves.tsx` (used by `Hero` and `ToolPage`) so the `.leaf-1…7` markup + LEAF_SVG live in one place.
+- Validation: `npm run typecheck` ✓; `npm test` ✓ 73/73; `npm run lint` ✓ 0 errors (12 pre-existing warnings, none in touched files). Playwright probe at 390/768/1440px across home, express-entry, program (PNP), landing, and tool URLs: mobile/tablet all show the light-green band (`#dff3da`, 74/150px split), 7 leaves animating, orbit stage + sun-rays `display:none`; desktop keeps the full botanical radial gradient with stage and rays visible. Zero console errors on every probed page.
+
+## 2026-08-08 — websiteData: extracted all 132 UAE legacy page datasets from dm-consultant.ae
+
+- Created `websiteData/` with one markdown file per page (133 files incl. `README.md` index), covering exactly the **132 legacy URLs** listed in the UAE sheet's "Old Full URL" column of `DMC_Legacy_URL_to_New_Menu_Mapping_WebsiteWise.xlsx`.
+- Each file follows the sample brief structure (HERO → SECTIONS → FAQ → FORMS → CTA), starts with a **Source page URL** line, and includes the sheet's mapping metadata (old nav path, new top-nav menu, new submenu, notes) plus meta description and breadcrumbs when present.
+- Data extracted verbatim from the live site (fetch with cache + retry; Elementor DOM parsed with Python stdlib; FAQ from JSON-LD; CF7 form fields captured). Sitewide chrome (header, popups, footer nav, news/blog widgets, testimonial strips) filtered out; duplicate Elementor panes and duplicate CF7 forms deduped.
+- Crawler lives outside the repo (`/tmp/extract_dmc.py`); only the output folder was committed to the project.
+- Validation: 132/132 URLs extracted, 0 failures; all files contain the source-URL header; the four student-visa pages are genuinely thin on the live site (only an H1 exists there).
+
+## 2026-08-08 — websiteData: extraction extended to ABU DHABI, KUWAIT, QATAR, INDIA markets
+
+- Extended the per-market extraction (same tag-annotated format as UAE) to the other four sheets of `DMC_Legacy_URL_to_New_Menu_Mapping_WebsiteWise.xlsx`, writing into `websiteData/<MARKET>/` folders the user created: ABU DHABI (42 URLs, dm-consultantabudhabi.com), KUWAIT (61, dm-consultantkuwait.com), QATAR (61, dm-consultant.qa), INDIA (75, dm-consultant.in).
+- Each market folder mirrors the UAE layout: `README.md` (URL→file index), `index.md` (homepage), `pages/…` (one file per URL, path mirrors URL), all with **Source page URL** at top, sheet mapping metadata, and HTML-tag annotations (`<h2>`, `<p>`, `<li>`, `<a href>`, `<input>`, `<select>`, FAQ `<h4>`/`<p>`).
+- Per-market `URLS-NOT-IN-SITEMAP_<MARKET>.md` built from each site's own sitemap: ABU DHABI 11, KUWAIT 2, QATAR 9, INDIA 3 URLs not in their sitemaps.
+- QATAR: `residency-by-investment/` and `citizenship-by-investment/` return HTTP 404 on the live site — stub files created in the QATAR folder clearly marking them as not-extractable (page missing on qatar site); noted in the not-in-sitemap file.
+- Validation: all markets extracted with 0 fetch failures except the two QATAR 404s (stubbed); sample files from each market verified (source URL, sheet meta, tag annotations present).
 
 ## 2026-08-06 — AlternativeHero1: white glow around green hero text removed
 

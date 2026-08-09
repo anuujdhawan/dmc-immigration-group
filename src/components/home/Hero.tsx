@@ -4,6 +4,7 @@ import { useEffect, useRef, type CSSProperties } from "react";
 
 import type { Market } from "@/config/markets";
 import { marketHref } from "@/lib/routing/routes";
+import { FloatingLeaves } from "@/components/ui/FloatingLeaves";
 
 const COUNTRIES = [
   { name: "Canada", flag: "🇨🇦", route: "Express Entry · PNP · Study" },
@@ -51,19 +52,6 @@ const NODES = [
   { index: 18, ring: "ring-3", left: "31.590%", top: "42.185%", delay: "1.32s" },
   { index: 19, ring: "ring-3", left: "47.563%", top: "30.149%", delay: "1.53s" },
 ];
-
-const LEAVES = [
-  { className: "leaf-1", top: "-4%", left: "7%" },
-  { className: "leaf-2", top: "-5%", left: "25%", width: "18px" },
-  { className: "leaf-3", top: "-7%", left: "44%", width: "29px" },
-  { className: "leaf-4", top: "-4%", left: "63%" },
-  { className: "leaf-5", top: "-8%", left: "79%", width: "20px" },
-  { className: "leaf-6", top: "-5%", left: "90%", width: "27px" },
-  { className: "leaf-7", top: "-6%", left: "53%", width: "17px" },
-];
-
-const LEAF_SVG =
-  "M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22L6.66 19.7C7.14 19.87 7.64 20 8 20C19 20 22 3 22 3C21 5 14 5.25 9 6.25C4 7.25 2 11.5 2 13.5C2 15.5 3.75 17.25 3.75 17.25C7 8 17 8 17 8Z";
 
 interface HeroAction {
   label: string;
@@ -254,24 +242,13 @@ export function Hero({
     <section
       ref={heroRef}
       id={sectionId}
-      className="hero aurora-hero botanical-hero editorial-hero"
+      className="hero aurora-hero botanical-hero editorial-hero alternative-hero"
       data-observe-section=""
     >
       <div aria-hidden="true" className="botanical-hero-bg" />
       <div aria-hidden="true" className="botanical-sun-rays" />
       <div aria-hidden="true" className="botanical-map-grid" />
-      {LEAVES.map((leaf) => (
-        <span
-          key={leaf.className}
-          aria-hidden="true"
-          className={`botanical-leaf ${leaf.className}`}
-          style={{ top: leaf.top, left: leaf.left, ...(leaf.width ? { width: leaf.width } : {}) }}
-        >
-          <svg viewBox="0 0 24 24">
-            <path d={LEAF_SVG} />
-          </svg>
-        </span>
-      ))}
+      <FloatingLeaves />
 
       <div className="botanical-hero-shell">
         <div className="botanical-hero-copy fade-up">

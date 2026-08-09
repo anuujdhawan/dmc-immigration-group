@@ -21,6 +21,19 @@ const AGE_RANGES = ["18–45", "45+"];
 const EDUCATION_LEVELS = ["12th", "Diploma", "Bachelor's", "Master's", "PhD"];
 const WORK_EXPERIENCE = ["0–2 yrs", "3–5 yrs", "5+ yrs"];
 
+/**
+ * Skilled-migration gate: applicants who are 45+ or hold only 12th-level
+ * education cannot qualify, so the form is blocked before submission and this
+ * message is shown below the fields.
+ */
+const ELIGIBILITY_GATE_MESSAGE =
+  "To qualify for Australia Skilled Migration, you need a minimum of a diploma or bachelor's degree and must be under 45 years of age.";
+
+/** True when the selected age/education fails the skilled-migration gate. */
+function failsEligibilityGate(ageRange: unknown, education: unknown): boolean {
+  return String(ageRange ?? "") === "45+" || String(education ?? "") === "12th";
+}
+
 interface LandingLeadFormProps {
   market: Market;
   pageId: LandingPageId;
@@ -62,6 +75,15 @@ export function LandingLeadForm({
 
   const onSubmit = useCallback(
     async (data: Record<string, unknown>) => {
+      // Block submission for profiles that cannot qualify for skilled migration
+      // (age 45+ or highest education of 12th) and surface the eligibility
+      // message instead of sending the lead.
+      if (failsEligibilityGate(data.ageRange, data.education)) {
+        setStatus("error");
+        setErrorMsg(ELIGIBILITY_GATE_MESSAGE);
+        return;
+      }
+
       const formData = data as LeadFormData;
       setStatus("submitting");
       setErrorMsg("");
