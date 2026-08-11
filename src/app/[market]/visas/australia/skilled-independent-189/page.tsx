@@ -30,14 +30,21 @@ export async function generateMetadata({
 export default async function SkilledIndependent189Route({
   params,
 }: { params: Promise<{ market: string }> }) {
-  const { market } = await params;
-  if (!isMarket(market)) notFound();
-  const office = getOffice(market);
-  return (
-    <SkilledIndependent189Page
-      market={market}
-      phoneHref={"tel:" + office.phoneE164}
-      phoneLabel={office.phoneDisplay}
-    />
-  );
+  // ===========================================================================
+  // ROUTE DISABLED — page rendering commented out per request: only the 4
+  // landing pages and 4 thank-you pages are live. This route intentionally
+  // returns 404 (notFound) instead of rendering.
+  // ===========================================================================
+  // const { market } = await params;
+  // if (!isMarket(market)) notFound();
+  // const office = getOffice(market);
+  // return (
+  //   <SkilledIndependent189Page
+  //     market={market}
+  //     phoneHref={"tel:" + office.phoneE164}
+  //     phoneLabel={office.phoneDisplay}
+  //   />
+  // );
+  // ===========================================================================
+  notFound();
 }

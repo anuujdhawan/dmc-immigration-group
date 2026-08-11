@@ -52,26 +52,29 @@ export function ToolCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-3xl border border-brand-100/80 bg-white shadow-[0_1px_3px_rgba(23,61,13,0.06),0_10px_30px_rgba(23,61,13,0.07)]",
+        "relative overflow-hidden rounded-3xl border border-brand-100/60 bg-white transition-shadow duration-300 hover:shadow-[0_2px_8px_rgba(23,61,13,0.06),0_20px_48px_rgba(23,61,13,0.1)]",
+        "shadow-[0_1px_3px_rgba(23,61,13,0.05),0_10px_30px_rgba(23,61,13,0.07)]",
         className,
       )}
     >
+      {/* Accent top gradient bar */}
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-brand-300 via-brand-500 to-brand-600" />
       {/* Soft botanical glow, top-right */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-20 -top-24 size-64 rounded-full bg-gradient-to-br from-brand-100/80 via-brand-50/60 to-transparent blur-2xl"
+        className="pointer-events-none absolute -right-20 -top-24 size-64 rounded-full bg-gradient-to-br from-brand-100/60 via-brand-50/40 to-transparent blur-3xl"
       />
       {/* Fine leaf hairline */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-300/70 to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-[3px] h-px bg-gradient-to-r from-transparent via-brand-300/50 to-transparent"
       />
 
       {eyebrow || title || lede ? (
         <header className={cn("relative px-6 pb-5 pt-7 md:px-8 md:pt-8", headerClassName)}>
           {Icon ? (
             <div className="mb-4 inline-flex items-center gap-3">
-              <span className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-md shadow-brand-600/25">
+              <span className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-md shadow-brand-600/25 transition-transform duration-300">
                 <Icon aria-hidden="true" className="size-5" />
               </span>
               {eyebrow ? (
@@ -137,12 +140,13 @@ interface ToolSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 
 export function ToolSelect({ options, chip, className, ...rest }: ToolSelectProps) {
   return (
-    <div className="relative">
+    <div className="relative group">
       <select
         {...rest}
         className={cn(
-          "h-12 w-full appearance-none rounded-xl border border-slate-200 bg-white pl-4 text-sm font-medium text-ink shadow-sm transition",
-          "hover:border-brand-300 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/15",
+          "h-12 w-full appearance-none rounded-xl border border-slate-200 bg-white pl-4 text-sm font-medium text-ink shadow-sm transition-all duration-200",
+          "hover:border-brand-300 hover:shadow-md hover:shadow-brand-600/5",
+          "focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/15 focus:shadow-md focus:shadow-brand-600/5",
           chip ? "pr-24" : "pr-11",
           className,
         )}
@@ -154,13 +158,13 @@ export function ToolSelect({ options, chip, className, ...rest }: ToolSelectProp
         ))}
       </select>
       {chip ? (
-        <span className="pointer-events-none absolute right-9 top-1/2 -translate-y-1/2 rounded-full bg-brand-50 px-2 py-0.5 text-[11px] font-bold text-brand-700">
+        <span className="pointer-events-none absolute right-9 top-1/2 -translate-y-1/2 rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-bold text-brand-700 border border-brand-100">
           {chip}
         </span>
       ) : null}
       <ChevronDown
         aria-hidden="true"
-        className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+        className="pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400 transition-colors duration-200 group-focus-within:text-brand-500"
       />
     </div>
   );
@@ -226,7 +230,7 @@ export function ToolSegmented<T extends string>({
       {label ? (
         <span className="mb-2 block text-[13px] font-semibold text-slate-700">{label}</span>
       ) : null}
-      <div className="inline-flex flex-wrap gap-1.5 rounded-2xl border border-slate-200 bg-slate-50/80 p-1.5">
+      <div className="inline-flex flex-wrap gap-1 rounded-2xl border border-slate-200 bg-slate-50/80 p-1">
         {options.map((option) => {
           const active = option.value === value;
           return (
@@ -236,10 +240,10 @@ export function ToolSegmented<T extends string>({
               onClick={() => onChange(option.value)}
               aria-pressed={active}
               className={cn(
-                "rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200",
+                "relative rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-250",
                 active
-                  ? "bg-brand-600 text-white shadow-md shadow-brand-600/25"
-                  : "text-slate-600 hover:bg-white hover:text-brand-700",
+                  ? "bg-gradient-to-b from-brand-500 to-brand-700 text-white shadow-md shadow-brand-600/30"
+                  : "text-slate-600 hover:bg-white hover:text-brand-700 hover:shadow-sm",
               )}
             >
               {option.label}
@@ -265,10 +269,10 @@ export function ToolCheck({
   return (
     <label
       className={cn(
-        "flex cursor-pointer items-start gap-3.5 rounded-2xl border p-4 transition-all duration-200",
+        "flex cursor-pointer items-start gap-3.5 rounded-2xl border p-4 transition-all duration-300",
         checked
-          ? "border-brand-300 bg-brand-50 shadow-sm shadow-brand-600/5"
-          : "border-slate-200 bg-white hover:border-brand-200 hover:bg-brand-50/40",
+          ? "border-brand-300 bg-gradient-to-br from-brand-50/80 to-brand-50/40 shadow-sm shadow-brand-600/8 ring-1 ring-brand-200/50"
+          : "border-slate-200 bg-white hover:border-brand-200 hover:bg-brand-50/30 hover:shadow-sm",
       )}
     >
       <input
@@ -280,17 +284,17 @@ export function ToolCheck({
       <span
         aria-hidden="true"
         className={cn(
-          "mt-0.5 grid size-5 shrink-0 place-items-center rounded-md border-2 transition-all duration-200",
+          "mt-0.5 grid size-5 shrink-0 place-items-center rounded-lg border-2 transition-all duration-300",
           "peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500 peer-focus-visible:ring-offset-2",
           checked
-            ? "border-brand-600 bg-brand-600 text-white"
+            ? "border-brand-600 bg-gradient-to-b from-brand-500 to-brand-700 text-white shadow-sm shadow-brand-600/30"
             : "border-slate-300 bg-white text-transparent",
         )}
       >
         <Check aria-hidden="true" className="size-3.5 stroke-[3]" />
       </span>
       <span className="min-w-0">
-        <span className={cn("block text-sm font-bold", checked ? "text-brand-900" : "text-ink")}>
+        <span className={cn("block text-sm font-bold transition-colors duration-200", checked ? "text-brand-900" : "text-ink")}>
           {label}
         </span>
         {description ? (
@@ -321,13 +325,13 @@ export function ToolButton({
     <button
       {...rest}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition-all duration-200 active:scale-[0.98]",
+        "inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-bold transition-all duration-250 active:scale-[0.97]",
         "disabled:cursor-not-allowed disabled:opacity-45 disabled:active:scale-100",
         variant === "primary" &&
-          "bg-brand-600 text-white shadow-md shadow-brand-600/20 hover:bg-brand-700 hover:shadow-lg hover:shadow-brand-600/25",
+          "bg-gradient-to-b from-brand-500 to-brand-700 text-white shadow-md shadow-brand-600/25 hover:from-brand-600 hover:to-brand-800 hover:shadow-lg hover:shadow-brand-600/30",
         variant === "secondary" &&
-          "border border-slate-200 bg-white text-slate-700 hover:border-brand-300 hover:bg-brand-50/50 hover:text-brand-700",
-        variant === "ghost" && "text-brand-700 hover:bg-brand-50",
+          "border border-slate-200 bg-white text-slate-700 hover:border-brand-300 hover:bg-brand-50/50 hover:text-brand-700 hover:shadow-md hover:shadow-brand-600/5",
+        variant === "ghost" && "text-brand-700 hover:bg-brand-50/80",
         className,
       )}
     >
@@ -405,6 +409,13 @@ export function ScoreGauge({
         ? "#d97706"
         : "var(--color-brand-500)";
 
+  const glowColor =
+    tone === "pass"
+      ? "rgba(53,142,26,0.3)"
+      : tone === "warn"
+        ? "rgba(217,119,6,0.3)"
+        : "rgba(67,170,27,0.2)";
+
   return (
     <div
       className="relative inline-grid place-items-center"
@@ -433,7 +444,7 @@ export function ScoreGauge({
           strokeDashoffset={dashOffset}
           style={{
             transition: "stroke-dashoffset 0.9s cubic-bezier(0.22, 1, 0.36, 1)",
-            filter: "drop-shadow(0 2px 6px rgba(53,142,26,0.35))",
+            filter: `drop-shadow(0 2px 8px ${glowColor})`,
           }}
         />
       </svg>
@@ -495,9 +506,9 @@ export function ToolResult({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-3xl border p-6 md:p-7",
-        tone === "pass" && "border-brand-200/80 bg-gradient-to-br from-brand-50 via-white to-brand-50/70",
-        tone === "warn" && "border-amber-200/80 bg-gradient-to-br from-amber-50 via-white to-amber-50/60",
+        "relative overflow-hidden rounded-3xl border-2 p-6 md:p-7",
+        tone === "pass" && "border-brand-300/60 bg-gradient-to-br from-brand-50 via-white to-brand-50/70",
+        tone === "warn" && "border-amber-300/60 bg-gradient-to-br from-amber-50 via-white to-amber-50/60",
         tone === "neutral" && "border-slate-200 bg-gradient-to-br from-slate-50 via-white to-slate-50/60",
         className,
       )}
@@ -506,6 +517,7 @@ export function ToolResult({
         aria-hidden="true"
         className="pointer-events-none absolute -right-14 -top-14 size-40 rounded-full bg-white/60 blur-2xl"
       />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/40 to-transparent" />
       <div className="relative flex flex-wrap items-center justify-between gap-4">
         <ToolBadge tone={tone === "pass" ? "pass" : tone === "warn" ? "warn" : "neutral"}>
           {status}

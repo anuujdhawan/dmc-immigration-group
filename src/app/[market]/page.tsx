@@ -16,15 +16,22 @@ export async function generateMetadata({
 export default async function MarketHomePage({
   params,
 }: PageProps<"/[market]">) {
-  const { market: slug } = await params;
-  if (!isMarket(slug)) notFound();
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(officeJsonLd(slug)) }}
-      />
-      <HomeSections market={slug} />
-    </>
-  );
+  // ===========================================================================
+  // ROUTE DISABLED — page rendering commented out per request: only the 4
+  // landing pages and 4 thank-you pages are live. This route intentionally
+  // returns 404 (notFound) instead of rendering.
+  // ===========================================================================
+  // const { market: slug } = await params;
+  // if (!isMarket(slug)) notFound();
+  // return (
+  //   <>
+  //     <script
+  //       type="application/ld+json"
+  //       dangerouslySetInnerHTML={{ __html: JSON.stringify(officeJsonLd(slug)) }}
+  //     />
+  //     <HomeSections market={slug} />
+  //   </>
+  // );
+  // ===========================================================================
+  notFound();
 }

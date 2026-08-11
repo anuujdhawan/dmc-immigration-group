@@ -1,0 +1,259 @@
+import type { ReactNode } from "react";
+import { Shield, Clock, FileCheck, ArrowRight } from "lucide-react";
+
+import { getOffice } from "@/config/offices";
+import { LeadFormSection } from "@/components/pages/internal/InternalPageTemplate";
+import { marketHref } from "@/lib/routing/routes";
+import { FloatingLeaves } from "@/components/ui/FloatingLeaves";
+import { AccordionItem } from "@/components/ui/AccordionItem";
+import { MARKET_LABELS, type Market } from "@/config/markets";
+import { pageMedia } from "@/config/page-media";
+import { faqJsonLd } from "@/lib/seo/market-seo";
+import { interpolateMarket, marketAudience, marketIn } from "@/lib/i18n/market-copy";
+
+export interface ToolPageProps {
+  market: Market;
+  eyebrow: string;
+  title: string;
+  lede: string;
+  /** Official sources shown in the sources band. */
+  sources: { label: string; url: string }[];
+  lastVerified: string;
+  children: ReactNode;
+  /** Optional extra copy rendered above the sources band. */
+  note?: ReactNode;
+  /** Market-relative path of this tool page, used in structured data. */
+  path?: string;
+}
+
+export function ToolPage({
+  market,
+  eyebrow,
+  title,
+  lede,
+  sources,
+  lastVerified,
+  children,
+  note,
+  path = "/tools",
+}: ToolPageProps) {
+  const office = getOffice(market);
+  const marketLabel = MARKET_LABELS[market];
+  const media = pageMedia(path.replace(/^\//, ""));
+  const heroImage = media.split;
+  const faqItems = [
+    {
+      question: `How accurate is this ${title.toLowerCase()}?`,
+      answer: `The tool estimates based on the rules published by the official authorities and verified on ${lastVerified}. It gives a directional read, not a guarantee — a DMC consultant in ${marketLabel} can review your exact profile, documents and circumstances before any application.`,
+    },
+    {
+      question: "Is this tool free to use?",
+      answer: "Yes — every DMC tool is free, with no sign-up and no obligation. You only enter the details needed to calculate your result.",
+    },
+    {
+      question: `What happens after I get my result ${marketIn(market)}?`,
+      answer: `Share your result with the ${office.city} office for a free, no-obligation eligibility assessment. A DMC consultant confirms the route fit, the evidence you will need and the realistic next steps for your profile.`,
+    },
+  ];
+  const schema = faqJsonLd(faqItems, market, undefined, path);
+
+  return (
+    <main className="bg-white">
+      {schema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /> : null}
+
+      {/* ═══ Hero band — split layout with image + botanical treatment ═══ */}
+      <section className="relative isolate overflow-hidden bg-[linear-gradient(135deg,#0d2a08_0%,#153a0a_30%,#1a4510_60%,#20560f_100%)]">
+        <FloatingLeaves />
+        {/* Decorative grid overlay */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.5) 40px), repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.5) 40px)" }} />
+        {/* Radial glow */}
+        <div aria-hidden="true" className="pointer-events-none absolute -right-40 top-0 size-[600px] rounded-full bg-[radial-gradient(circle,rgba(69,179,24,0.15)_0%,transparent_70%)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute -left-20 bottom-0 size-[400px] rounded-full bg-[radial-gradient(circle,rgba(69,179,24,0.1)_0%,transparent_70%)]" />
+
+        <div className="relative mx-auto max-w-[1280px] px-6 py-16 md:py-20">
+          <div className="grid items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
+            {/* Text column */}
+            <div className="max-w-3xl">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.07] px-4 py-1.5 backdrop-blur-sm">
+                <span className="size-1.5 rounded-full bg-[#45b318] shadow-[0_0_6px_#45b318]" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#a4e985]">{interpolateMarket(eyebrow, market)}</span>
+              </div>
+              <h1 className="font-display text-3xl font-extrabold leading-[1.1] text-white md:text-5xl lg:text-[3.4rem]">
+                {interpolateMarket(title, market)}
+              </h1>
+              <p className="mt-5 max-w-2xl text-base leading-relaxed text-[#9aab96] md:text-lg">
+                {interpolateMarket(lede, market)}
+              </p>
+
+              {/* Trust strip */}
+              <div className="mt-8 flex flex-wrap items-center gap-5">
+                {[
+                  { icon: Shield, label: "Verified data", sub: lastVerified },
+                  { icon: Clock, label: "Instant results", sub: "No wait" },
+                  { icon: FileCheck, label: "Free to use", sub: "No sign-up" },
+                ].map((item) => (
+                  <div key={item.label} className="flex items-center gap-2.5 text-white/80">
+                    <span className="grid size-8 place-items-center rounded-lg bg-white/[0.08]">
+                      <item.icon aria-hidden="true" className="size-4 text-[#a4e985]" />
+                    </span>
+                    <span className="text-xs font-semibold leading-tight">
+                      {item.label}
+                      <br />
+                      <span className="text-[10px] font-medium text-[#6a8a64]">{item.sub}</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Hero image */}
+            {heroImage ? (
+              <div className="hidden md:block">
+                <div className="relative size-[280px] overflow-hidden rounded-3xl border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.4)] lg:size-[320px]">
+                  <img
+                    src={heroImage.src}
+                    alt={heroImage.alt}
+                    className="size-full object-cover"
+                    loading="eager"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                  {heroImage.label ? (
+                    <span className="absolute bottom-3 left-3 rounded-full bg-black/40 px-3 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+                      {heroImage.label}
+                    </span>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+        {/* Bottom fade into white */}
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent" />
+      </section>
+
+      {/* ═══ Tool section — premium card layout ═══ */}
+      <section className="relative -mt-4 bg-white pb-14 md:-mt-6 md:pb-20">
+        <div className="mx-auto max-w-[1280px] px-6">
+          {/* Tool card with enhanced styling */}
+          <div className="tool-card-glow relative overflow-hidden rounded-3xl border border-brand-100/60 bg-white shadow-[0_2px_8px_rgba(23,61,13,0.05),0_16px_48px_rgba(23,61,13,0.08)]">
+            {/* Top accent bar */}
+            <div className="h-1 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600" />
+            <div className="p-4 md:p-8">{children}</div>
+          </div>
+
+          {note ? (
+            <div className="mt-8 flex items-start gap-3 rounded-2xl border border-brand-200/60 bg-gradient-to-r from-brand-50/80 to-white p-6">
+              <span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-brand-100">
+                <span className="size-2 rounded-full bg-brand-500" />
+              </span>
+              <div>{note}</div>
+            </div>
+          ) : null}
+
+          {/* ═══ Official sources — styled as a trust panel ═══ */}
+          <div className="mt-12 overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-sm">
+            <div className="flex items-center gap-3 border-b border-slate-100 bg-gradient-to-r from-brand-50/60 to-transparent px-6 py-4">
+              <span className="grid size-9 place-items-center rounded-xl bg-brand-600 text-white shadow-sm shadow-brand-600/20">
+                <Shield aria-hidden="true" className="size-4" />
+              </span>
+              <div>
+                <h2 className="font-display text-lg font-bold text-ink">Official sources &amp; verification</h2>
+                <p className="text-xs text-slate-400">Data verified on {lastVerified}</p>
+              </div>
+            </div>
+            <div className="px-6 py-5">
+              <p className="text-sm leading-relaxed text-slate-500">
+                Immigration rules, fees and thresholds change regularly. This information should be read alongside
+                the official government sources below.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {sources.map((source) => (
+                  <a
+                    key={source.url}
+                    href={source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50/50 px-3.5 py-1.5 text-[13px] font-semibold text-brand-700 transition-all duration-200 hover:border-brand-300 hover:bg-brand-100 hover:shadow-sm"
+                  >
+                    {source.label}
+                    <ArrowRight aria-hidden="true" className="size-3 transition-transform duration-200 group-hover:translate-x-0.5" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ═══ Common questions ═══ */}
+          <div className="mt-14">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="grid size-9 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                <span className="font-display text-lg">?</span>
+              </span>
+              <h2 className="font-display text-2xl font-bold text-ink">Common questions</h2>
+            </div>
+            <div className="space-y-3">
+              {faqItems.map((item) => (
+                <AccordionItem key={item.question} question={item.question} answer={item.answer} />
+              ))}
+            </div>
+          </div>
+
+          {/* ═══ Related tools — card grid ═══ */}
+          <div className="mt-14">
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-brand-600">Explore more</p>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <a
+                href={marketHref(market, "/tools/canada")}
+                className="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-600/5"
+              >
+                <div className="mb-3 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-brand-600">
+                  <span className="size-1.5 rounded-full bg-brand-500" />
+                  Canada
+                </div>
+                <p className="font-display text-sm font-bold text-ink transition-colors group-hover:text-brand-700">Canada tools hub</p>
+                <p className="mt-1 text-xs text-slate-400">CRS, CLB, FSW & PNP calculators</p>
+                <ArrowRight aria-hidden="true" className="absolute right-4 top-1/2 size-4 -translate-y-1/2 text-slate-300 transition-all duration-300 group-hover:right-3 group-hover:text-brand-500" />
+              </a>
+              <a
+                href={marketHref(market, "/tools/australia")}
+                className="group relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-600/5"
+              >
+                <div className="mb-3 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#1a6fbf]">
+                  <span className="size-1.5 rounded-full bg-[#1a6fbf]" />
+                  Australia
+                </div>
+                <p className="font-display text-sm font-bold text-ink transition-colors group-hover:text-brand-700">Australia tools hub</p>
+                <p className="mt-1 text-xs text-slate-400">Points, fees, processing & occupations</p>
+                <ArrowRight aria-hidden="true" className="absolute right-4 top-1/2 size-4 -translate-y-1/2 text-slate-300 transition-all duration-300 group-hover:right-3 group-hover:text-brand-500" />
+              </a>
+              <a
+                href={marketHref(market, "/tools/eligibility-checker")}
+                className="group relative overflow-hidden rounded-2xl border border-brand-100/60 bg-gradient-to-br from-brand-50/40 to-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lg hover:shadow-brand-600/5"
+              >
+                <div className="mb-3 inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-brand-600">
+                  <span className="size-1.5 rounded-full bg-brand-500" />
+                  General
+                </div>
+                <p className="font-display text-sm font-bold text-ink transition-colors group-hover:text-brand-700">Free eligibility checker</p>
+                <p className="mt-1 text-xs text-slate-400">Quick 4-question profile match</p>
+                <ArrowRight aria-hidden="true" className="absolute right-4 top-1/2 size-4 -translate-y-1/2 text-slate-300 transition-all duration-300 group-hover:right-3 group-hover:text-brand-500" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Lead form band */}
+      <LeadFormSection
+        id="free-assessment"
+        kicker={`Free assessment · ${MARKET_LABELS[market]} market`}
+        title="Not sure where your profile fits?"
+        copy={[
+          `Speak with the ${office.city} office for a free, no-obligation assessment of your eligibility — prepared for ${marketAudience(market)}.`,
+        ]}
+        phone={office.phoneDisplay}
+        market={market}
+      />
+    </main>
+  );
+}

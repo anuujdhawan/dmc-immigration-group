@@ -2,15 +2,17 @@ import type { ReactNode } from "react";
 
 import { getOffice } from "@/config/offices";
 import { LeadFormSection } from "@/components/pages/internal/InternalPageTemplate";
+import { Hero } from "@/components/home/Hero";
 import { marketHref } from "@/lib/routing/routes";
-import { FloatingLeaves } from "@/components/ui/FloatingLeaves";
-import { AccordionItem } from "@/components/ui/AccordionItem";
 import { MARKET_LABELS, type Market } from "@/config/markets";
-import { faqJsonLd } from "@/lib/seo/market-seo";
-import { interpolateMarket, marketAudience, marketIn } from "@/lib/i18n/market-copy";
+import type { ToolFamily } from "@/config/tools";
+import { interpolateMarket, marketAudience } from "@/lib/i18n/market-copy";
+import { ToolFeatureBand } from "./ToolFeatureBand";
 
 export interface ToolPageProps {
   market: Market;
+  /** Tool family — selects the country photography used across the page. */
+  family: ToolFamily;
   eyebrow: string;
   title: string;
   lede: string;
@@ -20,12 +22,19 @@ export interface ToolPageProps {
   children: ReactNode;
   /** Optional extra copy rendered above the sources band. */
   note?: ReactNode;
-  /** Market-relative path of this tool page, used in structured data. */
-  path?: string;
+}
+
+/** Splits a title so the final word renders as the hero's green accent. */
+function splitTitle(title: string): { first: string; rest: string } {
+  const words = title.trim().split(/\s+/);
+  if (words.length <= 1) return { first: title, rest: "" };
+  const last = words.pop() ?? "";
+  return { first: `${words.join(" ")} `, rest: last };
 }
 
 export function ToolPage({
   market,
+  family,
   eyebrow,
   title,
   lede,
@@ -33,55 +42,49 @@ export function ToolPage({
   lastVerified,
   children,
   note,
-  path = "/tools",
 }: ToolPageProps) {
   const office = getOffice(market);
-  const marketLabel = MARKET_LABELS[market];
-  const faqItems = [
-    {
-      question: `How accurate is this ${title.toLowerCase()}?`,
-      answer: `The tool estimates based on the rules published by the official authorities and verified on ${lastVerified}. It gives a directional read, not a guarantee — a DMC consultant in ${marketLabel} can review your exact profile, documents and circumstances before any application.`,
-    },
-    {
-      question: "Is this tool free to use?",
-      answer: "Yes — every DMC tool is free, with no sign-up and no obligation. You only enter the details needed to calculate your result.",
-    },
-    {
-      question: `What happens after I get my result ${marketIn(market)}?`,
-      answer: `Share your result with the ${office.city} office for a free, no-obligation eligibility assessment. A DMC consultant confirms the route fit, the evidence you will need and the realistic next steps for your profile.`,
-    },
-  ];
-  const schema = faqJsonLd(faqItems, market, undefined, path);
+  const { first, rest } = splitTitle(interpolateMarket(title, market));
 
   return (
     <main className="bg-white">
-      {schema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /> : null}
-      {/* Hero band — light-green botanical band with floating leaves (the
-          sitewide hero treatment; same palette as the homepage hero on mobile) */}
-      <section className="relative isolate overflow-hidden bg-[linear-gradient(to_bottom,#fafaf5_0%,#eff6ec_55%,#dff3da_100%)] py-16 md:py-20">
-        <FloatingLeaves />
-        <div className="relative mx-auto max-w-[1280px] px-6">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-brand-600">{interpolateMarket(eyebrow, market)}</p>
-          <h1 className="max-w-3xl font-display text-3xl font-extrabold leading-tight text-charcoal md:text-5xl">
-            {interpolateMarket(title, market)}
-          </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-            {interpolateMarket(lede, market)}
-          </p>
-        </div>
-      </section>
+      {/* The homepage hero, applied as-is: botanical band, orbiting destination
+          network, floating leaves and the standard actions/proof row. */}
+      <Hero
+        market={market}
+        sectionId="hero-tools"
+        eyebrow={`${interpolateMarket(eyebrow, market)} · ${MARKET_LABELS[market]} market`}
+        titlePrefix={first}
+        titleAccent={rest}
+        titleSuffix=""
+        subtitle={interpolateMarket(lede, market)}
+        primaryAction={{ label: "Book Consultation", href: "#free-assessment" }}
+        secondaryAction={{
+          label: "Free Eligibility Assessment",
+          href: marketHref(market, "/tools/eligibility-checker"),
+        }}
+        scrollTarget="#tool"
+        scrollLabel="Use the tool"
+      />
+
+      {/* Country photography that used to sit inside the old tool hero. */}
+      <ToolFeatureBand family={family} marketLabel={MARKET_LABELS[market]} />
 
       {/* Tool */}
-      <section className="bg-white py-14 md:py-20">
+      <section id="tool" className="scroll-mt-24 bg-white py-14 md:py-20">
         <div className="mx-auto max-w-[1280px] px-6">
-          <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-4 md:p-6">{children}</div>
+          <div className="rounded-[28px] border border-brand-600/10 bg-[linear-gradient(165deg,#f4f9f1_0%,#ffffff_48%,#eef6ea_100%)] p-4 shadow-[0_20px_52px_rgba(16,41,10,0.05)] md:p-8">
+            {children}
+          </div>
 
           {note ? (
-            <div className="mt-8 rounded-2xl border border-brand-100 bg-brand-50 p-6">{note}</div>
+            <div className="mt-8 rounded-[24px] border border-brand-100 bg-[linear-gradient(150deg,#f4f9f1_0%,#ffffff_60%,#eaf4e5_100%)] p-6">
+              {note}
+            </div>
           ) : null}
 
           {/* Official sources */}
-          <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
+          <div className="mt-10 rounded-[24px] border border-brand-600/10 bg-[linear-gradient(160deg,#f4f9f1_0%,#ffffff_55%,#edf5e9_100%)] p-6 md:p-8">
             <h2 className="font-display text-lg font-bold text-ink">Official sources &amp; verification</h2>
             <p className="mt-2 text-sm leading-relaxed text-slate-500">
               Immigration rules, fees and thresholds change regularly. Information on this page was last
@@ -104,33 +107,23 @@ export function ToolPage({
             </ul>
           </div>
 
-          {/* Common questions — keeps every tool page useful for organic visitors */}
-          <div className="mt-12">
-            <h2 className="font-display text-2xl font-bold text-ink">Common questions</h2>
-            <div className="mt-4 space-y-3">
-              {faqItems.map((item) => (
-                <AccordionItem key={item.question} question={item.question} answer={item.answer} />
-              ))}
-            </div>
-          </div>
-
           {/* Related tools */}
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href={marketHref(market, "/tools/canada")}
-              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700"
+              className="rounded-full border border-brand-200/80 bg-brand-50/70 px-4 py-2 text-sm font-medium text-brand-800 transition hover:border-brand-300 hover:bg-brand-100/70 hover:text-brand-700"
             >
               Canada tools hub
             </a>
             <a
               href={marketHref(market, "/tools/australia")}
-              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700"
+              className="rounded-full border border-brand-200/80 bg-brand-50/70 px-4 py-2 text-sm font-medium text-brand-800 transition hover:border-brand-300 hover:bg-brand-100/70 hover:text-brand-700"
             >
               Australia tools hub
             </a>
             <a
               href={marketHref(market, "/tools/eligibility-checker")}
-              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700"
+              className="rounded-full border border-brand-200/80 bg-brand-50/70 px-4 py-2 text-sm font-medium text-brand-800 transition hover:border-brand-300 hover:bg-brand-100/70 hover:text-brand-700"
             >
               Free eligibility checker
             </a>

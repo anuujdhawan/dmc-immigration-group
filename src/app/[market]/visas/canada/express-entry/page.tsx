@@ -82,26 +82,33 @@ export async function generateMetadata({
 export default async function ExpressEntryRoute({
   params,
 }: PageProps<"/[market]/visas/canada/express-entry">) {
-  const { market } = await params;
-  if (!isMarket(market)) notFound();
-  const office = getOffice(market);
-  const marketLabel = MARKET_LABELS[market];
-  const page = getPageContent("visas/canada/express-entry");
-  const marketNote = page?.marketNotes?.[market as Market];
-  return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaForMarket(marketLabel, marketNote?.faq ?? [])) }}
-      />
-      <ExpressEntryPage
-        market={market as Market}
-        phoneHref={`tel:${office.phoneE164}`}
-        phoneLabel={office.phoneDisplay}
-        localFaq={marketNote?.faq ?? []}
-        intro={marketNote?.intro}
-        cta={marketNote?.cta}
-      />
-    </>
-  );
+  // ===========================================================================
+  // ROUTE DISABLED — page rendering commented out per request: only the 4
+  // landing pages and 4 thank-you pages are live. This route intentionally
+  // returns 404 (notFound) instead of rendering.
+  // ===========================================================================
+  // const { market } = await params;
+  // if (!isMarket(market)) notFound();
+  // const office = getOffice(market);
+  // const marketLabel = MARKET_LABELS[market];
+  // const page = getPageContent("visas/canada/express-entry");
+  // const marketNote = page?.marketNotes?.[market as Market];
+  // return (
+  //   <>
+  //     <script
+  //       type="application/ld+json"
+  //       dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaForMarket(marketLabel, marketNote?.faq ?? [])) }}
+  //     />
+  //     <ExpressEntryPage
+  //       market={market as Market}
+  //       phoneHref={`tel:${office.phoneE164}`}
+  //       phoneLabel={office.phoneDisplay}
+  //       localFaq={marketNote?.faq ?? []}
+  //       intro={marketNote?.intro}
+  //       cta={marketNote?.cta}
+  //     />
+  //   </>
+  // );
+  // ===========================================================================
+  notFound();
 }

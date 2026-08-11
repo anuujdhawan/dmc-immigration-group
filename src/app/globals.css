@@ -14006,3 +14006,94 @@ textarea {
     --alt-hero-split: 150px;
   }
 }
+
+/* ─── Tool page enhancements ──────────────────────────────────────────── */
+
+/* Tool card hover glow effect */
+.tool-card-glow {
+  transition: box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.tool-card-glow:hover {
+  box-shadow:
+    0 0 0 1px rgba(53, 142, 26, 0.12),
+    0 4px 12px rgba(23, 61, 13, 0.06),
+    0 24px 56px rgba(23, 61, 13, 0.1);
+}
+
+/* Enhanced range slider styling for tool inputs */
+.dmc-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #43aa1b, #2a7015);
+  border: 3px solid #fff;
+  box-shadow:
+    0 2px 6px rgba(53, 142, 26, 0.35),
+    0 0 0 2px rgba(53, 142, 26, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.dmc-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow:
+    0 3px 10px rgba(53, 142, 26, 0.4),
+    0 0 0 3px rgba(53, 142, 26, 0.2);
+}
+.dmc-range::-webkit-slider-thumb:active {
+  transform: scale(1.05);
+}
+.dmc-range::-moz-range-thumb {
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #43aa1b, #2a7015);
+  border: 3px solid #fff;
+  box-shadow:
+    0 2px 6px rgba(53, 142, 26, 0.35),
+    0 0 0 2px rgba(53, 142, 26, 0.15);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.dmc-range::-moz-range-thumb:hover {
+  transform: scale(1.15);
+}
+.dmc-range::-moz-range-thumb:active {
+  transform: scale(1.05);
+}
+
+/* Subtle pulse animation for pass badges */
+@keyframes toolPassPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(53, 142, 26, 0.15); }
+  50% { box-shadow: 0 0 0 6px rgba(53, 142, 26, 0); }
+}
+
+.tool-pass-pulse {
+  animation: toolPassPulse 2.5s ease-in-out infinite;
+}
+
+/* Score gauge glow ring */
+@keyframes gaugeGlow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Smooth entrance animation for tool sections */
+@keyframes toolFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tool-fade-up {
+  animation: toolFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tool-fade-up-delay-1 { animation-delay: 0.1s; }
+.tool-fade-up-delay-2 { animation-delay: 0.2s; }
+.tool-fade-up-delay-3 { animation-delay: 0.3s; }

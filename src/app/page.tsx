@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { env } from "@/config/env";
 import { isMarket } from "@/config/markets";
@@ -9,6 +9,13 @@ import { isMarket } from "@/config/markets";
  * page renders. This page only guards against a misconfigured proxy matcher.
  */
 export default function RootPage() {
-  const fallback = isMarket(env.DEFAULT_MARKET) ? env.DEFAULT_MARKET : "dubai";
-  redirect(`/${fallback}`);
+  // ===========================================================================
+  // ROUTE DISABLED — page rendering commented out per request: only the 4
+  // landing pages and 4 thank-you pages are live. This route intentionally
+  // returns 404 (notFound) instead of rendering.
+  // ===========================================================================
+  // const fallback = isMarket(env.DEFAULT_MARKET) ? env.DEFAULT_MARKET : "dubai";
+  // redirect(`/${fallback}`);
+  // ===========================================================================
+  notFound();
 }
