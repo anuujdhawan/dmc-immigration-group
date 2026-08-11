@@ -26,7 +26,7 @@ export function resolveToolComponent(component: string, market: Market): ReactNo
     case "australia-points":
       return <AustraliaPointsCalculator />;
     case "australia-fees":
-      return <AustraliaFeeEstimator />;
+      return <AustraliaFeeEstimator market={market} />;
     case "australia-processing":
       return <AustraliaProcessingTimes />;
     case "australia-occupations":

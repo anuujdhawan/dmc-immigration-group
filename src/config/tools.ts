@@ -143,7 +143,7 @@ export const TOOL_REGISTRY: ToolDefinition[] = [
     family: "australia",
     title: "Australia Visa Fee Estimator",
     eyebrow: "Australia tool",
-    lede: "Estimate the base visa application charge for the main Australian skilled and employer-sponsored visas, with an indicative AED conversion.",
+    lede: "Estimate the base visa application charge for the main Australian skilled and employer-sponsored visas, with an indicative {currency} conversion.",
     seoTitle: "Australia Visa Fee Estimator | DMC Immigration Group",
     seoDescription: `Estimate base Australian visa application charges (VAC) for subclasses 189, 190, 491, 191, 482, 186 and 858. Last verified ${AUSTRALIA_FEES_LAST_VERIFIED}.`,
     sources: [

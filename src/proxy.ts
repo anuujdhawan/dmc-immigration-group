@@ -39,15 +39,19 @@ export function proxy(request: NextRequest) {
 
   // 3. Root geolocation / cookie / default routing (temporary, GET only).
   if (pathname === "/" && request.method === "GET") {
-    const cookieMarket = request.cookies.get(env.MARKET_COOKIE_NAME)?.value;
-    let target: Market | undefined;
-    if (isMarket(cookieMarket)) target = cookieMarket;
-    if (!target && env.GEO_ROUTING_ENABLED) {
-      target = marketForGeo(geoCountry(request), geoRegion(request));
-    }
-    if (!target) target = isMarket(env.DEFAULT_MARKET) ? env.DEFAULT_MARKET : "dubai";
-    const url = new URL(marketHref(target, "/") + search, request.nextUrl.origin);
+    const url = new URL(marketHref(marketTarget(request), "/") + search, request.nextUrl.origin);
     return NextResponse.redirect(url, 307);
+  }
+
+  // 3b. Market-less paths (e.g. /tools/…, /visas/…, /faqs) → the same market
+  // the root would choose (cookie → geo → default). Keeps root-level
+  // bookmarks and bare links working while canonical URLs stay market-prefixed.
+  if (request.method === "GET") {
+    const firstSegment = pathname.split("/").filter(Boolean)[0];
+    if (firstSegment && !isMarket(firstSegment)) {
+      const url = new URL(marketHref(marketTarget(request), pathname) + search, request.nextUrl.origin);
+      return NextResponse.redirect(url, 307);
+    }
   }
 
   // 4. Default trailing-slash behavior (replicates Next's built-in redirect,
@@ -58,6 +62,17 @@ export function proxy(request: NextRequest) {
   }
 
   return NextResponse.next();
+}
+
+/** Market chosen for a request: cookie → geo → default. */
+function marketTarget(request: NextRequest): Market {
+  const cookieMarket = request.cookies.get(env.MARKET_COOKIE_NAME)?.value;
+  if (isMarket(cookieMarket)) return cookieMarket;
+  if (env.GEO_ROUTING_ENABLED) {
+    const geo = marketForGeo(geoCountry(request), geoRegion(request));
+    if (geo) return geo;
+  }
+  return isMarket(env.DEFAULT_MARKET) ? env.DEFAULT_MARKET : "dubai";
 }
 
 export const config = {

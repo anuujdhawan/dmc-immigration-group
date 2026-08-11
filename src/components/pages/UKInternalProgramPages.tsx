@@ -15,6 +15,7 @@ import {
   InternalFactsBar,
   InternalSection,
   LeadFormSection,
+  LocalContextBand,
   MediaGallerySection,
   ProcessSection,
   RichCopy,
@@ -87,6 +88,7 @@ export function SkilledWorkerPage({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="uk-sw-hero"
@@ -255,14 +257,20 @@ export function SkilledWorkerPage({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />
@@ -308,6 +316,7 @@ export function SkilledWorkerDependentPage({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="uk-sw-dep-hero"
@@ -475,14 +484,20 @@ export function SkilledWorkerDependentPage({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />

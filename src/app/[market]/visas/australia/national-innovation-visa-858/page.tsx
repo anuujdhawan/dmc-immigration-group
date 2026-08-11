@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { NationalInnovationVisa858Page } from "@/components/pages/AustraliaInternalProgramPages";
 import { isMarket, type Market } from "@/config/markets";
-import { env } from "@/config/env/server";
 import { getOffice } from "@/config/offices";
 import { getPageContent } from "@/content/pages";
-import { canonicalUrl } from "@/lib/routing/routes";
+import { marketSeo } from "@/lib/seo/market-seo";
 export function generateStaticParams() {
   return ["dubai", "abu-dhabi", "qatar", "kuwait", "india"].map((market) => ({ market }));
 }
@@ -13,7 +12,12 @@ export async function generateMetadata({ params }: { params: Promise<{ market: s
   const { market } = await params;
   const page = getPageContent("visas/australia/national-innovation-visa-858");
   if (!page) return {};
-  return { title: page.seoTitle, description: page.seoDescription, alternates: { canonical: canonicalUrl(market as Market, "/visas/australia/national-innovation-visa-858", env.SITE_URL).toString() } };
+  return marketSeo({
+    title: page.seoTitle,
+    description: page.seoDescription,
+    market: market as Market,
+    path: "/visas/australia/national-innovation-visa-858",
+  });
 }
 export default async function NationalInnovationVisa858Route({ params }: { params: Promise<{ market: string }> }) {
   const { market } = await params;

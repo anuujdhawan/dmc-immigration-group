@@ -17,6 +17,7 @@ import {
   InternalFactsBar,
   InternalSection,
   LeadFormSection,
+  LocalContextBand,
   MediaFrame,
   MediaGallerySection,
   ProcessSection,
@@ -123,6 +124,7 @@ export function ProvincialNomineeProgramsPage({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="pnp-hero"
@@ -279,11 +281,17 @@ export function ProvincialNomineeProgramsPage({
 
       <FaqSection
         id="faq"
-        items={faq.items.map((item) => ({
-          q: item.question,
-          a: item.answer,
-        }))}
-      market={market}
+        items={[
+          ...faq.items.map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
+        market={market}
       />
 
       <MediaGallerySection pageId="visas/canada/provincial-nominee-programs" tone="soft" market={market} />
@@ -328,6 +336,7 @@ export function AtlanticImmigrationProgramPage({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="aip-hero"
@@ -496,11 +505,17 @@ export function AtlanticImmigrationProgramPage({
 
       <FaqSection
         id="faq"
-        items={faq.items.map((item) => ({
-          q: item.question,
-          a: item.answer,
-        }))}
-      market={market}
+        items={[
+          ...faq.items.map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
+        market={market}
       />
 
       <MediaGallerySection pageId="visas/canada/atlantic-immigration-program" tone="soft" market={market} />
@@ -545,6 +560,7 @@ export function RuralAndNorthernImmigrationPilotPage({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="rnip-hero"
@@ -644,11 +660,17 @@ export function RuralAndNorthernImmigrationPilotPage({
 
       <FaqSection
         id="faq"
-        items={faq.items.map((item) => ({
-          q: item.question,
-          a: item.answer,
-        }))}
-      market={market}
+        items={[
+          ...faq.items.map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
+        market={market}
       />
 
       <MediaGallerySection pageId="visas/canada/rural-and-northern-immigration-pilot" tone="soft" market={market} />
@@ -696,6 +718,7 @@ export function StudyPermitsPage({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="study-permits-hero"
@@ -799,11 +822,17 @@ export function StudyPermitsPage({
 
       <FaqSection
         id="faq"
-        items={faq.items.map((item) => ({
-          q: item.question,
-          a: item.answer,
-        }))}
-      market={market}
+        items={[
+          ...faq.items.map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
+        market={market}
       />
 
       <MediaGallerySection pageId="visas/canada/study-permits" tone="soft" market={market} />
@@ -851,6 +880,7 @@ export function FamilySponsorshipPage({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="pgp-hero"
@@ -969,11 +999,17 @@ export function FamilySponsorshipPage({
 
       <FaqSection
         id="faq"
-        items={faq.items.map((item) => ({
-          q: item.question,
-          a: item.answer,
-        }))}
-      market={market}
+        items={[
+          ...faq.items.map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
+        market={market}
       />
 
       <MediaGallerySection pageId="visas/canada/family-sponsorship-parent-grandparent-program" tone="soft" market={market} />

@@ -4,8 +4,10 @@ import { getOffice } from "@/config/offices";
 import { LeadFormSection } from "@/components/pages/internal/InternalPageTemplate";
 import { marketHref } from "@/lib/routing/routes";
 import { FloatingLeaves } from "@/components/ui/FloatingLeaves";
+import { AccordionItem } from "@/components/ui/AccordionItem";
 import { MARKET_LABELS, type Market } from "@/config/markets";
-import { interpolateMarket, marketAudience } from "@/lib/i18n/market-copy";
+import { faqJsonLd } from "@/lib/seo/market-seo";
+import { interpolateMarket, marketAudience, marketIn } from "@/lib/i18n/market-copy";
 
 export interface ToolPageProps {
   market: Market;
@@ -18,6 +20,8 @@ export interface ToolPageProps {
   children: ReactNode;
   /** Optional extra copy rendered above the sources band. */
   note?: ReactNode;
+  /** Market-relative path of this tool page, used in structured data. */
+  path?: string;
 }
 
 export function ToolPage({
@@ -29,11 +33,29 @@ export function ToolPage({
   lastVerified,
   children,
   note,
+  path = "/tools",
 }: ToolPageProps) {
   const office = getOffice(market);
+  const marketLabel = MARKET_LABELS[market];
+  const faqItems = [
+    {
+      question: `How accurate is this ${title.toLowerCase()}?`,
+      answer: `The tool estimates based on the rules published by the official authorities and verified on ${lastVerified}. It gives a directional read, not a guarantee — a DMC consultant in ${marketLabel} can review your exact profile, documents and circumstances before any application.`,
+    },
+    {
+      question: "Is this tool free to use?",
+      answer: "Yes — every DMC tool is free, with no sign-up and no obligation. You only enter the details needed to calculate your result.",
+    },
+    {
+      question: `What happens after I get my result ${marketIn(market)}?`,
+      answer: `Share your result with the ${office.city} office for a free, no-obligation eligibility assessment. A DMC consultant confirms the route fit, the evidence you will need and the realistic next steps for your profile.`,
+    },
+  ];
+  const schema = faqJsonLd(faqItems, market, undefined, path);
 
   return (
     <main className="bg-white">
+      {schema ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /> : null}
       {/* Hero band — light-green botanical band with floating leaves (the
           sitewide hero treatment; same palette as the homepage hero on mobile) */}
       <section className="relative isolate overflow-hidden bg-[linear-gradient(to_bottom,#fafaf5_0%,#eff6ec_55%,#dff3da_100%)] py-16 md:py-20">
@@ -50,36 +72,30 @@ export function ToolPage({
       </section>
 
       {/* Tool */}
-      <section className="bg-gradient-to-b from-white via-brand-50/30 to-white py-14 md:py-20">
-        <div className="mx-auto max-w-[1280px] px-6">{children}</div>
+      <section className="bg-white py-14 md:py-20">
+        <div className="mx-auto max-w-[1280px] px-6">
+          <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-4 md:p-6">{children}</div>
 
-        {note ? (
-          <div className="mx-auto mt-8 max-w-[1280px] px-6">
-            <div className="rounded-3xl border border-brand-100 bg-brand-50/70 p-6">{note}</div>
-          </div>
-        ) : null}
+          {note ? (
+            <div className="mt-8 rounded-2xl border border-brand-100 bg-brand-50 p-6">{note}</div>
+          ) : null}
 
-        {/* Official sources */}
-        <div className="mx-auto mt-10 max-w-[1280px] px-6">
-          <div className="rounded-3xl border border-brand-100/70 bg-white p-6 shadow-[0_1px_3px_rgba(23,61,13,0.06),0_10px_30px_rgba(23,61,13,0.06)] md:p-7">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="font-display text-lg font-bold text-ink">Official sources &amp; verification</h2>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-brand-700">
-                Last verified {lastVerified}
-              </span>
-            </div>
-            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500">
-              Immigration rules, fees and thresholds change regularly. Information on this page should
-              always be read alongside the official government sources below.
+          {/* Official sources */}
+          <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
+            <h2 className="font-display text-lg font-bold text-ink">Official sources &amp; verification</h2>
+            <p className="mt-2 text-sm leading-relaxed text-slate-500">
+              Immigration rules, fees and thresholds change regularly. Information on this page was last
+              verified <strong className="text-slate-700">{lastVerified}</strong> and should be read alongside
+              the official government sources below.
             </p>
-            <ul className="mt-4 flex flex-wrap gap-3">
+            <ul className="mt-4 space-y-2">
               {sources.map((source) => (
                 <li key={source.url}>
                   <a
                     href={source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50/50 px-4 py-2 text-sm font-semibold text-brand-700 underline-offset-4 transition hover:border-brand-300 hover:bg-brand-50 hover:underline"
+                    className="text-sm font-semibold text-brand-700 underline-offset-4 hover:underline"
                   >
                     {source.label} ↗
                   </a>
@@ -87,26 +103,34 @@ export function ToolPage({
               ))}
             </ul>
           </div>
-        </div>
 
-        {/* Related tools */}
-        <div className="mx-auto mt-6 max-w-[1280px] px-6">
-          <div className="flex flex-wrap gap-3">
+          {/* Common questions — keeps every tool page useful for organic visitors */}
+          <div className="mt-12">
+            <h2 className="font-display text-2xl font-bold text-ink">Common questions</h2>
+            <div className="mt-4 space-y-3">
+              {faqItems.map((item) => (
+                <AccordionItem key={item.question} question={item.question} answer={item.answer} />
+              ))}
+            </div>
+          </div>
+
+          {/* Related tools */}
+          <div className="mt-6 flex flex-wrap gap-3">
             <a
               href={marketHref(market, "/tools/canada")}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-700"
+              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700"
             >
               Canada tools hub
             </a>
             <a
               href={marketHref(market, "/tools/australia")}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-700"
+              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700"
             >
               Australia tools hub
             </a>
             <a
               href={marketHref(market, "/tools/eligibility-checker")}
-              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-700"
+              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700"
             >
               Free eligibility checker
             </a>
@@ -114,8 +138,10 @@ export function ToolPage({
         </div>
       </section>
 
-      {/* Lead form band */}
+      {/* Lead form band — anchored so in-page “Book Consultation” CTAs (header,
+          footer, hero) scroll to the form on this same page. */}
       <LeadFormSection
+        id="free-assessment"
         kicker={`Free assessment · ${MARKET_LABELS[market]} market`}
         title="Not sure where your profile fits?"
         copy={[

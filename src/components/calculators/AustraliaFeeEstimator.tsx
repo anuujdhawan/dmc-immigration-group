@@ -1,116 +1,95 @@
 "use client";
 
-import { Wallet } from "lucide-react";
 import { useState } from "react";
 
-import {
-  CountUp,
-  ToolBadge,
-  ToolCard,
-  ToolCheck,
-  ToolField,
-  ToolNote,
-  ToolSelect,
-  ToolStat,
-} from "@/components/calculators/tool-kit";
 import {
   AUSTRALIA_FEES_LAST_VERIFIED,
   AUSTRALIA_FEE_SCHEDULE_URL,
   AUSTRALIA_VISA_FEES,
 } from "@/features/tools/australia-data";
+import { MARKET_CURRENCIES, type Market } from "@/config/markets";
 
-const AED_PER_AUD = 2.4; // indicative; updated with sources
+function formatAmount(amount: number, currency: (typeof MARKET_CURRENCIES)[Market]): string {
+  const number = amount.toLocaleString(currency.locale, { maximumFractionDigits: 0 });
+  return `${currency.symbol} ${number}`;
+}
 
-export function AustraliaFeeEstimator() {
+export function AustraliaFeeEstimator({ market }: { market: Market }) {
   const [selected, setSelected] = useState<string>("189");
   const [includePartner, setIncludePartner] = useState(false);
   const [includeChild, setIncludeChild] = useState(false);
 
+  const currency = MARKET_CURRENCIES[market];
   const fee = AUSTRALIA_VISA_FEES.find((v) => v.code === selected) ?? AUSTRALIA_VISA_FEES[0];
 
   // Rough additional-applicant estimate: ~half the base for a partner, ~20% per child (16+).
   const partnerFee = includePartner ? Math.round(fee.baseFeeAud * 0.5) : 0;
   const childFee = includeChild ? Math.round(fee.baseFeeAud * 0.2) : 0;
   const totalAud = fee.baseFeeAud + partnerFee + childFee;
-  const totalAed = Math.round(totalAud * AED_PER_AUD);
+  const totalLocal = Math.round(totalAud * currency.ratePerAud);
 
   return (
-    <ToolCard
-      icon={Wallet}
-      eyebrow="Australia · Visa pricing"
-      title="Australia Visa Fee Estimator"
-      lede="Estimate the base Visa Application Charge (VAC) for the main applicant, with an indicative AED conversion. Additional applicants, health checks, skills assessments and levies are not included."
-    >
-      <ToolField label="Visa subclass" hint={`${fee.code} · ${fee.name}`}>
-        <ToolSelect
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
+      <h3 className="mb-1 font-display text-xl font-bold text-ink">Australia visa fee estimator</h3>
+      <p className="mb-6 text-sm text-slate-500">
+        Estimate the base Visa Application Charge (VAC) for the main applicant in {currency.code}. Additional applicants,
+        health checks, skills assessments and levies are not included.
+      </p>
+
+      <div className="mb-5">
+        <label className="mb-2 block text-sm font-medium text-slate-700">Visa subclass</label>
+        <select
           value={selected}
           onChange={(e) => setSelected(e.target.value)}
-          chip={`AUD ${fee.baseFeeAud.toLocaleString()}`}
-          options={AUSTRALIA_VISA_FEES.map((v) => ({ value: v.code, label: `${v.code} — ${v.name}` }))}
-        />
-      </ToolField>
-
-      <div className="mt-5 grid gap-3 sm:grid-cols-2">
-        <ToolCheck
-          checked={includePartner}
-          onChange={setIncludePartner}
-          label="Include partner (18+)"
-          description={`≈ AUD ${partnerFee.toLocaleString()} added`}
-        />
-        <ToolCheck
-          checked={includeChild}
-          onChange={setIncludeChild}
-          label="Include one dependent child (18+)"
-          description={`≈ AUD ${childFee.toLocaleString()} added`}
-        />
-      </div>
-
-      <div className="mt-6 overflow-hidden rounded-3xl border border-brand-200/80 bg-gradient-to-br from-brand-50 via-white to-brand-50/70 p-6 md:p-7">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-600">
-              Estimated total · main applicant
-            </p>
-            <div className="mt-2 font-display text-5xl font-black tabular-nums leading-none text-ink">
-              <CountUp value={totalAud} /> <span className="text-2xl text-brand-700">AUD</span>
-            </div>
-            <p className="mt-2 text-sm font-medium text-slate-500">
-              ≈ AED <CountUp value={totalAed} /> <span className="text-xs text-slate-400">(indicative {AED_PER_AUD}/AUD)</span>
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <ToolBadge tone="neutral">Base VAC</ToolBadge>
-            {includePartner ? <ToolBadge tone="pass">+ partner</ToolBadge> : null}
-            {includeChild ? <ToolBadge tone="pass">+ child</ToolBadge> : null}
-          </div>
-        </div>
-
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
-          <ToolStat label="Main applicant" value={`AUD ${fee.baseFeeAud.toLocaleString()}`} accent />
-          <ToolStat label="Partner (est.)" value={partnerFee ? `AUD ${partnerFee.toLocaleString()}` : "—"} />
-          <ToolStat label="Child 18+ (est.)" value={childFee ? `AUD ${childFee.toLocaleString()}` : "—"} />
-        </div>
-
-        {fee.notes ? (
-          <p className="mt-5 text-xs leading-relaxed text-slate-500">
-            <strong className="text-slate-600">Note:</strong> {fee.notes}
-          </p>
-        ) : null}
-      </div>
-
-      <ToolNote className="mt-6">
-        Base VAC as of {AUSTRALIA_FEES_LAST_VERIFIED} (updated 1 July 2026 fee schedule). Partner and
-        child figures are rough estimates — the exact additional applicant charge depends on the
-        subclass and age at application. Credit-card surcharges (~1.4%) apply. Official schedule:{" "}
-        <a
-          href={AUSTRALIA_FEE_SCHEDULE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold text-brand-700 underline underline-offset-2"
+          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-300"
         >
-          immi.homeaffairs.gov.au
-        </a>
-      </ToolNote>
-    </ToolCard>
+          {AUSTRALIA_VISA_FEES.map((v) => (
+            <option key={v.code} value={v.code}>
+              {v.code} — {v.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="mb-6 space-y-2">
+        <label className="flex items-center gap-3 text-sm text-slate-700">
+          <input
+            type="checkbox"
+            checked={includePartner}
+            onChange={(e) => setIncludePartner(e.target.checked)}
+            className="size-4 accent-[var(--ee-400)]"
+          />
+          Include partner (18+)
+        </label>
+        <label className="flex items-center gap-3 text-sm text-slate-700">
+          <input
+            type="checkbox"
+            checked={includeChild}
+            onChange={(e) => setIncludeChild(e.target.checked)}
+            className="size-4 accent-[var(--ee-400)]"
+          />
+          Include one dependent child (18+)
+        </label>
+      </div>
+
+      <div className={`rounded-xl border p-5 ${totalAud > 0 ? "border-brand-200 bg-brand-50" : "border-slate-200 bg-white"}`}>
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm font-bold text-ink">Estimated total (main applicant)</span>
+          <span className="text-3xl font-black text-brand-700">AUD {totalAud.toLocaleString()}</span>
+        </div>
+        <p className="mt-1 text-right text-sm text-slate-500">
+          ≈ {formatAmount(totalLocal, currency)} (indicative rate {currency.ratePerAud}/AUD)
+        </p>
+        {fee.notes ? <p className="mt-2 text-xs text-slate-500">{fee.notes}</p> : null}
+        <p className="mt-3 text-xs leading-relaxed text-slate-500">
+          Base VAC as of {AUSTRALIA_FEES_LAST_VERIFIED} (updated 1 July 2026 fee schedule). Partner and child
+          figures are rough estimates — the exact additional applicant charge depends on the subclass and
+          age at application. Credit-card surcharges (~1.4%) apply. Official schedule:{" "}
+          <a href={AUSTRALIA_FEE_SCHEDULE_URL} target="_blank" rel="noopener noreferrer" className="underline">
+            immi.homeaffairs.gov.au
+          </a>
+        </p>
+      </div>
+    </div>
   );
 }

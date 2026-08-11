@@ -1,4 +1,11 @@
-import type { PageContent } from "@/content/pages/types";
+import { MARKET_SLUGS, type Market } from "@/config/markets";
+import type { PageContent, PageMarketNote } from "@/content/pages/types";
+
+/** Build a per-market note object from one tokenized template ({market},
+ *  {applicantTerm}, {currency}, {marketFrom} resolve at render time). */
+function notesForAllMarkets(note: PageMarketNote): Partial<Record<Market, PageMarketNote>> {
+  return Object.fromEntries(MARKET_SLUGS.map((market) => [market, note]));
+}
 
 export const UK_PAGES: PageContent[] = [
   {
@@ -87,6 +94,18 @@ export const UK_PAGES: PageContent[] = [
       },
     ],
     relatedPages: ["visas/uk/skilled-worker-dependent", "visit-visas/uk", "study-abroad/uk-student-visas"],
+    marketNotes: notesForAllMarkets({
+      faq: [
+        {
+          question: "Where do applicants {marketFrom} give biometrics for the UK Skilled Worker visa?",
+          answer: "UK Visas and Immigration runs its visa application centres through commercial partners (VFS Global and TLScontact). Applicants from {market} book biometrics and document submission at the UK visa application centre serving their location — DMC {market} confirms the current centre, service fees and appointment availability for each application.",
+        },
+        {
+          question: "How do {applicantTerm} pay the UK visa fees?",
+          answer: "The visa fee and Immigration Health Surcharge are paid in pounds sterling during the online application. DMC {market} quotes its consultation and service fees separately in {currency}, so the full picture is clear in local money before you pay anything to the Home Office.",
+        },
+      ],
+    }),
     lastVerified: "2026-08-03",
     officialSources: [
       { label: "GOV.UK — Skilled Worker visa", url: "https://www.gov.uk/skilled-worker-visa" },

@@ -3,10 +3,9 @@ import { notFound } from "next/navigation";
 
 import { SkilledIndependent189Page } from "@/components/pages/AustraliaInternalProgramPages";
 import { isMarket, type Market } from "@/config/markets";
-import { env } from "@/config/env/server";
 import { getOffice } from "@/config/offices";
 import { getPageContent } from "@/content/pages";
-import { canonicalUrl } from "@/lib/routing/routes";
+import { marketSeo } from "@/lib/seo/market-seo";
 
 export function generateStaticParams() {
   return ["dubai", "abu-dhabi", "qatar", "kuwait", "india"].map((market) => ({
@@ -20,13 +19,12 @@ export async function generateMetadata({
   const { market } = await params;
   const page = getPageContent("visas/australia/skilled-independent-189");
   if (!page) return {};
-  return {
+  return marketSeo({
     title: page.seoTitle,
     description: page.seoDescription,
-    alternates: {
-      canonical: canonicalUrl(market as Market, "/visas/australia/skilled-independent-189", env.SITE_URL).toString(),
-    },
-  };
+    market: market as Market,
+    path: "/visas/australia/skilled-independent-189",
+  });
 }
 
 export default async function SkilledIndependent189Route({

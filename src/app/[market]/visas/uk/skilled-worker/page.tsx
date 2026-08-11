@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SkilledWorkerPage } from "@/components/pages/UKInternalProgramPages";
 import { isMarket, type Market } from "@/config/markets";
-import { env } from "@/config/env/server";
 import { getOffice } from "@/config/offices";
 import { getPageContent } from "@/content/pages";
-import { canonicalUrl } from "@/lib/routing/routes";
+import { marketSeo } from "@/lib/seo/market-seo";
 export function generateStaticParams() {
   return ["dubai", "abu-dhabi", "qatar", "kuwait", "india"].map((market) => ({ market }));
 }
@@ -13,7 +12,12 @@ export async function generateMetadata({ params }: { params: Promise<{ market: s
   const { market } = await params;
   const page = getPageContent("visas/uk/skilled-worker");
   if (!page) return {};
-  return { title: page.seoTitle, description: page.seoDescription, alternates: { canonical: canonicalUrl(market as Market, "/visas/uk/skilled-worker", env.SITE_URL).toString() } };
+  return marketSeo({
+    title: page.seoTitle,
+    description: page.seoDescription,
+    market: market as Market,
+    path: "/visas/uk/skilled-worker",
+  });
 }
 export default async function SkilledWorkerRoute({ params }: { params: Promise<{ market: string }> }) {
   const { market } = await params;

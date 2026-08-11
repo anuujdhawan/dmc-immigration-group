@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { isMarket, MARKET_LABELS, type Market } from "@/config/markets";
-import { env } from "@/config/env/server";
 import { getOffice } from "@/config/offices";
 import { getPageContent } from "@/content/pages";
-import { canonicalUrl } from "@/lib/routing/routes";
+import { marketSeo } from "@/lib/seo/market-seo";
 import { ExpressEntryPage } from "@/components/pages/ExpressEntryPage";
 
-function faqSchemaForMarket(marketLabel: string) {
+function faqSchemaForMarket(
+  marketLabel: string,
+  localFaq: { question: string; answer: string }[] = [],
+) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -45,6 +47,14 @@ function faqSchemaForMarket(marketLabel: string) {
           text: "Federal Skilled Worker eligibility uses a 67-point selection grid, while eligible Express Entry profiles are ranked separately through the Comprehensive Ranking System. CRS cut-off scores vary by invitation round.",
         },
       },
+      ...localFaq.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
     ],
   };
 }
@@ -61,13 +71,12 @@ export async function generateMetadata({
   const { market } = await params;
   const page = getPageContent("visas/canada/express-entry");
   if (!page) return {};
-  return {
+  return marketSeo({
     title: page.seoTitle,
     description: page.seoDescription,
-    alternates: {
-      canonical: canonicalUrl(market as Market, "/visas/canada/express-entry", env.SITE_URL).toString(),
-    },
-  };
+    market: market as Market,
+    path: "/visas/canada/express-entry",
+  });
 }
 
 export default async function ExpressEntryRoute({
@@ -77,16 +86,21 @@ export default async function ExpressEntryRoute({
   if (!isMarket(market)) notFound();
   const office = getOffice(market);
   const marketLabel = MARKET_LABELS[market];
+  const page = getPageContent("visas/canada/express-entry");
+  const marketNote = page?.marketNotes?.[market as Market];
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaForMarket(marketLabel)) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaForMarket(marketLabel, marketNote?.faq ?? [])) }}
       />
       <ExpressEntryPage
         market={market as Market}
         phoneHref={`tel:${office.phoneE164}`}
         phoneLabel={office.phoneDisplay}
+        localFaq={marketNote?.faq ?? []}
+        intro={marketNote?.intro}
+        cta={marketNote?.cta}
       />
     </>
   );

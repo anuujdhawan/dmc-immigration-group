@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
-import { marketSectionHref } from "@/lib/routing/routes";
-import { NAV_PRIMARY, marketHrefForNav } from "@/config/navigation";
+import { consultationHref, marketSectionHref } from "@/lib/routing/routes";
+import { marketHrefForNav, type NavLink } from "@/config/navigation";
+import { getMarketNavigation } from "@/config/market-nav";
 import type { Market } from "@/config/markets";
 import { MarketSwitcher } from "@/components/layout/MarketSwitcher";
 import { Button } from "@/components/ui/Button";
@@ -14,8 +15,57 @@ interface MobileNavigationProps {
   market: Market;
 }
 
+function MobileLinks({
+  links,
+  market,
+  onNavigate,
+}: {
+  links: NavLink[];
+  market: Market;
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="grid gap-1">
+      {links.map((link) =>
+        link.children && link.children.length > 0 ? (
+          <details key={`${link.label}:${link.href}`} className="mobile-nested-group">
+            <summary className="flex cursor-pointer items-center justify-between gap-2 rounded-[10px] px-3 py-2 text-[0.73rem] font-bold leading-[1.4] text-[#173D0D] hover:bg-white hover:text-brand-700">
+              <span>{link.label}</span>
+            </summary>
+            <div className="grid gap-1 border-l border-brand-600/15 pl-3 ml-1">
+              {link.children.map((child) => (
+                <a
+                  key={child.href}
+                  href={marketHrefForNav(market, child.href)}
+                  onClick={onNavigate}
+                  className="block rounded-[10px] px-3 py-2 text-[0.73rem] leading-[1.4] text-[#687064] hover:bg-white hover:text-brand-700"
+                >
+                  {child.label}
+                </a>
+              ))}
+            </div>
+          </details>
+        ) : (
+          <a
+            key={`${link.label}:${link.href}`}
+            href={marketHrefForNav(market, link.href)}
+            onClick={onNavigate}
+            className={cn(
+              "block rounded-[10px] px-3 py-2 text-[0.73rem] leading-[1.4] text-[#687064] hover:bg-white hover:text-brand-700",
+              link.label.includes("→") && "font-semibold text-brand-700",
+            )}
+          >
+            {link.label}
+          </a>
+        ),
+      )}
+    </div>
+  );
+}
+
 export function MobileNavigation({ market }: MobileNavigationProps) {
   const [open, setOpen] = useState(false);
+  const items = getMarketNavigation(market);
 
   return (
     <div className="flex w-auto min-w-0 items-center pointer-events-auto">
@@ -49,7 +99,7 @@ export function MobileNavigation({ market }: MobileNavigationProps) {
             Home <span className="text-[0.66rem] font-bold tracking-[0.13em] text-brand-600">01</span>
           </a>
 
-          {NAV_PRIMARY.filter((item) => item.columns?.length).map((item) => (
+          {items.filter((item) => item.columns?.length).map((item) => (
             <details key={item.label} className="mobile-group rounded-xl">
               <summary className="flex cursor-pointer items-center justify-between gap-4 rounded-xl px-[0.85rem] py-[0.86rem] text-[0.8rem] font-extrabold text-charcoal hover:bg-dmc-soft-green hover:text-brand-700">
                 <span>{item.label}</span>
@@ -60,20 +110,8 @@ export function MobileNavigation({ market }: MobileNavigationProps) {
                     <strong className="mt-[0.55rem] block text-[0.61rem] uppercase tracking-[0.13em] text-brand-700">
                       {column.heading}
                     </strong>
-                    <div className="mt-1 grid gap-1">
-                      {column.links.map((link) => (
-                        <a
-                          key={`${column.heading}:${link.label}:${link.href}`}
-                          href={marketHrefForNav(market, link.href)}
-                          onClick={() => setOpen(false)}
-                          className={cn(
-                            "block rounded-[10px] px-3 py-2 text-[0.73rem] leading-[1.4] text-[#687064] hover:bg-white hover:text-brand-700",
-                            link.label.includes("→") && "font-semibold text-brand-700",
-                          )}
-                        >
-                          {link.label}
-                        </a>
-                      ))}
+                    <div className="mt-1">
+                      <MobileLinks links={column.links} market={market} onNavigate={() => setOpen(false)} />
                     </div>
                   </div>
                 ))}
@@ -89,7 +127,7 @@ export function MobileNavigation({ market }: MobileNavigationProps) {
           </div>
 
           <Button
-            href={marketSectionHref(market, "contact")}
+            href={consultationHref(market)}
             onClick={() => setOpen(false)}
             variant="primary"
             size="md"

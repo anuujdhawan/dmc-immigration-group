@@ -1,4 +1,10 @@
-import { MARKET_LABELS, type Market } from "@/config/markets";
+import {
+  MARKET_APPLICANT_TERMS,
+  MARKET_CURRENCIES,
+  MARKET_LABELS,
+  MARKET_OFFICE_CITIES,
+  type Market,
+} from "@/config/markets";
 
 /**
  * Market-aware copy helpers.
@@ -38,12 +44,24 @@ export function marketOffice(market: Market): string {
   return `our ${MARKET_LABELS[market]} office`;
 }
 
+/** "UAE residents", "Indian applicants", "Kuwait residents" … */
+export function applicantTerm(market: Market): string {
+  return MARKET_APPLICANT_TERMS[market];
+}
+
+/** "AED", "INR", "KWD" … — the ISO code quoted for local fees. */
+export function marketCurrency(market: Market): string {
+  return MARKET_CURRENCIES[market].code;
+}
+
 const TOKENS: Array<{ token: string; resolve: (market: Market) => string }> = [
   { token: "{marketOffice}", resolve: marketOffice },
   { token: "{marketAudience}", resolve: marketAudience },
+  { token: "{applicantTerm}", resolve: applicantTerm },
   { token: "{marketFor}", resolve: marketFor },
   { token: "{marketIn}", resolve: marketIn },
   { token: "{marketFrom}", resolve: marketFrom },
+  { token: "{currency}", resolve: marketCurrency },
   { token: "{market}", resolve: marketName },
 ];
 
@@ -67,12 +85,23 @@ export function interpolateMarket(text: string, market: Market): string {
 }
 
 /**
- * A short, honest sentence that weaves the current market into content-page
- * copy. Used as a market context line so every page visibly states which
- * DMC market audience it is written for.
+ * Market context block woven into content-page copy. Every page visibly states
+ * which DMC market audience it serves, names the local office, and carries the
+ * "consultants in <market>" keyword phrase — so each market variant reads as
+ * its own piece of content rather than a copy.
  */
 export function marketContextSentence(market: Market): string {
-  return `Prepared for ${marketAudience(market)} and supported by ${marketOffice(market)}.`;
+  return `Prepared for ${marketAudience(market)} and supported by ${marketOffice(market)}. Our ${MARKET_LABELS[market]} consultants work with ${MARKET_APPLICANT_TERMS[market]} and offer free, no-obligation eligibility assessments for Canada, Australia and UK routes.`;
+}
+
+/**
+ * Per-market local-context sentence shown on every content page: names the
+ * applicant audience, the local office and the currency used for local fees —
+ * three concrete, market-specific facts that differ per URL.
+ */
+export function marketLocalNote(market: Market): string {
+  const currency = MARKET_CURRENCIES[market];
+  return `DMC ${MARKET_LABELS[market]} — immigration consultants serving ${MARKET_APPLICANT_TERMS[market]} from ${MARKET_OFFICE_CITIES[market]}, with consultations and service fees quoted in ${currency.code}.`;
 }
 
 /**

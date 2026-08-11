@@ -1,4 +1,14 @@
-import type { PageContent } from "@/content/pages/types";
+import { MARKET_SLUGS, type Market } from "@/config/markets";
+import type { PageContent, PageMarketNote } from "@/content/pages/types";
+
+/**
+ * Build a per-market note object from one tokenized template. Tokens resolve
+ * at render time ({market}, {applicantTerm}, {currency}, {marketFrom} …), so
+ * one template renders differently on each market page.
+ */
+function notesForAllMarkets(note: PageMarketNote): Partial<Record<Market, PageMarketNote>> {
+  return Object.fromEntries(MARKET_SLUGS.map((market) => [market, note]));
+}
 
 export const CANADA_PAGES: PageContent[] = [
   {
@@ -57,7 +67,7 @@ export const CANADA_PAGES: PageContent[] = [
       {
         kind: "lead",
         eyebrow: "Get in touch with DMC",
-        heading: "Canada Express Entry consultants in Dubai.",
+        heading: "Canada Express Entry consultants {marketIn}.",
         paragraphs: [
           "Express Entry is the online system IRCC uses to invite eligible candidates and manage permanent-residence applications under selected economic immigration programs.",
           "Applicants may need support to assess program fit, create an accurate profile, understand CRS ranking and coordinate their evidence. DMC supports prospective applicants {marketIn} and across the wider region through these preparation stages without guaranteeing an invitation or approval.",
@@ -200,7 +210,7 @@ export const CANADA_PAGES: PageContent[] = [
         steps: [
           { title: "Register online", body: "Share your initial details and begin the assessment of the skilled-immigration pathway that may suit your Canadian goals." },
           { title: "Immediate response", body: "After receiving the required enquiry details, the DMC team contacts you to understand your requirements." },
-          { title: "Know the process", body: "A consultant explains the Express Entry journey from Dubai, the relevant stages and the responsibilities involved." },
+          { title: "Know the process", body: "A consultant explains the Express Entry journey — the relevant stages and the responsibilities involved — before any application is prepared." },
           { title: "Join us", body: "When you decide to proceed, the sign-up process, service scope, responsibilities and next milestones are explained." },
           { title: "Documentation", body: "A dedicated case team supports document gathering, ECA preparation, language-test planning and other formalities." },
           { title: "Submission", body: "After the relevant evaluation, invitation or nomination, the applicable immigration application is prepared for submission." },
@@ -429,6 +439,103 @@ export const CANADA_PAGES: PageContent[] = [
     ],
     relatedPages: ["visas/canada/provincial-nominee-programs", "visas/canada/study-permits", "visit-visas/canada"],
     relatedTools: ["tools/canada/crs-calculator"],
+    marketNotes: {
+      dubai: {
+        intro:
+          "For UAE residents, an Express Entry file prepared from Dubai follows the same federal rules as any other — but the local preparation differs: language-test scheduling, Educational Credential Assessment, document attestation and police clearance are all arranged from the UAE. DMC's Dubai office coordinates those local steps end to end.",
+        cta: "Speak with the Dubai office about program fit, CRS factors and a realistic timeline for your profile — consultations and service fees are quoted in AED.",
+        faq: [
+          {
+            question: "Which visa office handles Express Entry applications from Dubai?",
+            answer: "Profiles and permanent-residence applications are processed centrally by IRCC in Canada. When biometrics or an in-person step is required, applicants in the UAE attend a Visa Application Centre (VAC) in the country — VFS Global operates the UAE centres — and the DMC Dubai office confirms the current arrangements for your file.",
+          },
+          {
+            question: "What needs special preparation for a UAE-based application?",
+            answer: "Documents issued in the UAE usually need translation into English or French, and some records require attestation before IRCC accepts them. UAE police clearance is required for the periods you have lived in the country, so your consultant plans these steps early — attestation timings vary and can affect your timeline.",
+          },
+          {
+            question: "How do UAE residents pay the Canada PR fees?",
+            answer: "IRCC charges its fees in Canadian dollars, paid online by card when the application is submitted. DMC quotes its consultation and service fees separately in AED, so you always see the local amount before committing.",
+          },
+        ],
+      },
+      "abu-dhabi": {
+        intro:
+          "For UAE residents, an Express Entry file prepared from Abu Dhabi follows the same federal rules as any other — but the local preparation differs: language-test scheduling, Educational Credential Assessment, document attestation and police clearance are all arranged from the UAE. DMC's Abu Dhabi office coordinates those local steps end to end.",
+        cta: "Speak with the Abu Dhabi office about program fit, CRS factors and a realistic timeline for your profile — consultations and service fees are quoted in AED.",
+        faq: [
+          {
+            question: "Which visa office handles Express Entry applications from Abu Dhabi?",
+            answer: "Profiles and permanent-residence applications are processed centrally by IRCC in Canada. When biometrics or an in-person step is required, applicants in the UAE attend a Visa Application Centre (VAC) — VFS Global operates centres in Abu Dhabi and Dubai — and the DMC Abu Dhabi office confirms the current arrangements for your file.",
+          },
+          {
+            question: "What needs special preparation for a UAE-based application?",
+            answer: "Documents issued in the UAE usually need translation into English or French, and some records require attestation before IRCC accepts them. UAE police clearance is required for the periods you have lived in the country, so your consultant plans these steps early — attestation timings vary and can affect your timeline.",
+          },
+          {
+            question: "How do UAE residents pay the Canada PR fees?",
+            answer: "IRCC charges its fees in Canadian dollars, paid online by card when the application is submitted. DMC quotes its consultation and service fees separately in AED, so you always see the local amount before committing.",
+          },
+        ],
+      },
+      qatar: {
+        intro:
+          "For Qatar residents, an Express Entry file prepared from Doha follows the same federal rules as any other — but the local preparation differs: language-test scheduling, Educational Credential Assessment, document attestation and police clearance are all arranged from Qatar. DMC's Doha office coordinates those local steps end to end.",
+        cta: "Speak with the Doha office about program fit, CRS factors and a realistic timeline for your profile — consultations and service fees are quoted in QAR.",
+        faq: [
+          {
+            question: "Which visa office handles Express Entry applications from Qatar?",
+            answer: "Profiles and permanent-residence applications are processed centrally by IRCC in Canada. When biometrics or an in-person step is required, applicants in Qatar attend a Visa Application Centre (VAC) in the country, and the DMC Doha office confirms the current arrangements for your file.",
+          },
+          {
+            question: "What needs special preparation for a Qatar-based application?",
+            answer: "Documents issued in Qatar usually need translation into English or French, and some records require attestation by the relevant authorities before IRCC accepts them. Qatar police clearance is required for the periods you have lived in the country, so your consultant plans these steps early — attestation timings vary and can affect your timeline.",
+          },
+          {
+            question: "How do Qatar residents pay the Canada PR fees?",
+            answer: "IRCC charges its fees in Canadian dollars, paid online by card when the application is submitted. DMC quotes its consultation and service fees separately in QAR, so you always see the local amount before committing.",
+          },
+        ],
+      },
+      kuwait: {
+        intro:
+          "For Kuwait residents, an Express Entry file prepared from Kuwait follows the same federal rules as any other — but the local preparation differs: language-test scheduling, Educational Credential Assessment, document attestation and police clearance are all arranged from Kuwait. DMC's Kuwait City office coordinates those local steps end to end.",
+        cta: "Speak with the Kuwait City office about program fit, CRS factors and a realistic timeline for your profile — consultations and service fees are quoted in KWD.",
+        faq: [
+          {
+            question: "Which visa office handles Express Entry applications from Kuwait?",
+            answer: "Profiles and permanent-residence applications are processed centrally by IRCC in Canada. When biometrics or an in-person step is required, applicants in Kuwait attend a Visa Application Centre (VAC) in the country, and the DMC Kuwait City office confirms the current arrangements for your file.",
+          },
+          {
+            question: "What needs special preparation for a Kuwait-based application?",
+            answer: "Documents issued in Kuwait usually need translation into English or French, and some records require attestation by the Kuwaiti authorities before IRCC accepts them. Kuwait police clearance is required for the periods you have lived in the country, so your consultant plans these steps early — attestation timings vary and can affect your timeline.",
+          },
+          {
+            question: "How do Kuwait residents pay the Canada PR fees?",
+            answer: "IRCC charges its fees in Canadian dollars, paid online by card when the application is submitted. DMC quotes its consultation and service fees separately in KWD, so you always see the local amount before committing.",
+          },
+        ],
+      },
+      india: {
+        intro:
+          "For Indian applicants, an Express Entry file prepared from India follows the same federal rules as any other — but the local preparation differs: language-test scheduling, Educational Credential Assessment, document attestation and police clearance are all arranged from India. DMC's Hyderabad office coordinates those local steps end to end.",
+        cta: "Speak with the Hyderabad office about program fit, CRS factors and a realistic timeline for your profile — consultations and service fees are quoted in INR.",
+        faq: [
+          {
+            question: "Which visa office handles Express Entry applications from India?",
+            answer: "Profiles and permanent-residence applications are processed centrally by IRCC in Canada. When biometrics or an in-person step is required, applicants in India attend a Visa Application Centre (VAC) — VFS Global operates centres across India — and the DMC Hyderabad office confirms the current arrangements for your file.",
+          },
+          {
+            question: "What needs special preparation for an India-based application?",
+            answer: "Documents issued in India usually need translation into English or French, and Indian police clearance is obtained through the Passport Seva process for the periods you have lived in the country. Education records for your Educational Credential Assessment and any attestation are planned into the file early.",
+          },
+          {
+            question: "How do Indian applicants pay the Canada PR fees?",
+            answer: "IRCC charges its fees in Canadian dollars, paid online by card when the application is submitted. DMC quotes its consultation and service fees separately in INR, so you always see the local amount before committing.",
+          },
+        ],
+      },
+    },
     lastVerified: "2026-08-04",
     officialSources: [
       { label: "IRCC — Immigrate through Express Entry", url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry.html" },
@@ -508,6 +615,18 @@ export const CANADA_PAGES: PageContent[] = [
     ],
     relatedPages: ["visas/canada/express-entry", "visas/canada/atlantic-immigration-program", "visas/canada/rural-and-northern-immigration-pilot"],
     relatedTools: ["tools/canada/crs-calculator"],
+    marketNotes: notesForAllMarkets({
+      faq: [
+        {
+          question: "Which Canadian provinces suit applicants {marketFrom}?",
+          answer: "The right province depends on your occupation, language scores, education and whether you hold an employer offer — not on your country alone. Provinces with regular draws and large international communities, such as Ontario, Alberta and British Columbia, are frequently compared by {applicantTerm}, but the match should be made on your profile. DMC {market} maps the streams that fit your occupation list before you apply.",
+        },
+        {
+          question: "Do {applicantTerm} need an employer job offer for a provincial nomination?",
+          answer: "Many streams require one, but several provinces run occupation-targeted, graduate and Express Entry-aligned streams without an offer. Whether an offer is necessary depends on the province and your occupation. A consultant in {market} can confirm which streams are realistically open to you and what each requires.",
+        },
+      ],
+    }),
     lastVerified: "2026-08-03",
     officialSources: [
       { label: "IRCC — Provincial nominee programs", url: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/provincial-nominees.html" },

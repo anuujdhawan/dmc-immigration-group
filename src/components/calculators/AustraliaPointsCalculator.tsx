@@ -1,19 +1,6 @@
 "use client";
 
-import { Gauge } from "lucide-react";
 import { useState } from "react";
-
-import {
-  ProgressBar,
-  ScoreGauge,
-  ToolBadge,
-  ToolButton,
-  ToolCard,
-  ToolField,
-  ToolNote,
-  ToolResult,
-  ToolSelect,
-} from "@/components/calculators/tool-kit";
 
 const AGE_POINTS: Record<string, number> = {
   "18-24": 25, "25-32": 30, "33-39": 25, "40-44": 15, "45+": 0,
@@ -43,28 +30,8 @@ const NOMINATION_POINTS: Record<string, number> = {
   "State/territory nomination (190)": 5, "Regional family/sponsorship (491)": 15, "None": 0,
 };
 
-type AustraliaFactors = {
-  age: string;
-  english: string;
-  secondLang: string;
-  employment: string;
-  ausEmployment: string;
-  education: string;
-  nomination: string;
-};
-
-const FIELDS: { key: keyof AustraliaFactors; label: string; max: number; data: Record<string, number>; empty: string }[] = [
-  { key: "age", label: "Age", max: 30, data: AGE_POINTS, empty: "Select age range" },
-  { key: "english", label: "English language", max: 20, data: ENGLISH_POINTS, empty: "Select level" },
-  { key: "secondLang", label: "Second language", max: 10, data: SECOND_LANG_POINTS, empty: "Select level" },
-  { key: "employment", label: "Overseas work experience", max: 15, data: EMPLOYMENT_POINTS, empty: "Select experience" },
-  { key: "ausEmployment", label: "Australian work experience", max: 20, data: AUS_EMPLOYMENT_POINTS, empty: "Select experience" },
-  { key: "education", label: "Education", max: 20, data: EDUCATION_POINTS, empty: "Select education" },
-  { key: "nomination", label: "Nomination / sponsorship", max: 15, data: NOMINATION_POINTS, empty: "Select" },
-];
-
 export function AustraliaPointsCalculator() {
-  const [factors, setFactors] = useState<AustraliaFactors>({
+  const [factors, setFactors] = useState({
     age: "",
     english: "",
     secondLang: "",
@@ -80,111 +47,122 @@ export function AustraliaPointsCalculator() {
     setSubmitted(false);
   };
 
-  const reset = () => {
-    setFactors({ age: "", english: "", secondLang: "", employment: "", ausEmployment: "", education: "", nomination: "" });
-    setSubmitted(false);
-  };
-
-  const scores = FIELDS.map((f) => ({
-    label: f.label,
-    max: f.max,
-    points: f.data[factors[f.key]] ?? 0,
-  }));
+  const scores = submitted
+    ? [
+        { label: "Age", max: 30, points: AGE_POINTS[factors.age] ?? 0 },
+        { label: "English Language", max: 20, points: ENGLISH_POINTS[factors.english] ?? 0 },
+        { label: "Other Language", max: 10, points: SECOND_LANG_POINTS[factors.secondLang] ?? 0 },
+        { label: "Overseas Employment", max: 15, points: EMPLOYMENT_POINTS[factors.employment] ?? 0 },
+        { label: "Australian Employment", max: 20, points: AUS_EMPLOYMENT_POINTS[factors.ausEmployment] ?? 0 },
+        { label: "Education", max: 20, points: EDUCATION_POINTS[factors.education] ?? 0 },
+        { label: "Nomination/Sponsorship", max: 15, points: NOMINATION_POINTS[factors.nomination] ?? 0 },
+      ]
+    : [];
 
   const total = scores.reduce((sum, s) => sum + s.points, 0);
-  const meets = total >= 65;
   const allFilled = Object.values(factors).every((v) => v !== "");
 
   return (
-    <ToolCard
-      icon={Gauge}
-      eyebrow="Australia · Points-tested migration"
-      title="Australia Points Calculator"
-      lede="Score your profile for the points-tested skilled visas — 189, 190 and 491 — against the 65-point minimum threshold."
-    >
-      <div className="grid gap-4 sm:grid-cols-2">
-        {FIELDS.map((field) => (
-          <ToolField key={field.key} label={field.label} hint={`max ${field.max} pts`}>
-            <ToolSelect
-              value={factors[field.key]}
-              onChange={(e) => update(field.key, e.target.value)}
-              chip={`${field.data[factors[field.key]] ?? 0} pts`}
-              options={[{ value: "", label: field.empty }, ...Object.keys(field.data).map((k) => ({ value: k, label: k }))]}
-            />
-          </ToolField>
-        ))}
-      </div>
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
+      <h3 className="mb-1 font-display text-xl font-bold text-ink">Australia Points Calculator</h3>
+      <p className="mb-6 text-sm text-slate-500">
+        Points-tested skilled migration calculator for visas 189, 190 and 491. Minimum 65 points required.
+      </p>
 
-      <div className="mt-6 flex flex-wrap gap-3">
-        <ToolButton onClick={() => setSubmitted(true)} disabled={!allFilled}>
-          Calculate points
-        </ToolButton>
-        <ToolButton variant="secondary" onClick={reset}>
-          Reset
-        </ToolButton>
-      </div>
-
-      {submitted ? (
-        <div className="mt-6 grid items-center gap-6 lg:grid-cols-[auto_1fr]">
-          <div className="grid place-items-center rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50/80 to-white p-6">
-            <ScoreGauge value={total} max={95} label="points" tone={meets ? "pass" : "warn"} />
-          </div>
-          <ToolResult
-            tone={meets ? "pass" : "warn"}
-            status={meets ? "Meets the 65-point minimum" : "Below the 65-point minimum"}
-            score={total}
-            scoreLabel="points"
-          >
-            <div className="mb-4 flex items-center gap-3">
-              <span className="text-xs font-semibold text-slate-500">Progress to 65</span>
-              <div className="flex-1">
-                <ProgressBar value={total} max={65} tone={meets ? "brand" : "amber"} />
-              </div>
-            </div>
-            <ul className="space-y-2.5">
-              {scores.map((s) => (
-                <li
-                  key={s.label}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-white/80 bg-white/70 px-4 py-3 shadow-sm"
-                >
-                  <span className="text-sm text-slate-600">{s.label}</span>
-                  <span className="font-semibold tabular-nums text-ink">
-                    {s.points} <span className="font-normal text-slate-400">/ {s.max}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <div
-              className={`mt-4 rounded-xl px-4 py-3 text-sm font-semibold text-white ${
-                meets ? "bg-gradient-to-r from-brand-600 to-brand-700" : "bg-gradient-to-r from-amber-500 to-amber-600"
-              }`}
-            >
-              {meets
-                ? `You meet the 65-point minimum. With ${total} points you may be competitive for invitation rounds, depending on occupation, skills assessment and other requirements.`
-                : "You do not currently meet the 65-point minimum threshold for points-tested skilled visas."}
-            </div>
-          </ToolResult>
+      <div className="space-y-4">
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">Age (max 30)</label>
+          <select value={factors.age} onChange={(e) => update("age", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-300">
+            <option value="">Select age range</option>
+            {Object.keys(AGE_POINTS).map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
         </div>
-      ) : null}
 
-      <div className="mt-6 flex flex-wrap items-center gap-2">
-        <ToolBadge tone={meets && submitted ? "pass" : "neutral"}>189 · 190 · 491</ToolBadge>
-        <ToolBadge tone="neutral">Invitation rounds vary</ToolBadge>
-        <ToolBadge tone="neutral">Occupation list applies</ToolBadge>
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">English Language (max 20)</label>
+          <select value={factors.english} onChange={(e) => update("english", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-300">
+            <option value="">Select level</option>
+            {Object.keys(ENGLISH_POINTS).map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">Second Language (max 10)</label>
+          <select value={factors.secondLang} onChange={(e) => update("secondLang", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-300">
+            <option value="">Select level</option>
+            {Object.keys(SECOND_LANG_POINTS).map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">Overseas Work Experience (max 15)</label>
+          <select value={factors.employment} onChange={(e) => update("employment", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-300">
+            <option value="">Select experience</option>
+            {Object.keys(EMPLOYMENT_POINTS).map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">Australian Work Experience (max 20)</label>
+          <select value={factors.ausEmployment} onChange={(e) => update("ausEmployment", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-300">
+            <option value="">Select experience</option>
+            {Object.keys(AUS_EMPLOYMENT_POINTS).map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">Education (max 20)</label>
+          <select value={factors.education} onChange={(e) => update("education", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-300">
+            <option value="">Select education</option>
+            {Object.keys(EDUCATION_POINTS).map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium text-slate-700">Nomination / Sponsorship (max 15)</label>
+          <select value={factors.nomination} onChange={(e) => update("nomination", e.target.value)} className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-300">
+            <option value="">Select</option>
+            {Object.keys(NOMINATION_POINTS).map((k) => <option key={k} value={k}>{k}</option>)}
+          </select>
+        </div>
       </div>
 
-      <ToolNote className="mt-5">
-        Informational estimate only. Invitation rounds, occupation lists and points thresholds vary.
-        Rules may change. Last verified: August 2026. Official source:{" "}
-        <a
-          href="https://immi.homeaffairs.gov.au/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold text-brand-700 underline underline-offset-2"
-        >
-          immi.homeaffairs.gov.au
-        </a>
-      </ToolNote>
-    </ToolCard>
+      <div className="mt-6 flex gap-3">
+        <button onClick={() => setSubmitted(true)} disabled={!allFilled} className="rounded-xl bg-brand-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:opacity-50">
+          Calculate Points
+        </button>
+        <button onClick={() => { setFactors({ age: "", english: "", secondLang: "", employment: "", ausEmployment: "", education: "", nomination: "" }); setSubmitted(false); }} className="rounded-xl border border-slate-200 px-6 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+          Reset
+        </button>
+      </div>
+
+      {submitted && (
+        <div className={`mt-6 rounded-xl border p-4 ${total >= 65 ? "border-brand-200 bg-brand-50" : "border-amber-200 bg-amber-50"}`}>
+          <div className="mb-3 flex items-baseline justify-between">
+            <h4 className="text-sm font-bold text-ink">Your Points</h4>
+            <span className={`text-3xl font-black ${total >= 65 ? "text-brand-700" : "text-amber-700"}`}>{total}</span>
+          </div>
+
+          <div className="mb-3 space-y-1.5">
+            {scores.map((s) => (
+              <div key={s.label} className="flex items-center justify-between text-sm">
+                <span className="text-slate-600">{s.label}</span>
+                <span className="font-medium text-ink">{s.points} / {s.max}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className={`rounded-lg p-3 text-sm font-semibold ${total >= 65 ? "bg-brand-600 text-white" : "bg-amber-500 text-white"}`}>
+            {total >= 65
+              ? `You meet the 65-point minimum. With ${total} points you may be competitive for invitation rounds, depending on occupation, skills assessment and other requirements.`
+              : "You do not currently meet the 65-point minimum threshold for points-tested skilled visas."}
+          </div>
+
+          <p className="mt-3 text-xs text-slate-500">
+            This is an informational estimate only. Invitation rounds, occupation lists and points thresholds vary. Rules may change. Last verified: August 2026. Official source: <a href="https://immi.homeaffairs.gov.au/" target="_blank" rel="noopener noreferrer" className="underline">immi.homeaffairs.gov.au</a>
+          </p>
+        </div>
+      )}
+    </div>
   );
 }

@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  applicantTerm,
   interpolateMarket,
   marketAudience,
   marketContextSentence,
+  marketCurrency,
   marketFor,
   marketFrom,
   marketIn,
+  marketLocalNote,
   marketName,
   marketOffice,
   paragraphsForMarket,
@@ -29,8 +32,28 @@ describe("market-copy phrases", () => {
 
   it("builds a complete market context sentence", () => {
     expect(marketContextSentence("dubai")).toBe(
-      "Prepared for clients in the Dubai market and supported by our Dubai office.",
+      "Prepared for clients in the Dubai market and supported by our Dubai office. Our Dubai consultants work with UAE residents and offer free, no-obligation eligibility assessments for Canada, Australia and UK routes.",
     );
+  });
+
+  it("resolves the applicant term per market", () => {
+    expect(applicantTerm("dubai")).toBe("UAE residents");
+    expect(applicantTerm("india")).toBe("Indian applicants");
+    expect(applicantTerm("kuwait")).toBe("Kuwait residents");
+  });
+
+  it("resolves the local currency per market", () => {
+    expect(marketCurrency("dubai")).toBe("AED");
+    expect(marketCurrency("qatar")).toBe("QAR");
+    expect(marketCurrency("india")).toBe("INR");
+  });
+
+  it("builds a market-specific local note naming audience, office and currency", () => {
+    expect(marketLocalNote("kuwait")).toContain("Kuwait residents");
+    expect(marketLocalNote("kuwait")).toContain("Kuwait City, Kuwait");
+    expect(marketLocalNote("kuwait")).toContain("KWD");
+    expect(marketLocalNote("india")).toContain("Indian applicants");
+    expect(marketLocalNote("india")).toContain("INR");
   });
 });
 
@@ -51,6 +74,7 @@ describe("interpolateMarket", () => {
     expect(interpolateMarket("{marketIn} {marketFrom}", "dubai")).toBe("in Dubai from Dubai");
     expect(interpolateMarket("{marketAudience}", "dubai")).toBe("clients in the Dubai market");
     expect(interpolateMarket("{marketFor}", "dubai")).toBe("for residents in Dubai");
+    expect(interpolateMarket("Fees for {applicantTerm} in {currency}.", "india")).toBe("Fees for Indian applicants in INR.");
   });
 
   it("leaves unknown tokens and plain text untouched", () => {
@@ -79,7 +103,7 @@ describe("paragraphsForMarket", () => {
   it("prepends a market context sentence to the first paragraph by default", () => {
     const out = paragraphsForMarket(["The visa rules are as follows."], "dubai");
     expect(out[0]).toBe(
-      "Prepared for clients in the Dubai market and supported by our Dubai office. The visa rules are as follows.",
+      "Prepared for clients in the Dubai market and supported by our Dubai office. Our Dubai consultants work with UAE residents and offer free, no-obligation eligibility assessments for Canada, Australia and UK routes. The visa rules are as follows.",
     );
   });
 

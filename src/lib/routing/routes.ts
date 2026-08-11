@@ -17,6 +17,18 @@ export function marketSectionHref(market: Market, section: string): string {
   return `/${market}#${anchor}`;
 }
 
+/**
+ * Link target for "Book Consultation" CTAs.
+ *
+ * On the scraped legacy markets (india/kuwait) every page renders its own
+ * free-assessment form band anchored `#free-assessment` — so the CTA stays on
+ * the same page and scrolls to the form there. The dynamic markets anchor to
+ * their homepage's `#contact` section instead.
+ */
+export function consultationHref(market: Market): string {
+  return market === "india" || market === "kuwait" ? "#free-assessment" : marketSectionHref(market, "contact");
+}
+
 export function stripMarketPrefix(href: string): string {
   const match = href.match(new RegExp(`^${MARKET_SLUG_PATTERN}(/|$)`));
   if (!match) return href;

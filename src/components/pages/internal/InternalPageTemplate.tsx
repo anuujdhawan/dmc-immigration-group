@@ -6,7 +6,7 @@ import { useCallback, useRef, useState, type FormEvent, type ReactNode } from "r
 import { MARKET_LABELS, MARKET_LIST, type Market } from "@/config/markets";
 import { marketHref } from "@/lib/routing/routes";
 import { galleryFor } from "@/config/page-gallery";
-import { interpolateMarket, marketAudience } from "@/lib/i18n/market-copy";
+import { interpolateMarket, marketAudience, marketLocalNote } from "@/lib/i18n/market-copy";
 import { MediaCard, MediaCardGrid, type MediaCardItem } from "@/components/ui/MediaCard";
 
 type TextBlock = string | ReactNode;
@@ -88,6 +88,32 @@ export type FaqItem = {
   q: string;
   a: string;
 };
+
+/**
+ * Slim per-market context bar shown near the top of every page — names the
+ * applicant audience, local office, currency and phone so each market variant
+ * carries visible local detail. Safe to render in client components.
+ */
+export function LocalContextBand({
+  market,
+  phoneHref,
+  phoneLabel,
+}: {
+  market: Market;
+  phoneHref: string;
+  phoneLabel: string;
+}) {
+  return (
+    <div className="border-b border-brand-600/10 bg-brand-50/70">
+      <div className="ee-shell flex flex-wrap items-center gap-x-4 gap-y-1 py-2.5 text-xs font-medium text-ink/75">
+        <span>{marketLocalNote(market)}</span>
+        <a href={phoneHref} className="font-bold text-brand-700 transition-colors hover:text-brand-800">
+          {phoneLabel}
+        </a>
+      </div>
+    </div>
+  );
+}
 
 export function InternalBreadcrumbs({ items }: { items: BreadcrumbItem[] }) {
   return (
@@ -349,15 +375,19 @@ export function LeadFormSection({
   kicker,
   title,
   copy,
+  id,
 }: {
   market: Market;
   phone: string;
   kicker: string;
   title: string;
   copy: string[];
+  /** Optional anchor id — used on the fixed-route tool pages so "Book
+   *  Consultation" CTAs can scroll to the form on the same page. */
+  id?: string;
 }) {
   return (
-    <section className="ee-section ee-section-alt" aria-labelledby="ee-hero-form-title">
+    <section className="ee-section ee-section-alt" id={id} aria-labelledby="ee-hero-form-title">
       <div className="ee-shell ee-hero-form-wrap">
         <div className="ee-hero-form-intro">
           <span className="ee-kicker">{interpolateMarket(kicker, market)}</span>

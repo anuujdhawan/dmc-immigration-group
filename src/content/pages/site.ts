@@ -1,7 +1,14 @@
 import { OFFICE_LIST } from "@/config/offices";
 import { TESTIMONIALS } from "@/config/testimonials";
+import { MARKET_SLUGS, type Market } from "@/config/markets";
 
-import type { PageContent } from "@/content/pages/types";
+import type { PageContent, PageMarketNote } from "@/content/pages/types";
+
+/** Build a per-market note object from one tokenized template ({market},
+ *  {applicantTerm}, {currency}, {marketFrom} resolve at render time). */
+function notesForAllMarkets(note: PageMarketNote): Partial<Record<Market, PageMarketNote>> {
+  return Object.fromEntries(MARKET_SLUGS.map((market) => [market, note]));
+}
 
 const OFFICE_CARDS = OFFICE_LIST.map((office) => ({
   title: office.city,
@@ -80,8 +87,8 @@ const LEGACY_GALLERY_ITEMS = [
 ];
 
 const LEGAL_HELP = [
-  "The legal pages stay client-owned and draft-like for now.",
-  "They explain how we use your information, what our service covers, how refunds are handled and the limits of the advice provided.",
+  "These pages explain how DMC Immigration Group uses your information, what our services cover, how refunds are handled and the limits of the advice we provide.",
+  "Each page is written in plain language so you can understand your rights and responsibilities before you share personal information or engage our services.",
 ];
 
 export const SITE_PAGES: PageContent[] = [
@@ -397,11 +404,11 @@ export const SITE_PAGES: PageContent[] = [
     id: "blog",
     title: "Blog",
     eyebrow: "Resources",
-    seoTitle: "Immigration Blog | DMC Immigration Group",
+    seoTitle: "Immigration Blog — Guides & Updates | DMC Immigration Group",
     seoDescription:
-      "The old-site immigration blog archive, surfaced as a clean index page while the full MDX migration is prepared.",
+      "Immigration guides and updates from DMC — Canada Express Entry, UK and USA visas, work permits and practical application advice for applicants in the UAE, Qatar, Kuwait and India.",
     lede:
-      "The previous site published a large SEO-driven blog archive. This page starts the migration by surfacing a selection of the legacy posts in a cleaner layout while the full article import continues.",
+      "Practical, plain-language immigration guides from the DMC team — Express Entry strategy, UK and USA visitor routes, work permits and application preparation for applicants across the Gulf and India.",
     sections: [
       {
         kind: "cards",
@@ -417,38 +424,50 @@ export const SITE_PAGES: PageContent[] = [
     id: "tools",
     title: "Tools",
     eyebrow: "Tools",
-    seoTitle: "Immigration Tools | DMC Immigration Group",
+    seoTitle: "Immigration Tools & Calculators | DMC Immigration Group",
     seoDescription:
-      "The DMC tools hub for eligibility checks, country-specific planning and route-linked assessments.",
+      "Free immigration tools — eligibility checker, Canada CRS, CLB and PNP calculators, Australia points, fees and occupation tools for applicants in Dubai, Abu Dhabi, Qatar, Kuwait and India.",
     lede:
-      "The dropdown now points to real tool pages instead of anchors, and this hub gives the tool family a single place to live while the calculators are phased in.",
+      "Free, verified immigration planning tools for Canada, Australia and UK routes — CRS and points calculators, provincial nomination matchers, eligibility checks and visa fee estimators, prepared by DMC consultants.",
     sections: [
       {
         kind: "cards",
-        heading: "Tool hubs",
+        heading: "Free planning tools",
         items: [
           {
-            title: "General eligibility checker",
+            title: "Free eligibility checker",
             label: "Assessment",
-            body: "A structured starting point for route fit, documents and next steps.",
+            body: "Four quick questions that point your profile toward the right route.",
             href: "/tools/eligibility-checker",
           },
           {
-            title: "Canada tools",
-            label: "Country hub",
-            body: "CRS, FSW-67 and PNP planning routes for Canada.",
-            href: "/tools/canada",
+            title: "Canada CRS calculator",
+            label: "Canada tool",
+            body: "Estimate your Express Entry Comprehensive Ranking System score.",
+            href: "/tools/canada/crs-calculator",
           },
           {
-            title: "Australia tools",
-            label: "Country hub",
-            body: "Points, occupation and visa planning routes for Australia.",
-            href: "/tools/australia",
+            title: "Canada CLB calculator",
+            label: "Canada tool",
+            body: "Convert IELTS, CELPIP or TEF scores to Canadian Language Benchmark levels.",
+            href: "/tools/canada/clb-calculator",
+          },
+          {
+            title: "Australia points calculator",
+            label: "Australia tool",
+            body: "Score your profile for the points-tested skilled visas 189, 190 and 491.",
+            href: "/tools/australia/points-calculator",
+          },
+          {
+            title: "Australia visa fee estimator",
+            label: "Australia tool",
+            body: "Estimate base visa application charges with an indicative {currency} conversion.",
+            href: "/tools/australia/visa-fee-estimator",
           },
           {
             title: "Document checklists",
             label: "Guide",
-            body: "The practical prep lists that back the tools.",
+            body: "The practical prep lists that back every application.",
             href: "/guides/document-checklists",
           },
         ],
@@ -464,16 +483,16 @@ export const SITE_PAGES: PageContent[] = [
     eyebrow: "Tools",
     seoTitle: "Free Immigration Eligibility Checker | DMC Immigration Group",
     seoDescription:
-      "A market-aware eligibility starting point that helps DMC frame the right questions before a consultation.",
+      "Free four-step immigration eligibility check for Canada PR, Australia skilled migration, UK work visas, study, visit and business routes — for applicants in the UAE, Qatar, Kuwait and India.",
     lede:
-      "This page replaces the old anchor with a real route. It is a simple assessment hub that points people toward the right program page and the right office for their market.",
+      "Answer four quick questions and get a directional read on which immigration route fits your profile — Canada, Australia, UK, study, visit or business — plus the next step to take with a DMC consultant.",
     sections: [
       {
         kind: "overview",
         heading: "What this check does",
         paragraphs: [
-          "The old site treated eligibility as a first conversation, not a sales form. This page keeps that logic and moves it to a dedicated route.",
-          "Use it to understand whether your profile is more likely to fit skilled migration, study, business or visit pathways before you book a consultation.",
+          "A structured first pass at eligibility: whether your profile is more likely to fit skilled migration, study, business or visit pathways, and which DMC office should own the follow-up.",
+          "Use it before booking a consultation so you arrive with a clear sense of your route fit, the evidence you will need and the questions worth asking.",
         ],
       },
       {
@@ -504,46 +523,21 @@ export const SITE_PAGES: PageContent[] = [
     id: "tools/canada",
     title: "Canada Tools",
     eyebrow: "Tools",
-    seoTitle: "Canada Immigration Tools | DMC Immigration Group",
+    seoTitle: "Canada Immigration Tools & Calculators | DMC Immigration Group",
     seoDescription:
-      "Canada-specific tool hub for CRS, FSW-67 and provincial planning, set up as a route-aware page in the new site.",
+      "Free Canada immigration calculators — CRS score, CLB conversion, FSW 67-point check and provincial nominee stream matchers for applicants in Dubai, Abu Dhabi, Qatar, Kuwait and India.",
     lede:
-      "The Canada tool page gathers the Canadian assessments and the route links that clients usually need before a consultation.",
+      "Free Canada tools for applicants in the Gulf and India — CRS, CLB and FSW-67 calculators plus provincial nominee program (PNP) stream matchers, with official sources and current verification.",
     sections: [
       {
         kind: "cards",
         heading: "Canada assessments",
         items: [
-          {
-            title: "CRS calculator",
-            label: "Live tool",
-            body: "Estimate your Express Entry ranking score across core, spouse and transferability factors.",
-            href: "/tools/canada/crs-calculator",
-          },
-          {
-            title: "CLB calculator",
-            label: "Live tool",
-            body: "Convert IELTS, CELPIP and TEF results into Canadian Language Benchmarks.",
-            href: "/tools/canada/clb-calculator",
-          },
-          {
-            title: "FSW 67-point calculator",
-            label: "Live tool",
-            body: "Check the Federal Skilled Worker selection-factor grid against the 67-point threshold.",
-            href: "/tools/canada/fsw-67-calculator",
-          },
-          {
-            title: "PNP stream matchers",
-            label: "Live tool",
-            body: "Match your profile to active provincial nominee streams — Ontario, Alberta, BC and more.",
-            href: "/tools/canada/ontario-pnp-matcher",
-          },
-          {
-            title: "RCIP eligibility checklist",
-            label: "Live tool",
-            body: "Self-assess against the Rural Community Immigration Pilot core checks.",
-            href: "/tools/canada/rcip-eligibility",
-          },
+          { title: "CRS calculator", label: "Live tool", body: "Estimate your Express Entry Comprehensive Ranking System score — age, education, language, experience and spouse factors.", href: "/tools/canada/crs-calculator" },
+          { title: "CLB calculator", label: "Live tool", body: "Convert IELTS, CELPIP or TEF scores into Canadian Language Benchmark levels.", href: "/tools/canada/clb-calculator" },
+          { title: "FSW 67-point calculator", label: "Live tool", body: "Check whether you meet the Federal Skilled Worker selection-factor grid.", href: "/tools/canada/fsw-67-calculator" },
+          { title: "PNP stream matchers", label: "Live tool", body: "Match your profile to active provincial nomination streams, province by province.", href: "/tools/canada/ontario-pnp-matcher" },
+          { title: "RCIP eligibility checklist", label: "Live tool", body: "Work through the Rural Community Immigration Pilot core checks.", href: "/tools/canada/rcip-eligibility" },
         ],
       },
       {
@@ -564,40 +558,20 @@ export const SITE_PAGES: PageContent[] = [
     id: "tools/australia",
     title: "Australia Tools",
     eyebrow: "Tools",
-    seoTitle: "Australia Immigration Tools | DMC Immigration Group",
+    seoTitle: "Australia Immigration Tools & Calculators | DMC Immigration Group",
     seoDescription:
-      "Australia-specific tool hub for points, occupation and nomination planning, set up as a route-aware page in the new site.",
+      "Free Australia immigration tools — skilled-migration points calculator, visa fee estimator, processing times and occupation eligibility checker for applicants in Dubai, Abu Dhabi, Qatar, Kuwait and India.",
     lede:
-      "The Australia tools page gathers the migration planning routes that sit behind the 189, 190, 491, 191 and employer-sponsored pathways.",
+      "Free Australia planning tools — points, fees, processing times and occupation eligibility for the 189, 190, 491, 191, 482, 186 and 858 visas, with official Home Affairs sources.",
     sections: [
       {
         kind: "cards",
         heading: "Australia assessments",
         items: [
-          {
-            title: "Points calculator",
-            label: "Live tool",
-            body: "Score your profile for 189, 190 and 491 against the 65-point minimum.",
-            href: "/tools/australia/points-calculator",
-          },
-          {
-            title: "Visa fee estimator",
-            label: "Live tool",
-            body: "Estimate the base application charge with an indicative AED conversion.",
-            href: "/tools/australia/visa-fee-estimator",
-          },
-          {
-            title: "Processing times",
-            label: "Live tool",
-            body: "Look up Home Affairs' indicative processing bands for each skilled subclass.",
-            href: "/tools/australia/processing-times",
-          },
-          {
-            title: "Occupation discovery",
-            label: "Live tool",
-            body: "Search ANZSCO groups, skill levels and skills-assessment authorities.",
-            href: "/tools/australia/occupation-eligibility-checker",
-          },
+          { title: "Points calculator", label: "Live tool", body: "Score your profile for the points-tested skilled visas — 189, 190 and 491.", href: "/tools/australia/points-calculator" },
+          { title: "Visa fee estimator", label: "Live tool", body: "Estimate base visa application charges with an indicative {currency} conversion.", href: "/tools/australia/visa-fee-estimator" },
+          { title: "Processing times", label: "Live tool", body: "Look up indicative global processing-time bands per subclass.", href: "/tools/australia/processing-times" },
+          { title: "Occupation eligibility", label: "Live tool", body: "Search ANZSCO occupation groups, skill levels and assessing authorities.", href: "/tools/australia/occupation-eligibility-checker" },
         ],
       },
       {
@@ -620,7 +594,7 @@ export const SITE_PAGES: PageContent[] = [
     eyebrow: "Canada skilled immigration",
     seoTitle: "Canada Visa Paths | DMC Immigration Group",
     seoDescription:
-      "Canada visa hub for Express Entry, PNP, Atlantic, study permits, family sponsorship and visit routes.",
+      "Canada visa hub — Express Entry, PNP, Atlantic Immigration Program, study permits and family sponsorship for applicants in Dubai, Abu Dhabi, Qatar, Kuwait and India.",
     lede: "The Canada hub groups the major Canadian routes under one market-aware page so the path is easier to compare before drilling into a single program.",
     sections: [
       {
@@ -646,7 +620,7 @@ export const SITE_PAGES: PageContent[] = [
     eyebrow: "Australia skilled migration",
     seoTitle: "Australia Visa Paths | DMC Immigration Group",
     seoDescription:
-      "Australia visa hub for the main skilled routes, employer-sponsored routes and state nomination pages.",
+      "Australia visa hub — Skilled Independent 189, Skilled Nominated 190, regional 491 and 191, employer-sponsored 482 and National Innovation 858 for applicants in the Gulf and India.",
     lede:
       "A simple hub for the Australian routes so the market-specific pages can be compared before moving into a single visa stream.",
     sections: [
@@ -664,6 +638,18 @@ export const SITE_PAGES: PageContent[] = [
       },
     ],
     relatedPages: ["visas/australia/skilled-independent-189", "tools/australia"],
+    marketNotes: notesForAllMarkets({
+      faq: [
+        {
+          question: "Which skills-assessment body do applicants {marketFrom} usually use?",
+          answer: "The assessing authority depends on your occupation, not your country — engineers use Engineers Australia, accountants use CPA Australia, CA ANZ or IPA, IT professionals use the ACS, and other occupations have their own authorities. DMC {market} confirms the correct authority for your ANZSCO occupation code before you book any test or assessment.",
+        },
+        {
+          question: "How are Australia visa fees paid {marketFrom}?",
+          answer: "Home Affairs charges its application fees in Australian dollars, payable online by card when the visa application is lodged. DMC {market} quotes its consultation and service fees separately in {currency}, so you can compare the full cost in local money.",
+        },
+      ],
+    }),
     lastVerified: "2026-08-04",
     officialSources: [],
   },
@@ -672,7 +658,8 @@ export const SITE_PAGES: PageContent[] = [
     title: "UK Visas",
     eyebrow: "UK work visas",
     seoTitle: "UK Visa Paths | DMC Immigration Group",
-    seoDescription: "UK visa hub for the Skilled Worker and Skilled Worker dependent routes.",
+    seoDescription:
+      "UK Skilled Worker visa guide for applicants in Dubai, Abu Dhabi, Qatar, Kuwait and India — salary thresholds, sponsor requirements, dependants and the application process.",
     lede:
       "The UK hub keeps the current routes together and makes the work and family path easy to scan before you move to the detailed page.",
     sections: [

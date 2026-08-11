@@ -1,11 +1,32 @@
 import type { MetadataRoute } from "next";
-import { MARKET_LIST } from "@/config/markets";
+import { DEFAULT_MARKET, MARKET_LIST } from "@/config/markets";
 import { PAGE_IDS } from "@/content/pages";
-import { TOOL_PATHS } from "@/config/tools";
 import { LANDING_MARKETS, LANDING_PAGE_IDS } from "@/config/landing-pages";
+import { TOOL_PATHS } from "@/config/tools";
+import { MARKET_HREFLANG_LOCALE } from "@/lib/seo/market-seo";
 import { env } from "@/config/env/server";
 
 const SITE_URL = env.SITE_URL;
+
+type SitemapAlternateLanguages = NonNullable<
+  NonNullable<MetadataRoute.Sitemap[number]["alternates"]>["languages"]
+>;
+
+function hreflangFor(path: string): SitemapAlternateLanguages {
+  const byLocale = new Map<string, string[]>();
+  for (const market of MARKET_LIST) {
+    const locale = MARKET_HREFLANG_LOCALE[market];
+    const existing = byLocale.get(locale) ?? [];
+    existing.push(`${SITE_URL}/${market}${path}`);
+    byLocale.set(locale, existing);
+  }
+  const languages: Record<string, string | string[]> = {};
+  for (const [locale, urls] of byLocale) {
+    languages[locale] = urls.length === 1 ? urls[0] : urls;
+  }
+  languages["x-default"] = `${SITE_URL}/${DEFAULT_MARKET}${path}`;
+  return languages as SitemapAlternateLanguages;
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date().toISOString();
@@ -18,6 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: "weekly",
       priority: 1.0,
+      alternates: { languages: hreflangFor("") },
     });
   }
 
@@ -29,11 +51,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: now,
         changeFrequency: "monthly",
         priority: 0.7,
+        alternates: { languages: hreflangFor(`/${pageId}`) },
       });
     }
   }
 
-  // Tool pages across all markets
+  // Tool pages across all markets (CRS calculator, points calculator, …)
   for (const market of MARKET_LIST) {
     for (const toolPath of TOOL_PATHS) {
       entries.push({
@@ -41,6 +64,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: now,
         changeFrequency: "monthly",
         priority: 0.8,
+        alternates: { languages: hreflangFor(`/tools/${toolPath}`) },
       });
     }
   }
@@ -53,6 +77,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: now,
         changeFrequency: "monthly",
         priority: 0.8,
+        alternates: { languages: hreflangFor(`/${pageId}`) },
       });
     }
   }

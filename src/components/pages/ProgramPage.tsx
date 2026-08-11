@@ -1,5 +1,6 @@
 import { MARKET_LABELS, type Market } from "@/config/markets";
-import { interpolateMarket, paragraphsForMarket } from "@/lib/i18n/market-copy";
+import { getOffice } from "@/config/offices";
+import { interpolateMarket, marketLocalNote, paragraphsForMarket } from "@/lib/i18n/market-copy";
 import {
   type CardItem,
   type DisclaimerSection,
@@ -10,6 +11,7 @@ import {
   type PageSection,
 } from "@/content/pages/types";
 import { breadcrumbsFor, getPageContent } from "@/content/pages";
+import { breadcrumbJsonLd, faqJsonLd } from "@/lib/seo/market-seo";
 import { marketHref } from "@/lib/routing/routes";
 import { pageMedia } from "@/config/page-media";
 import { cn } from "@/lib/utils/cn";
@@ -113,11 +115,12 @@ function CardGrid({ items }: { items: { title: string; body: string }[] }) {
   );
 }
 
-function CardsGrid({ items }: { items: CardItem[] }) {
+function CardsGrid({ items, market }: { items: CardItem[]; market: Market }) {
   return (
     <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       {items.map((item) => {
         const external = item.href?.startsWith("http");
+        const href = item.href && !external ? marketHref(market, item.href) : item.href;
         const card = (
           <>
             {item.image ? (
@@ -149,9 +152,9 @@ function CardsGrid({ items }: { items: CardItem[] }) {
 
         return (
           <li key={`${item.title}-${item.label ?? item.href ?? "card"}`}>
-            {item.href ? (
+            {href ? (
               <a
-                href={item.href}
+                href={href}
                 target={external ? "_blank" : undefined}
                 rel={external ? "noreferrer noopener" : undefined}
                 className="group flex h-full flex-col gap-3 rounded-2xl border border-brand-600/10 bg-white/80 p-6 shadow-sm transition-colors hover:border-brand-600/30 hover:bg-brand-50/50"
@@ -522,13 +525,13 @@ function HelpBand({ section }: { section: PageSection & { kind: "help" } }) {
   );
 }
 
-function LinksGrid({ section }: { section: PageSection & { kind: "links" } }) {
+function LinksGrid({ section, market }: { section: PageSection & { kind: "links" }; market: Market }) {
   return (
     <ul className="grid gap-4 md:grid-cols-2">
       {section.items.map((item) => (
         <li key={item.title}>
           <a
-            href={item.path}
+            href={marketHref(market, item.path)}
             className="group flex h-full flex-col gap-1 rounded-2xl border border-brand-600/10 bg-white/80 p-6 shadow-sm transition-colors hover:border-brand-600/30 hover:bg-brand-50/50"
           >
             <span className="font-display text-lg font-bold text-charcoal group-hover:text-brand-700">
@@ -566,7 +569,7 @@ function StatusBanner({ section }: { section: PageSection & { kind: "status" } }
   );
 }
 
-function SectionContent({ section, tone }: { section: ExtendedPageSection; tone: "white" | "slate" | "aurora" }) {
+function SectionContent({ section, tone, market }: { section: ExtendedPageSection; tone: "white" | "slate" | "aurora"; market: Market }) {
   switch (section.kind) {
     case "status":
       return <StatusBanner section={section} />;
@@ -598,9 +601,9 @@ function SectionContent({ section, tone }: { section: ExtendedPageSection; tone:
     case "help":
       return <HelpBand section={section} />;
     case "cards":
-      return <CardsGrid items={section.items} />;
+      return <CardsGrid items={section.items} market={market} />;
     case "links":
-      return <LinksGrid section={section} />;
+      return <LinksGrid section={section} market={market} />;
     case "split":
       return <SplitSection section={section} tone={tone} />;
     case "lead":
@@ -681,6 +684,8 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
   const statusSections = page.sections.filter((section) => section.kind === "status");
   const { first, rest } = splitTitle(page.heroTitle ?? page.title);
   const marketLabel = MARKET_LABELS[market];
+  const office = getOffice(market);
+  const marketNote = page.marketNotes?.[market];
   const heroSectionId = `hero-${page.id.replace(/[^a-z0-9]+/gi, "-")}`;
   const media = pageMedia(page.id);
   const hasSplitContent = rawContentSections.some((section) => section.kind === "split");
@@ -689,18 +694,44 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
   // Resolve market tokens through every content string, and add a single
   // market context line to the FIRST overview or lead section only — so the
   // market is named in the page copy without repeating the same sentence.
+  // A hand-authored per-market `intro` (page.marketNotes) replaces the generic
+  // context line with richer, page-specific local copy when present.
   const firstContextIndex = rawContentSections.findIndex(
     (section) => section.kind === "overview" || section.kind === "lead",
   );
   const contentSections: ExtendedPageSection[] = rawContentSections.map((section, index) => {
     const resolved = deepInterpolate(section, market) as ExtendedPageSection;
     if (index === firstContextIndex && (resolved.kind === "overview" || resolved.kind === "lead")) {
-      resolved.paragraphs = paragraphsForMarket(resolved.paragraphs, market);
+      resolved.paragraphs = paragraphsForMarket(resolved.paragraphs, market, {
+        prependFirst: !marketNote?.intro,
+      });
+      if (marketNote?.intro) {
+        resolved.paragraphs = [interpolateMarket(marketNote.intro, market), ...resolved.paragraphs];
+      }
     }
     return resolved;
   });
 
-  const firstContentSection = contentSections[0];
+  // Per-market local FAQ section from page.marketNotes — questions applicants
+  // in this market actually ask, rendered with the FAQPage schema below.
+  const localFaqSection: ExtendedPageSection | null =
+    marketNote?.faq && marketNote.faq.length > 0
+      ? {
+          kind: "faq",
+          anchor: "local-faq",
+          eyebrow: `${marketLabel} applicants`,
+          heading: `Questions ${marketLabel} applicants ask most`,
+          items: marketNote.faq.map((item) => ({
+            question: interpolateMarket(item.question, market),
+            answer: interpolateMarket(item.answer, market),
+          })),
+        }
+      : null;
+  const allContentSections: ExtendedPageSection[] = localFaqSection
+    ? [...contentSections, localFaqSection]
+    : contentSections;
+
+  const firstContentSection = allContentSections[0];
   const scrollTarget = firstContentSection ? `#${sectionId(firstContentSection, 0)}` : undefined;
   const secondaryActionHref = page.relatedPages?.[0]
     ? marketHref(market, `/${page.relatedPages[0]}`)
@@ -708,7 +739,7 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
   const secondaryActionLabel = page.relatedPages?.[0] ? "Read related guides" : "Explore tools";
   const sectionNavItems =
     page.sectionNav ??
-    contentSections
+    allContentSections
       .filter((section) => section.kind !== "lead" && section.kind !== "disclaimer")
       .map((section, index) => ({
         anchor: sectionId(section, index),
@@ -719,8 +750,18 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
             : section.kind,
       }));
 
+  const faqItems = allContentSections
+    .filter((section) => section.kind === "faq")
+    .flatMap((section) => (section as { items: { question: string; answer: string }[] }).items);
+  const pagePath = `/${page.id}`;
+  const schema = [
+    breadcrumbJsonLd(breadcrumbsFor(page.id), market, undefined, pagePath, page.title),
+    faqJsonLd(faqItems, market, undefined, pagePath),
+  ].filter((entry): entry is Record<string, unknown> => entry !== null);
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       <Hero
         market={market}
         sectionId={heroSectionId}
@@ -737,6 +778,19 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
         <StatusBanner key={index} section={section} />
       ))}
       <Breadcrumbs page={page} market={market} />
+      {/* Per-market local-context strip — currency, applicant audience and the
+          market office, so every market variant carries visible local detail. */}
+      <div className="border-b border-brand-600/10 bg-brand-50/60">
+        <Container className="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-1 py-2.5 text-xs font-medium text-ink/75">
+          <span>{marketLocalNote(market)}</span>
+          <a
+            href={`tel:${office.phoneE164}`}
+            className="font-bold text-brand-700 transition-colors hover:text-brand-800"
+          >
+            {office.phoneDisplay}
+          </a>
+        </Container>
+      </div>
       {page.facts ? <FactsStrip section={{ kind: "facts", items: deepInterpolate(page.facts, market) as NonNullable<PageContent["facts"]> }} /> : null}
       <SectionNav items={sectionNavItems} />
 
@@ -756,7 +810,7 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
         </section>
       ) : null}
 
-      {contentSections.map((section, index) => {
+      {allContentSections.map((section, index) => {
         const id = sectionId(section, index);
         const dark = section.kind === "process";
         const tone = dark ? "aurora" : index % 2 === 0 ? "white" : "slate";
@@ -771,7 +825,7 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
                   dark={dark}
                 />
               )}
-              <SectionContent section={section} tone={tone} />
+              <SectionContent section={section} tone={tone} market={market} />
             </Container>
           </section>
         );
@@ -825,18 +879,22 @@ export function ProgramPage({ page, market }: { page: PageContent; market: Marke
             <div>
               <p className="text-xs font-bold uppercase tracking-mega text-leaf-soft">Start with clarity</p>
               <h2 className="mt-3 max-w-2xl text-balance font-display text-3xl font-bold leading-tight md:text-4xl">
-                Could Express Entry be the right route for you?
+                {page.id.startsWith("visas/canada")
+                  ? "Could Express Entry be the right route for you?"
+                  : "Could this route be right for you?"}
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-7 text-aurora-muted">
-                Speak with the DMC team about program fit, documentation priorities, CRS factors and a realistic next step for your profile.
+                {marketNote?.cta
+                  ? interpolateMarket(marketNote.cta, market)
+                  : "Speak with the DMC team about program fit, documentation priorities and a realistic next step for your profile."}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
               <Button href={marketHref(market, "/#contact")} variant="white" size="lg">
                 Book Consultation
               </Button>
-              <Button href="tel:+97143447757" variant="outline" size="lg">
-                Call +971 4 344 7757
+              <Button href={`tel:${office.phoneE164}`} variant="outline" size="lg">
+                Call {office.phoneDisplay}
               </Button>
             </div>
           </div>

@@ -4,6 +4,8 @@ export interface NavLink {
   label: string;
   href: string;
   description?: string;
+  /** Nested sub-sub-menu items (flyout) — used by the legacy-market nav trees. */
+  children?: NavLink[];
 }
 
 export interface NavColumn {

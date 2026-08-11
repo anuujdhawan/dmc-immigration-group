@@ -1,16 +1,7 @@
 "use client";
 
-import { Leaf } from "lucide-react";
 import { useState } from "react";
 
-import {
-  ProgressBar,
-  ScoreGauge,
-  ToolCard,
-  ToolCheck,
-  ToolNote,
-  ToolResult,
-} from "@/components/calculators/tool-kit";
 import { RCIP_FACTS } from "@/features/tools/canada-pnp";
 
 export function RcipEligibilityTool() {
@@ -18,71 +9,59 @@ export function RcipEligibilityTool() {
 
   const answered = Object.keys(checks).length;
   const met = Object.values(checks).filter(Boolean).length;
-  const total = RCIP_FACTS.keyChecks.length;
-  const allMet = met === total;
 
   return (
-    <ToolCard
-      icon={Leaf}
-      eyebrow="Canada · Rural & Northern"
-      title="RCIP Eligibility Checklist"
-      lede="The Rural Community Immigration Pilot (RCIP) replaced the closed Rural and Northern Immigration Pilot (RNIP). Work through each check to see how close your profile is."
-    >
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
+      <h3 className="mb-1 font-display text-xl font-bold text-ink">RCIP eligibility checklist</h3>
+      <p className="mb-6 text-sm text-slate-500">
+        The Rural Community Immigration Pilot (RCIP) replaced the closed Rural and Northern Immigration
+        Pilot (RNIP). Work through each check below to see how close your profile is.
+      </p>
+
       <ul className="space-y-3">
         {RCIP_FACTS.keyChecks.map((check, index) => (
-          <li key={check.label}>
-            <ToolCheck
-              checked={checks[index] ?? false}
-              onChange={(checked) => setChecks((prev) => ({ ...prev, [index]: checked }))}
-              label={check.label}
-              description={check.description}
-            />
+          <li
+            key={check.label}
+            className={`rounded-xl border p-4 transition ${
+              checks[index] ? "border-brand-200 bg-brand-50" : "border-slate-200 bg-white"
+            }`}
+          >
+            <label className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={checks[index] ?? false}
+                onChange={(e) => setChecks((prev) => ({ ...prev, [index]: e.target.checked }))}
+                className="mt-0.5 size-4 accent-[var(--ee-400)]"
+              />
+              <span>
+                <span className="block text-sm font-bold text-ink">{check.label}</span>
+                <span className="mt-0.5 block text-sm leading-relaxed text-slate-600">{check.description}</span>
+              </span>
+            </label>
           </li>
         ))}
       </ul>
 
-      <div className="mt-7 grid items-center gap-6 lg:grid-cols-[auto_1fr]">
-        <div className="grid place-items-center rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50/80 to-white p-6">
-          <ScoreGauge value={met} max={total} label={`of ${total} checks`} tone={allMet ? "pass" : answered > 0 ? "warn" : "neutral"} />
+      <div className="mt-6 rounded-xl border border-brand-100 bg-brand-50 p-5">
+        <div className="flex items-baseline justify-between">
+          <h4 className="text-sm font-bold text-ink">Your progress</h4>
+          <span className="text-2xl font-black text-brand-700">
+            {met}/{RCIP_FACTS.keyChecks.length}
+          </span>
         </div>
-        <ToolResult
-          tone={allMet ? "pass" : answered > 0 ? "warn" : "neutral"}
-          status={
-            answered === 0
-              ? "Start the self-assessment"
-              : allMet
-                ? "You appear to cover the core RCIP checks"
-                : `${total - met} check${total - met === 1 ? "" : "s"} still to review`
-          }
-          score={`${met}/${total}`}
-          scoreLabel="checks met"
-        >
-          <div className="mb-4 flex items-center gap-3">
-            <span className="text-xs font-semibold text-slate-500">Overall progress</span>
-            <div className="flex-1">
-              <ProgressBar value={met} max={total} tone={allMet ? "brand" : "amber"} />
-            </div>
-          </div>
-          <p className="text-sm leading-relaxed text-slate-600">
-            {allMet
-              ? "Each community sets its own process — confirm the details with a participating community before applying."
-              : "This is a self-assessment only. A DMC consultant can review your full profile — including the community-recommendation process — in a free consultation."}
-          </p>
-        </ToolResult>
+        <p className="mt-2 text-sm text-slate-600">
+          {met === RCIP_FACTS.keyChecks.length
+            ? "You appear to cover the core RCIP checks. Each community sets its own process — confirm the details with a participating community before applying."
+            : "This is a self-assessment only. A DMC consultant can review your full profile — including the community-recommendation process — in a free consultation."}
+        </p>
+        <p className="mt-3 text-xs text-slate-500">
+          Informational estimate only — meeting these checks does not guarantee a recommendation or
+          nomination. Last verified: {RCIP_FACTS.lastVerified}. Official source:{" "}
+          <a href={RCIP_FACTS.officialUrl} target="_blank" rel="noopener noreferrer" className="underline">
+            canada.ca — RCIP
+          </a>
+        </p>
       </div>
-
-      <ToolNote className="mt-6">
-        Informational estimate only — meeting these checks does not guarantee a recommendation or
-        nomination. Last verified: {RCIP_FACTS.lastVerified}. Official source:{" "}
-        <a
-          href={RCIP_FACTS.officialUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold text-brand-700 underline underline-offset-2"
-        >
-          canada.ca — RCIP
-        </a>
-      </ToolNote>
-    </ToolCard>
+    </div>
   );
 }

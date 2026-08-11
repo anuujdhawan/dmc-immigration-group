@@ -16,6 +16,7 @@ import {
   InternalFactsBar,
   InternalSection,
   LeadFormSection,
+  LocalContextBand,
   MediaGallerySection,
   ProcessSection,
   ProgramCards,
@@ -88,6 +89,7 @@ export function SkilledIndependent189Page({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="au-189-hero"
@@ -232,14 +234,20 @@ export function SkilledIndependent189Page({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />
@@ -284,6 +292,7 @@ export function SkilledNominated190Page({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="au-190-hero"
@@ -428,14 +437,20 @@ export function SkilledNominated190Page({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />
@@ -480,6 +495,7 @@ export function SkilledWorkRegional491Page({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="au-491-hero"
@@ -624,14 +640,20 @@ export function SkilledWorkRegional491Page({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />
@@ -675,6 +697,7 @@ export function PermanentResidence191Page({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="au-191-hero"
@@ -796,14 +819,20 @@ export function PermanentResidence191Page({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />
@@ -848,6 +877,7 @@ export function EmployerSponsored482Page({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="au-482-hero"
@@ -992,14 +1022,20 @@ export function EmployerSponsored482Page({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />
@@ -1044,6 +1080,7 @@ export function EmployerNomination186Page({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="au-186-hero"
@@ -1188,14 +1225,20 @@ export function EmployerNomination186Page({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />
@@ -1239,6 +1282,7 @@ export function NationalInnovationVisa858Page({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="au-858-hero"
@@ -1360,14 +1404,20 @@ export function NationalInnovationVisa858Page({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />
@@ -1411,6 +1461,7 @@ export function StateTerritoryNominationsPage({
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="au-stn-hero"
@@ -1532,14 +1583,20 @@ export function StateTerritoryNominationsPage({
       ) : null}
 
       {faq && faq.kind === "faq" ? (
-        <FaqSection
-          id="faq"
-          items={faq.items.map((item) => ({
+      <FaqSection
+        id="faq"
+        items={[
+          ...faq.items.map((item) => ({
             q: item.question,
             a: item.answer,
-          }))}
+          })),
+          ...(page.marketNotes?.[market]?.faq ?? []).map((item) => ({
+            q: item.question,
+            a: item.answer,
+          })),
+        ]}
         market={market}
-        />
+      />
       ) : null}
 
       <MediaGallerySection pageId={page.id} tone="soft" market={market} />

@@ -37,6 +37,35 @@ export const MARKET_OFFICE_CITIES: Record<Market, string> = {
   india: "Hyderabad, India",
 };
 
+/** How applicants in each market are referred to in local copy. */
+export const MARKET_APPLICANT_TERMS: Record<Market, string> = {
+  dubai: "UAE residents",
+  "abu-dhabi": "UAE residents",
+  qatar: "Qatar residents",
+  kuwait: "Kuwait residents",
+  india: "Indian applicants",
+};
+
+export interface MarketCurrency {
+  /** ISO 4217 code, e.g. "AED". */
+  code: string;
+  /** Display symbol used before amounts, e.g. "AED" or "₹". */
+  symbol: string;
+  /** BCP-47 locale used for number grouping, e.g. "en-IN". */
+  locale: string;
+  /** Indicative AUD → local-currency rate used by the fee estimator. */
+  ratePerAud: number;
+}
+
+/** Currency context per market, used by tools and copy so fees read locally. */
+export const MARKET_CURRENCIES: Record<Market, MarketCurrency> = {
+  dubai: { code: "AED", symbol: "AED", locale: "en-AE", ratePerAud: 2.4 },
+  "abu-dhabi": { code: "AED", symbol: "AED", locale: "en-AE", ratePerAud: 2.4 },
+  qatar: { code: "QAR", symbol: "QAR", locale: "en-QA", ratePerAud: 2.4 },
+  kuwait: { code: "KWD", symbol: "KWD", locale: "en-KW", ratePerAud: 0.2 },
+  india: { code: "INR", symbol: "₹", locale: "en-IN", ratePerAud: 56 },
+};
+
 export const MARKET_COUNTRY_CODES: Record<Market, string> = {
   dubai: "AE",
   "abu-dhabi": "AE",

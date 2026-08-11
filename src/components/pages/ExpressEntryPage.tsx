@@ -2,6 +2,7 @@
 
 import { MARKET_LABELS, type Market } from "@/config/markets";
 import { marketHref } from "@/lib/routing/routes";
+import { interpolateMarket } from "@/lib/i18n/market-copy";
 import { pageMedia } from "@/config/page-media";
 import { Hero } from "@/components/home/Hero";
 import { CRSCalculator } from "@/components/calculators/CRSCalculator";
@@ -22,6 +23,7 @@ import {
   InternalFactsBar,
   InternalSection,
   LeadFormSection,
+  LocalContextBand,
   MediaGallerySection,
   MediaFrame,
   PartnerLogoStrip,
@@ -266,18 +268,32 @@ export function ExpressEntryPage({
   market,
   phoneHref,
   phoneLabel,
+  localFaq,
+  intro,
+  cta,
 }: {
   market: Market;
   phoneHref: string;
   phoneLabel: string;
+  /** Per-market local FAQ items from the page's marketNotes (resolved by the server route). */
+  localFaq?: { question: string; answer: string }[];
+  /** Per-market intro paragraph from the page's marketNotes. */
+  intro?: string;
+  /** Per-market CTA copy from the page's marketNotes. */
+  cta?: string;
 }) {
   const marketLabel = MARKET_LABELS[market];
   const faqItems = faqItemsForMarket(marketLabel);
-  const overviewCopy = overviewCopyForMarket(marketLabel);
+  const allFaqItems = [
+    ...faqItems,
+    ...(localFaq ?? []).map((item) => ({ q: item.question, a: item.answer })),
+  ];
+  const overviewCopy = intro ? [interpolateMarket(intro, market), ...overviewCopyForMarket(marketLabel)] : overviewCopyForMarket(marketLabel);
   const media = pageMedia("visas/canada/express-entry");
 
   return (
     <div className="ee-page" id="express-entry-content">
+      <LocalContextBand market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
       <Hero
         market={market}
         sectionId="express-entry-hero"
@@ -522,7 +538,7 @@ export function ExpressEntryPage({
         </div>
       </InternalSection>
 
-      <FaqSection id="faq" items={faqItems} market={market} />
+      <FaqSection id="faq" items={allFaqItems} market={market} />
 
       <InternalSection id="resources">
         <div className="ee-shell">
@@ -564,7 +580,12 @@ export function ExpressEntryPage({
         by the relevant government authority, and rules, fees, invitation criteria and processing times can change.
       </DisclaimerBand>
 
-      <FinalCta market={market} phoneHref={phoneHref} phoneLabel={phoneLabel} />
+      <FinalCta
+        market={market}
+        phoneHref={phoneHref}
+        phoneLabel={phoneLabel}
+        copy={cta ?? undefined}
+      />
     </div>
   );
 }
