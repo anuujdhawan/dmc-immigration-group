@@ -514,9 +514,36 @@ export const SITE_PAGES: PageContent[] = [
         kind: "cards",
         heading: "Canada assessments",
         items: [
-          { title: "CRS calculator", label: "Coming soon", body: "The points calculator will arrive in the next tools phase." },
-          { title: "FSW-67 review", label: "Coming soon", body: "A route-fit checker for Federal Skilled Worker profile planning." },
-          { title: "PNP matcher", label: "Coming soon", body: "A provincial fit view tied to the current nomination programs." },
+          {
+            title: "CRS calculator",
+            label: "Live tool",
+            body: "Estimate your Express Entry ranking score across core, spouse and transferability factors.",
+            href: "/tools/canada/crs-calculator",
+          },
+          {
+            title: "CLB calculator",
+            label: "Live tool",
+            body: "Convert IELTS, CELPIP and TEF results into Canadian Language Benchmarks.",
+            href: "/tools/canada/clb-calculator",
+          },
+          {
+            title: "FSW 67-point calculator",
+            label: "Live tool",
+            body: "Check the Federal Skilled Worker selection-factor grid against the 67-point threshold.",
+            href: "/tools/canada/fsw-67-calculator",
+          },
+          {
+            title: "PNP stream matchers",
+            label: "Live tool",
+            body: "Match your profile to active provincial nominee streams — Ontario, Alberta, BC and more.",
+            href: "/tools/canada/ontario-pnp-matcher",
+          },
+          {
+            title: "RCIP eligibility checklist",
+            label: "Live tool",
+            body: "Self-assess against the Rural Community Immigration Pilot core checks.",
+            href: "/tools/canada/rcip-eligibility",
+          },
         ],
       },
       {
@@ -547,9 +574,30 @@ export const SITE_PAGES: PageContent[] = [
         kind: "cards",
         heading: "Australia assessments",
         items: [
-          { title: "Points calculator", label: "Coming soon", body: "Points-based planning for 189, 190 and 491." },
-          { title: "Occupation eligibility", label: "Coming soon", body: "A route-fit view for ANZSCO and skills-assessment planning." },
-          { title: "Nomination strategy", label: "Coming soon", body: "State, territory and employer nomination routing." },
+          {
+            title: "Points calculator",
+            label: "Live tool",
+            body: "Score your profile for 189, 190 and 491 against the 65-point minimum.",
+            href: "/tools/australia/points-calculator",
+          },
+          {
+            title: "Visa fee estimator",
+            label: "Live tool",
+            body: "Estimate the base application charge with an indicative AED conversion.",
+            href: "/tools/australia/visa-fee-estimator",
+          },
+          {
+            title: "Processing times",
+            label: "Live tool",
+            body: "Look up Home Affairs' indicative processing bands for each skilled subclass.",
+            href: "/tools/australia/processing-times",
+          },
+          {
+            title: "Occupation discovery",
+            label: "Live tool",
+            body: "Search ANZSCO groups, skill levels and skills-assessment authorities.",
+            href: "/tools/australia/occupation-eligibility-checker",
+          },
         ],
       },
       {

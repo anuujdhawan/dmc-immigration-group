@@ -2,7 +2,18 @@
 
 Living checklist. Update after every meaningful batch. Never delete completed history.
 
-Last updated: 2026-08-09
+Last updated: 2026-08-11
+
+## 2026-08-11 — All 10 tools/calculators live on real routes + premium visual kit
+
+- Requested: take all the tools & calculators from the `dmc-immigrationgroup` project folder and embed them in this project, each beautified to complement the botanical-green theme.
+- Parity check: every calculator + data module in the old folder is byte-identical to what already ships here (`diff` verified all 10 calculators + `features/tools/*`). The real gap was **routing** — `tool-route.tsx`/`ToolRoute` existed but nothing served it, so `/tools/<tool>` 404'd (the known interruption from the 2026-08-05 entry). The homepage Tools cards and the EE page's own links all pointed at dead or "Coming soon" routes.
+- **Wired the routes**: `src/app/[market]/tools/page.tsx` (tools hub content page) and `src/app/[market]/tools/[...slug]/page.tsx` (catch-all — static `tools` segment wins over `[...segments]`): resolves `toolByPath(slug)` → `ToolRoute` + `resolveToolComponent` for every registered tool; falls back to `getPageContent("tools/…")` for the Canada/Australia hub pages; unknown slugs redirect to `/tools`. `generateStaticParams` covers `TOOL_PATHS` + hubs for all 5 markets; per-tool SEO metadata + canonicals. `sitemap.ts` now emits every `/tools/…` URL.
+- **Premium tool-kit** (`src/components/calculators/tool-kit.tsx`): shared design system — `ToolCard` (icon tile, eyebrow, display title, lede, botanical glow + hairline), `ToolSelect` (chevron + points chip), `ToolSlider` (custom `.dmc-range` track/thumb, filled gradient, value pill), `ToolSegmented` (pills), `ToolCheck` (custom animated checkbox, `peer-focus-visible` ring), `ToolButton`, `ScoreGauge` (animated SVG ring), `CountUp` (eased counter, no SSR "0" flash), `ToolResult` (pass/warn gradient panel + status pill + score), `ToolStat`, `ProgressBar`, `ToolBadge`, `ToolNote`. Every primitive uses the brand green palette (brand-50→700), Manrope display type and soft green shadows.
+- **All 10 calculators refactored onto the kit** with zero logic changes (points tables, fees, CLB maps, PNP matching all untouched): CRS (slider + gauge + 4 breakdown stats), CLB (segmented test type, per-ability CLB badges, min-CLB gauge), FSW 67 (7 selects + 67-threshold gauge + progress), Australia Points (same pattern, 65 threshold), Fee Estimator (subclass select, partner/child checks, animated AUD + AED totals), Processing Times (50%/90% band cards), Occupation Discovery (search + skill-level segmented + badged table), PNP Matcher (segmented Yes/No, fit badges per stream), RCIP checklist (animated progress gauge), Eligibility Checker (4-step wizard polish: icon tiles, step rail, answer chips, result panel).
+- `ToolPage.tsx` shell upgraded (soft green band behind the tool, source pills, verification badge) and homepage `ToolsSection.tsx` rebuilt as a full 10-tool gallery grouped Start here / Canada / Australia (each card links to its live tool route). Canada/Australia hub content pages now list the live tools instead of "Coming soon".
+- New `src/config/tools.test.ts` (6 tests): unique paths, slug shape, metadata completeness, `toolByPath` resolution, component keys (incl. every `pnp:` → province), family grouping.
+- Validation: `npm run typecheck` ✓, `npm run lint` ✓ (0 errors; only pre-existing warnings), `npm test` ✓ 79/79 (12 files). Live dev-server check: all 7 probed tool routes return 200 (`/dubai/tools`, `/tools/canada`, `/tools/australia`, `/tools/eligibility-checker`, `/tools/canada/crs-calculator`, `/tools/canada/ontario-pnp-matcher`, `/tools/australia/points-calculator`); CRS gauge/slider verified interactive in preview (age 30→40 updates score 323→273).
 
 ## 2026-08-09 — Lead form email fixed: Resend sandbox only delivers to dmcimmigrationgroup@gmail.com
 

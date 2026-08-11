@@ -50,30 +50,36 @@ export function ToolPage({
       </section>
 
       {/* Tool */}
-      <section className="bg-white py-14 md:py-20">
-        <div className="mx-auto max-w-[1280px] px-6">
-          <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-4 md:p-6">{children}</div>
+      <section className="bg-gradient-to-b from-white via-brand-50/30 to-white py-14 md:py-20">
+        <div className="mx-auto max-w-[1280px] px-6">{children}</div>
 
-          {note ? (
-            <div className="mt-8 rounded-2xl border border-brand-100 bg-brand-50 p-6">{note}</div>
-          ) : null}
+        {note ? (
+          <div className="mx-auto mt-8 max-w-[1280px] px-6">
+            <div className="rounded-3xl border border-brand-100 bg-brand-50/70 p-6">{note}</div>
+          </div>
+        ) : null}
 
-          {/* Official sources */}
-          <div className="mt-10 rounded-2xl border border-slate-200 bg-white p-6">
-            <h2 className="font-display text-lg font-bold text-ink">Official sources &amp; verification</h2>
-            <p className="mt-2 text-sm leading-relaxed text-slate-500">
-              Immigration rules, fees and thresholds change regularly. Information on this page was last
-              verified <strong className="text-slate-700">{lastVerified}</strong> and should be read alongside
-              the official government sources below.
+        {/* Official sources */}
+        <div className="mx-auto mt-10 max-w-[1280px] px-6">
+          <div className="rounded-3xl border border-brand-100/70 bg-white p-6 shadow-[0_1px_3px_rgba(23,61,13,0.06),0_10px_30px_rgba(23,61,13,0.06)] md:p-7">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="font-display text-lg font-bold text-ink">Official sources &amp; verification</h2>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-brand-700">
+                Last verified {lastVerified}
+              </span>
+            </div>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500">
+              Immigration rules, fees and thresholds change regularly. Information on this page should
+              always be read alongside the official government sources below.
             </p>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 flex flex-wrap gap-3">
               {sources.map((source) => (
                 <li key={source.url}>
                   <a
                     href={source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-semibold text-brand-700 underline-offset-4 hover:underline"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50/50 px-4 py-2 text-sm font-semibold text-brand-700 underline-offset-4 transition hover:border-brand-300 hover:bg-brand-50 hover:underline"
                   >
                     {source.label} ↗
                   </a>
@@ -81,24 +87,26 @@ export function ToolPage({
               ))}
             </ul>
           </div>
+        </div>
 
-          {/* Related tools */}
-          <div className="mt-6 flex flex-wrap gap-3">
+        {/* Related tools */}
+        <div className="mx-auto mt-6 max-w-[1280px] px-6">
+          <div className="flex flex-wrap gap-3">
             <a
               href={marketHref(market, "/tools/canada")}
-              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700"
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-700"
             >
               Canada tools hub
             </a>
             <a
               href={marketHref(market, "/tools/australia")}
-              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700"
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-700"
             >
               Australia tools hub
             </a>
             <a
               href={marketHref(market, "/tools/eligibility-checker")}
-              className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-700"
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:text-brand-700"
             >
               Free eligibility checker
             </a>

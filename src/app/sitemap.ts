@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { MARKET_LIST } from "@/config/markets";
 import { PAGE_IDS } from "@/content/pages";
+import { TOOL_PATHS } from "@/config/tools";
 import { LANDING_MARKETS, LANDING_PAGE_IDS } from "@/config/landing-pages";
 import { env } from "@/config/env/server";
 
@@ -28,6 +29,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: now,
         changeFrequency: "monthly",
         priority: 0.7,
+      });
+    }
+  }
+
+  // Tool pages across all markets
+  for (const market of MARKET_LIST) {
+    for (const toolPath of TOOL_PATHS) {
+      entries.push({
+        url: `${SITE_URL}/${market}/tools/${toolPath}`,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.8,
       });
     }
   }

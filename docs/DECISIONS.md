@@ -2,6 +2,13 @@
 
 Record architectural and content decisions, deviations from templates, renamed/closed programs, canonical URL choices, dependency choices, and unresolved client verification items. Append, never rewrite history.
 
+## 2026-08-11 — Tool routes + shared tool-kit design system
+
+- All 10 tools/calculators now render on real routes: `src/app/[market]/tools/[...slug]/page.tsx` resolves `toolByPath(slug)` → `ToolRoute` + `resolveToolComponent`, falls back to `getPageContent("tools/…")` for the Canada/Australia hub pages, and redirects unknown slugs to `/tools`. `[market]/tools/page.tsx` serves the tools hub. The static `tools` segment beats the `[market]/[...segments]` catch-all, so no route conflict; sitemap includes every `/tools/…` URL.
+- One shared presentation layer for every calculator: `src/components/calculators/tool-kit.tsx` (ToolCard/Select/Slider/Segmented/Check/Button, ScoreGauge, CountUp, ToolResult/Stat/Progress/Badge/Note). All calculator logic is untouched — the kit owns presentation + micro-interactions only, so future tools get the same look by composing these primitives.
+- `CountUp` starts at the real value (no SSR "0" flash) and animates only on subsequent changes; `ScoreGauge` marks inner text `aria-hidden` so screen readers hear the `aria-label` once; `ToolCheck` keeps a `peer-focus-visible` ring so the custom checkbox stays keyboard-visible.
+- Homepage `ToolsSection` and the Canada/Australia hub pages now surface the live tools (10 cards / real links) instead of the earlier 3-card teaser and "Coming soon" placeholders.
+
 ## 2026-08-09 — Resend lead recipient = dmcimmigrationgroup@gmail.com (sandbox owner)
 - The Resend account is in sandbox mode, which only delivers to the account owner `dmcimmigrationgroup@gmail.com`. All form lead emails (`RESEND_REPLY_TO_EMAIL` + every `DMC_<MARKET>_LEAD_TO_EMAIL`) now target that inbox; the previous `dmcimmigrationglobal@gmail.com` was unverified and every send was rejected with Resend 403. `from` must remain `onboarding@resend.dev` until a sending domain is verified. Widening recipients is a `.env`-only change after domain verification.
 

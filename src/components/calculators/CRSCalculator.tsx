@@ -1,6 +1,21 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { Gauge, Users } from "lucide-react";
+import { useCallback, useState } from "react";
+
+import {
+  ProgressBar,
+  ScoreGauge,
+  ToolBadge,
+  ToolCard,
+  ToolCheck,
+  ToolField,
+  ToolNote,
+  ToolResult,
+  ToolSelect,
+  ToolSlider,
+  ToolStat,
+} from "@/components/calculators/tool-kit";
 
 type EducationLevel =
   | "less-secondary"
@@ -192,168 +207,171 @@ export function CRSCalculator({ className }: { className?: string }) {
   }, []);
 
   const score = calculateCRS(inputs);
+  const core = agePoints(inputs.age) + educationPoints(inputs.education)
+    + clbPoints(inputs.clbListening) + clbPoints(inputs.clbSpeaking)
+    + clbPoints(inputs.clbReading) + clbPoints(inputs.clbWriting)
+    + canadianExperiencePoints(inputs.canadianExperience);
+  const spouse = inputs.hasSpouse
+    ? Math.round(educationPoints(inputs.spouseEducation) / 10 + clbPoints(inputs.spouseCLB) / 10 + canadianExperiencePoints(inputs.spouseExperience) / 10)
+    : 0;
+  const transferability = skillTransferability(inputs);
+  const additional = additionalFactors(inputs);
 
   return (
-    <div className={className ?? ""} style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "18px" }}>
-        {/* Age */}
-        <label style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          <span style={{ fontSize: ".78rem", fontWeight: 600, color: "var(--ee-950)", textTransform: "uppercase", letterSpacing: ".04em" }}>Age</span>
-          <input
-            type="range"
-            min={18}
-            max={50}
-            value={inputs.age}
-            onChange={(e) => update("age", Number(e.target.value))}
-            style={{ width: "100%", accentColor: "var(--ee-400)" }}
-          />
-          <span style={{ fontSize: ".92rem", color: "var(--ee-700)" }}>{inputs.age} years — {agePoints(inputs.age)} pts</span>
-        </label>
-
-        {/* Education */}
-        <label style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          <span style={{ fontSize: ".78rem", fontWeight: 600, color: "var(--ee-950)", textTransform: "uppercase", letterSpacing: ".04em" }}>Highest education</span>
-          <select
+    <ToolCard
+      className={className}
+      icon={Gauge}
+      eyebrow="Canada · Express Entry"
+      title="CRS Calculator"
+      lede="Estimate your Comprehensive Ranking System score — core factors, spouse factors, skill transferability and additional points."
+    >
+      <div className="grid gap-x-6 gap-y-6 md:grid-cols-2 lg:grid-cols-3">
+        <ToolSlider
+          label="Age"
+          value={inputs.age}
+          min={18}
+          max={50}
+          onChange={(age) => update("age", age)}
+          hint={`${agePoints(inputs.age)} points`}
+        />
+        <ToolField label="Highest education" hint={`${educationPoints(inputs.education)} pts`}>
+          <ToolSelect
             value={inputs.education}
             onChange={(e) => update("education", e.target.value as EducationLevel)}
-            style={{ height: "48px", paddingInline: "14px", border: "1px solid var(--ee-line)", borderRadius: "14px", background: "#fff" }}
-          >
-            {EDUCATION_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
-          <span style={{ fontSize: ".88rem", color: "var(--ee-700)" }}>{educationPoints(inputs.education)} pts</span>
-        </label>
-
-        {/* Canadian Experience */}
-        <label style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          <span style={{ fontSize: ".78rem", fontWeight: 600, color: "var(--ee-950)", textTransform: "uppercase", letterSpacing: ".04em" }}>Canadian work experience</span>
-          <select
-            value={inputs.canadianExperience}
+            options={EDUCATION_OPTIONS}
+          />
+        </ToolField>
+        <ToolField
+          label="Canadian work experience"
+          hint={`${canadianExperiencePoints(inputs.canadianExperience)} pts`}
+        >
+          <ToolSelect
+            value={String(inputs.canadianExperience)}
             onChange={(e) => update("canadianExperience", Number(e.target.value) as CanadianExperience)}
-            style={{ height: "48px", paddingInline: "14px", border: "1px solid var(--ee-line)", borderRadius: "14px", background: "#fff" }}
-          >
-            {EXPERIENCE_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
-          <span style={{ fontSize: ".88rem", color: "var(--ee-700)" }}>{canadianExperiencePoints(inputs.canadianExperience)} pts</span>
-        </label>
+            options={EXPERIENCE_OPTIONS.map((o) => ({ value: String(o.value), label: o.label }))}
+          />
+        </ToolField>
       </div>
 
       {/* Language */}
-      <div>
-        <span style={{ fontSize: ".78rem", fontWeight: 600, color: "var(--ee-950)", textTransform: "uppercase", letterSpacing: ".04em", display: "block", marginBottom: "10px" }}>
-          First official language (English / French)
-        </span>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "14px" }}>
+      <div className="mt-8">
+        <div className="mb-3 flex items-center gap-2">
+          <span className="h-px flex-1 bg-gradient-to-r from-brand-200 to-transparent" />
+          <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-600">
+            First official language · English / French
+          </span>
+          <span className="h-px flex-1 bg-gradient-to-l from-brand-200 to-transparent" />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {([
             ["clbListening", "Listening"],
             ["clbSpeaking", "Speaking"],
             ["clbReading", "Reading"],
             ["clbWriting", "Writing"],
           ] as const).map(([key, label]) => (
-            <label key={key} style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-              <span style={{ fontSize: ".82rem", color: "var(--ee-700)" }}>{label}</span>
-              <select
-                value={inputs[key]}
+            <ToolField key={key} label={label} hint={`${clbPoints(inputs[key])} pts`}>
+              <ToolSelect
+                value={String(inputs[key])}
                 onChange={(e) => update(key, Number(e.target.value) as CLBLevel)}
-                style={{ height: "44px", paddingInline: "12px", border: "1px solid var(--ee-line)", borderRadius: "12px", background: "#fff", fontSize: ".88rem" }}
-              >
-                {CLB_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
-            </label>
+                options={CLB_OPTIONS.map((o) => ({ value: String(o.value), label: o.label }))}
+              />
+            </ToolField>
           ))}
         </div>
       </div>
 
-      {/* Spouse toggle */}
-      <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
-        <input
-          type="checkbox"
+      {/* Spouse */}
+      <div className="mt-8">
+        <ToolCheck
           checked={inputs.hasSpouse}
-          onChange={(e) => update("hasSpouse", e.target.checked)}
-          style={{ width: "18px", height: "18px", accentColor: "var(--ee-400)" }}
+          onChange={(checked) => update("hasSpouse", checked)}
+          label="Include spouse or common-law partner"
+          description="Their education, language and Canadian experience can add a small number of points."
         />
-        <span style={{ fontSize: ".92rem", color: "var(--ee-950)" }}>Include spouse or common-law partner</span>
-      </label>
+        {inputs.hasSpouse ? (
+          <div className="mt-4 rounded-3xl border border-brand-100 bg-brand-50/40 p-5">
+            <div className="mb-4 flex items-center gap-2">
+              <Users aria-hidden="true" className="size-4 text-brand-600" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-600">
+                Spouse factors
+              </span>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <ToolField label="Spouse education">
+                <ToolSelect
+                  value={inputs.spouseEducation}
+                  onChange={(e) => update("spouseEducation", e.target.value as EducationLevel)}
+                  options={EDUCATION_OPTIONS}
+                />
+              </ToolField>
+              <ToolField label="Spouse language (CLB)">
+                <ToolSelect
+                  value={String(inputs.spouseCLB)}
+                  onChange={(e) => update("spouseCLB", Number(e.target.value) as CLBLevel)}
+                  options={CLB_OPTIONS.map((o) => ({ value: String(o.value), label: o.label }))}
+                />
+              </ToolField>
+              <ToolField label="Spouse Canadian experience">
+                <ToolSelect
+                  value={String(inputs.spouseExperience)}
+                  onChange={(e) => update("spouseExperience", Number(e.target.value) as CanadianExperience)}
+                  options={EXPERIENCE_OPTIONS.map((o) => ({ value: String(o.value), label: o.label }))}
+                />
+              </ToolField>
+            </div>
+          </div>
+        ) : null}
+      </div>
 
-      {/* Spouse factors */}
-      {inputs.hasSpouse && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px", padding: "18px", border: "1px solid var(--ee-line)", borderRadius: "18px", background: "rgba(244,249,241,.5)" }}>
-          <label style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-            <span style={{ fontSize: ".82rem", color: "var(--ee-700)" }}>Spouse education</span>
-            <select
-              value={inputs.spouseEducation}
-              onChange={(e) => update("spouseEducation", e.target.value as EducationLevel)}
-              style={{ height: "44px", paddingInline: "12px", border: "1px solid var(--ee-line)", borderRadius: "12px", background: "#fff" }}
-            >
-              {EDUCATION_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </label>
-          <label style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-            <span style={{ fontSize: ".82rem", color: "var(--ee-700)" }}>Spouse language (CLB)</span>
-            <select
-              value={inputs.spouseCLB}
-              onChange={(e) => update("spouseCLB", Number(e.target.value) as CLBLevel)}
-              style={{ height: "44px", paddingInline: "12px", border: "1px solid var(--ee-line)", borderRadius: "12px", background: "#fff" }}
-            >
-              {CLB_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </label>
-          <label style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
-            <span style={{ fontSize: ".82rem", color: "var(--ee-700)" }}>Spouse Canadian experience</span>
-            <select
-              value={inputs.spouseExperience}
-              onChange={(e) => update("spouseExperience", Number(e.target.value) as CanadianExperience)}
-              style={{ height: "44px", paddingInline: "12px", border: "1px solid var(--ee-line)", borderRadius: "12px", background: "#fff" }}
-            >
-              {EXPERIENCE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </label>
+      {/* Score */}
+      <div className="mt-8 grid items-center gap-6 lg:grid-cols-[auto_1fr]">
+        <div className="grid place-items-center rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50/80 to-white p-6">
+          <ScoreGauge value={score} max={1200} label="CRS points" tone={score >= 500 ? "pass" : "neutral"} />
         </div>
-      )}
-
-      {/* Score display */}
-      <div style={{ textAlign: "center", padding: "28px", border: "1px solid rgba(53,142,26,.15)", borderRadius: "24px 62px 24px 24px", background: "linear-gradient(145deg, #e5f3df, #f4f9f1)" }}>
-        <span style={{ fontSize: ".78rem", fontWeight: 600, color: "var(--ee-500)", textTransform: "uppercase", letterSpacing: ".06em" }}>Estimated CRS Score</span>
-        <div style={{ fontSize: "clamp(2.8rem, 6vw, 4.5rem)", fontWeight: 700, color: "var(--ee-950)", lineHeight: 1.1, marginTop: "8px" }}>{score}</div>
-        <p style={{ fontSize: ".88rem", color: "var(--ee-700)", marginTop: "8px", maxWidth: "480px", marginInline: "auto" }}>
-          This is an estimate based on core factors. A provincial nomination can add up to 600 additional points. Actual CRS scoring may vary based on additional factors not covered here.
-        </p>
+        <ToolResult
+          tone={score >= 500 ? "pass" : "neutral"}
+          status={
+            score >= 500
+              ? "Strong competitive range"
+              : "Estimated ranking score"
+          }
+          score={score}
+          scoreLabel="estimated CRS"
+        >
+          <p className="text-sm leading-relaxed text-slate-600">
+            This estimate is based on core factors, spouse factors, skill transferability and
+            Canadian-education points. A provincial nomination can add up to{" "}
+            <strong className="text-brand-700">600 additional points</strong> — that alone can move a
+            profile from the edge of the pool into invitation range.
+          </p>
+          <div className="mt-4 flex items-center gap-3">
+            <span className="text-xs font-semibold text-slate-500">Invitation competitiveness</span>
+            <div className="flex-1">
+              <ProgressBar value={Math.min(score, 600)} max={600} />
+            </div>
+          </div>
+        </ToolResult>
       </div>
 
       {/* Breakdown */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "12px", fontSize: ".82rem" }}>
-        <div style={{ padding: "14px", border: "1px solid var(--ee-line)", borderRadius: "14px", background: "#fff" }}>
-          <strong style={{ display: "block", color: "var(--ee-500)", fontSize: ".72rem", textTransform: "uppercase" }}>Core factors</strong>
-          <span style={{ fontSize: "1.3rem", fontWeight: 600, color: "var(--ee-950)" }}>
-            {agePoints(inputs.age) + educationPoints(inputs.education) + clbPoints(inputs.clbListening) + clbPoints(inputs.clbSpeaking) + clbPoints(inputs.clbReading) + clbPoints(inputs.clbWriting) + canadianExperiencePoints(inputs.canadianExperience)}
-          </span>
-        </div>
-        <div style={{ padding: "14px", border: "1px solid var(--ee-line)", borderRadius: "14px", background: "#fff" }}>
-          <strong style={{ display: "block", color: "var(--ee-500)", fontSize: ".72rem", textTransform: "uppercase" }}>Spouse factors</strong>
-          <span style={{ fontSize: "1.3rem", fontWeight: 600, color: "var(--ee-950)" }}>
-            {inputs.hasSpouse ? Math.round(educationPoints(inputs.spouseEducation) / 10 + clbPoints(inputs.spouseCLB) / 10 + canadianExperiencePoints(inputs.spouseExperience) / 10) : 0}
-          </span>
-        </div>
-        <div style={{ padding: "14px", border: "1px solid var(--ee-line)", borderRadius: "14px", background: "#fff" }}>
-          <strong style={{ display: "block", color: "var(--ee-500)", fontSize: ".72rem", textTransform: "uppercase" }}>Skill transferability</strong>
-          <span style={{ fontSize: "1.3rem", fontWeight: 600, color: "var(--ee-950)" }}>{skillTransferability(inputs)}</span>
-        </div>
-        <div style={{ padding: "14px", border: "1px solid var(--ee-line)", borderRadius: "14px", background: "#fff" }}>
-          <strong style={{ display: "block", color: "var(--ee-500)", fontSize: ".72rem", textTransform: "uppercase" }}>Additional factors</strong>
-          <span style={{ fontSize: "1.3rem", fontWeight: 600, color: "var(--ee-950)" }}>{additionalFactors(inputs)}</span>
-        </div>
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <ToolStat label="Core factors" value={core} hint="Age · education · language · experience" accent />
+        <ToolStat label="Spouse factors" value={spouse} hint="Included when a partner is added" />
+        <ToolStat label="Skill transferability" value={transferability} hint="Education + language + experience" />
+        <ToolStat label="Additional factors" value={additional} hint="Canadian-education bonus" />
       </div>
-    </div>
+
+      <div className="mt-6 flex flex-wrap items-center gap-2">
+        <ToolBadge tone="neutral">Estimated only</ToolBadge>
+        <ToolBadge tone="neutral">Up to 600 PNP bonus</ToolBadge>
+        <ToolBadge tone="neutral">Cut-offs vary by round</ToolBadge>
+      </div>
+
+      <ToolNote className="mt-5">
+        This is an informational estimate only — actual CRS scoring is determined by IRCC and includes
+        factors not covered here (valid job offers, French-language bonus, provincial nomination and
+        sibling points). Scores and invitation cut-offs change between rounds.
+      </ToolNote>
+    </ToolCard>
   );
 }
